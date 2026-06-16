@@ -652,18 +652,18 @@ const LorapokVpnDemo = () => {
 
       <div className="relative z-10 flex items-center justify-between mb-8">
         <div className="flex items-center gap-2">
-          <Logo size={20} isConnecting={status === 'CONNECTING'} isConnected={status === 'CONNECTED'} />
-          <span className="text-[#22c55e] font-bold tracking-tight">LORA-CON PORTAL v2</span>
+          <Logo size={18} isConnecting={status === 'CONNECTING'} isConnected={status === 'CONNECTED'} />
+          <span className="text-[#22c55e] font-mono tracking-tighter uppercase font-bold text-sm">LORA-CON PORTAL v2</span>
         </div>
-        <div className={`px-2 py-0.5 rounded-full border text-[8px] font-bold ${status === 'CONNECTED' ? 'bg-[#22c55e]/10 border-[#22c55e] text-[#22c55e]' : 'bg-white/5 border-white/10 text-slate-500'}`}>
+        <div className={`px-3 py-1 rounded-full border text-[10px] uppercase font-black tracking-widest ${status === 'CONNECTED' ? 'bg-[#22c55e]/10 border-[#22c55e]/50 text-[#22c55e]' : 'bg-white/5 border-white/10 text-slate-500'}`}>
           {status}
         </div>
       </div>
 
       <div className="relative z-10 flex-1 space-y-2 overflow-hidden">
-        <p className="text-white font-bold">$ lora --status</p>
-        <p className="text-slate-300 font-bold">Node: <span className={connInfo ? "text-white" : ""}>[{connInfo?.name || 'NONE'}]</span></p>
-        <p className="text-slate-300 font-bold">Latency: <span className={connInfo ? "text-[#22c55e] drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]" : ""}>{ping}ms</span></p>
+        <p className="text-white font-mono font-bold text-sm">$ lora --status</p>
+        <p className="text-slate-300 font-mono font-bold text-sm">Node: <span className={connInfo ? "text-white" : ""}>[{connInfo?.name || 'NONE'}]</span></p>
+        <p className="text-slate-300 font-mono font-bold text-sm mb-4">Latency: <span className={connInfo ? "text-[#22c55e] drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]" : ""}>{ping}ms</span></p>
         
         <AnimatePresence mode="wait">
           {status === 'CONNECTING' && (
@@ -738,7 +738,7 @@ const LorapokVpnDemo = () => {
         disabled={status === 'CONNECTING'}
         className={`relative z-10 mt-6 w-full py-4 rounded-xl font-bold text-[11px] transition-all group overflow-hidden ${
           status === 'CONNECTED' 
-            ? 'bg-red-500 text-white hover:bg-red-600' 
+            ? 'bg-[#ef4444] text-white hover:bg-red-600' 
             : status === 'CONNECTING'
             ? 'bg-amber-500/10 text-amber-500 cursor-not-allowed'
             : 'bg-[#22c55e] text-black hover:bg-[#1ea34d]'

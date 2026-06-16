@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, MessageSquare, MapPin, Github, Twitter } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';

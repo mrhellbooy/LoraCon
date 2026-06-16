@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Logo = ({ size = 40, className, isConnected = true, isConnecting = false }) => {
   const neonColor = isConnected ? "#22c55e" : isConnecting ? "#f97316" : "#64748b";

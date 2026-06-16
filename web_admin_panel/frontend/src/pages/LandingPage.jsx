@@ -59,7 +59,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => (
   </motion.div>
 );
 
-const TabManModal = ({ isOpen, onClose }) => {
+const DownloadModal = ({ isOpen, onClose }) => {
   const addToast = useToast();
   if (!isOpen) return null;
 
@@ -96,66 +96,52 @@ const TabManModal = ({ isOpen, onClose }) => {
       onClick={onClose}
     >
       <motion.div 
-        initial={{ scale: 0.8, opacity: 0 }}
+        initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.8, opacity: 0 }}
-        className="w-full max-h-[90vh] max-w-3xl bg-[#030303] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col shadow-[0_0_100px_rgba(34,197,94,0.15)] relative"
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="w-full max-w-2xl bg-[#09090b] border border-white/5 rounded-3xl overflow-hidden flex flex-col shadow-2xl relative"
         onClick={e => e.stopPropagation()}
       >
-        <div className="absolute top-0 right-0 w-full h-[300px] bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.08)_0%,transparent_70%)] pointer-events-none" />
-        
-        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.01] relative z-10 shrink-0">
-          <div className="flex items-center gap-6">
-            <div className="p-4 rounded-2xl bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.2)]">
-              <Download className="w-8 h-8 text-[#22c55e]" />
+        <div className="p-6 border-b border-white/5 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center text-[#22c55e]">
+              <Download className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter leading-none mb-1">Secure Distribution</h3>
-              <p className="text-[9px] text-slate-500 font-mono tracking-[0.3em] uppercase italic opacity-60">// CHANNEL: SENTINEL-EXPORT-v1.0.10 //</p>
+              <h3 className="text-sm font-bold text-white tracking-widest uppercase mb-0.5">LORAPOK ECOSYSTEM</h3>
+              <p className="text-[10px] text-slate-500 font-mono">v4.0.2 ARM64/X86_64</p>
             </div>
           </div>
           <button 
             onClick={onClose} 
-            className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all group active:scale-90 border border-white/10"
+            className="p-2 text-slate-500 hover:text-white transition-colors"
           >
-            <X size={24} className="text-slate-500 group-hover:text-white" />
+            <X size={20} />
           </button>
         </div>
 
-        <div className="p-8 gap-4 grid grid-cols-1 sm:grid-cols-2 relative z-10 overflow-y-auto">
+        <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
-            { name: 'Android APK', size: '24.5 MB', icon: Smartphone, color: '#22c55e', desc: 'Secure Mobile Client' },
-            { name: 'Windows Client', size: '48.2 MB', icon: Monitor, color: '#4ade80', desc: 'Desktop Sentinel' },
-            { name: 'macOS DMG', size: '42.1 MB', icon: Apple, color: '#fbbf24', desc: 'Darwin Core Build' },
+            { name: 'Android APK', size: '24.5 MB', icon: Smartphone },
+            { name: 'Windows Client', size: '48.2 MB', icon: Monitor },
+            { name: 'macOS DMG', size: '42.1 MB', icon: Apple },
+            { name: 'Linux Binary', size: '18.9 MB', icon: Terminal },
           ].map((item, i) => (
             <motion.a
               key={item.name}
               href="#"
               onClick={(e) => handleDownload(e, item)}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ x: 5, backgroundColor: 'rgba(34,197,94,0.02)', borderColor: 'rgba(34,197,94,0.1)' }}
-              transition={{ delay: i * 0.05 }}
-              className="p-5 rounded-2xl bg-white/[0.01] border border-white/5 transition-all group flex items-center gap-4"
+              whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.03)' }}
+              whileTap={{ scale: 0.98 }}
+              className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 transition-all group flex flex-col gap-4"
             >
-              <div 
-                className="w-12 h-12 rounded-xl bg-black border border-white/10 flex items-center justify-center transition-all group-hover:scale-105"
-              >
-                 <item.icon className="w-6 h-6" style={{ color: item.color }} />
-              </div>
-              <div className="flex-1">
-                <div className="font-black text-white text-base italic uppercase tracking-tighter mb-0.5">{item.name}</div>
-                <div className="text-[8px] text-slate-500 font-mono tracking-widest opacity-60 uppercase mb-1">{item.desc}</div>
-                <div className="text-[10px] text-[#22c55e] font-mono font-bold">{item.size}</div>
+              <item.icon className="w-6 h-6 text-slate-400 group-hover:text-[#22c55e] transition-colors" />
+              <div>
+                <div className="font-bold text-white tracking-wide mb-1 text-sm">{item.name}</div>
+                <div className="text-[10px] text-slate-500 font-mono tracking-widest">{item.size}</div>
               </div>
             </motion.a>
           ))}
-        </div>
-
-        <div className="p-6 bg-black/60 border-t border-white/5 text-center relative z-10 shrink-0">
-          <p className="text-[10px] text-slate-500 font-mono uppercase tracking-[0.5em] italic opacity-40">
-            // ALL PACKAGES ARE CRYPTOGRAPHICALLY SIGNED BY LORAPOK LABS //
-          </p>
         </div>
       </motion.div>
     </motion.div>
@@ -561,9 +547,10 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
 };
 
 const LorapokVpnDemo = () => {
-  const [status, setStatus] = useState('CONNECTED'); // Set to connected initially
+  const [status, setStatus] = useState('CONNECTED');
   const [connInfo, setConnInfo] = useState({ name: 'node_ch_105', city: 'Zurich', country: 'Switzerland', ip: '179.43.144.157' });
   const [ping, setPing] = useState(32);
+  const [speeds, setSpeeds] = useState({ down: 42.5, up: 12.8 });
 
   const mockNodes = [
     { name: 'us_east_sentinel', city: 'Washington DC', country: 'United States', ip: '142.250.190.46' },
@@ -573,7 +560,6 @@ const LorapokVpnDemo = () => {
   ];
 
   useEffect(() => {
-    // If it's IDLE, auto-connect after a delay
     if (status === 'IDLE') {
         const timer = setTimeout(() => toggleConnection(), 2000);
         return () => clearTimeout(timer);
@@ -588,7 +574,11 @@ const LorapokVpnDemo = () => {
           const delta = Math.floor(Math.random() * 5) - 2;
           return Math.max(12, Math.min(80, prev + delta));
         });
-      }, 1500);
+        setSpeeds({
+          down: (40 + Math.random() * 10).toFixed(1),
+          up: (10 + Math.random() * 5).toFixed(1)
+        });
+      }, 2000);
     }
     return () => clearInterval(interval);
   }, [status]);
@@ -617,7 +607,6 @@ const LorapokVpnDemo = () => {
         console.error("Failed to fetch real IP data", e);
       }
       
-      // Fallback
       const randomNode = mockNodes[Math.floor(Math.random() * mockNodes.length)];
       setTimeout(() => {
         setConnInfo(randomNode);
@@ -631,8 +620,8 @@ const LorapokVpnDemo = () => {
   };
 
   return (
-    <div className="relative w-full h-full bg-[#030303] p-6 lg:p-10 flex flex-col font-mono text-[11px] lg:text-xs overflow-hidden border border-white/5 rounded-[2rem]">
-      {/* Background Tunnel Animation when connected */}
+    <div className="relative w-full h-full bg-[#030303] p-6 flex flex-col font-mono text-[11px] lg:text-xs overflow-hidden border border-white/5 rounded-[2.5rem]">
+      {/* Background Animated Elements */}
       <AnimatePresence>
         {status === 'CONNECTED' && (
           <motion.div 
@@ -643,21 +632,12 @@ const LorapokVpnDemo = () => {
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1)_0%,transparent_70%)]" />
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-gradient-to-r from-transparent via-[#22c55e]/50 to-transparent" />
-            
-            {/* Dynamic Telemetry Overlay Removed to avoid overlap */}
-            
-            {/* Moving particles represent data flow */}
             {[...Array(6)].map((_, i) => (
               <motion.div
                 key={i}
                 initial={{ x: '-10%', opacity: 0 }}
                 animate={{ x: '110%', opacity: [0, 1, 1, 0] }}
-                transition={{ 
-                  duration: 3, 
-                  repeat: Infinity, 
-                  delay: i * 0.5,
-                  ease: "linear"
-                }}
+                transition={{ duration: 3, repeat: Infinity, delay: i * 0.5, ease: "linear" }}
                 className="absolute top-1/2 -translate-y-1/2 w-8 h-[1px] bg-gradient-to-r from-transparent via-[#22c55e] to-transparent"
                 style={{ top: `calc(50% + ${(i - 3) * 12}px)` }}
               />
@@ -677,7 +657,7 @@ const LorapokVpnDemo = () => {
       </div>
 
       <div className="relative z-10 flex-1 space-y-2 overflow-hidden">
-        <p className="text-slate-400 font-bold">$ lora --status</p>
+        <p className="text-white font-bold">$ lora --status</p>
         <p className="text-slate-300 font-bold">Node: <span className={connInfo ? "text-white" : ""}>[{connInfo?.name || 'NONE'}]</span></p>
         <p className="text-slate-300 font-bold">Latency: <span className={connInfo ? "text-[#22c55e] drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]" : ""}>{ping}ms</span></p>
         
@@ -690,10 +670,10 @@ const LorapokVpnDemo = () => {
               exit={{ opacity: 0 }}
               className="space-y-1 pt-2"
             >
-              <p className="text-blue-400">$ lora --connect --mode stealth</p>
-              <p className="text-slate-500 animate-pulse">{" >> "}Initiating Handshake [ChaCha20-Poly1305]</p>
-              <p className="text-slate-500">{" >> "}Generating Ephemeral Keys [Curve25519]</p>
-              <p className="text-slate-500 italic">{" >> "}Hunting for optimal entropy node...</p>
+              <p className="text-blue-400 font-bold">$ lora --connect --mode stealth</p>
+              <p className="text-slate-500 font-bold animate-pulse">{" >> "}Initiating Handshake [ChaCha20-Poly1305]</p>
+              <p className="text-slate-500 font-bold">{" >> "}Generating Ephemeral Keys [Curve25519]</p>
+              <p className="text-slate-500 font-bold">{" >> "}Hunting for optimal entropy node...</p>
             </motion.div>
           )}
 
@@ -715,12 +695,12 @@ const LorapokVpnDemo = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                     <div>
-                      <p className="text-slate-300 uppercase text-[9px] tracking-widest font-black mb-0.5">Location</p>
-                      <p className="text-white font-black text-sm tracking-tight">{connInfo.city}, {connInfo.country}</p>
+                      <p className="text-slate-400 uppercase text-[9px] tracking-widest font-black mb-0.5">Location</p>
+                      <p className="text-white font-bold text-sm tracking-tight">{connInfo.city}, {connInfo.country}</p>
                     </div>
                     <div>
-                      <p className="text-slate-300 uppercase text-[9px] tracking-widest font-black mb-0.5">Assigned IP</p>
-                      <p className="text-[#22c55e] font-mono text-sm font-black drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]">{connInfo.ip}</p>
+                      <p className="text-slate-400 uppercase text-[9px] tracking-widest font-black mb-0.5">Assigned IP</p>
+                      <p className="text-[#22c55e] font-mono text-sm font-bold">{connInfo.ip}</p>
                     </div>
                   </div>
                 </div>
@@ -732,18 +712,18 @@ const LorapokVpnDemo = () => {
                       <Zap className="w-2.5 h-2.5 text-[#22c55e]" />
                       <span className="text-[7px] text-slate-300 font-bold uppercase tracking-wider">DOWN</span>
                     </div>
-                    <div className="text-sm font-black text-white tracking-tight">42.5 Mbps</div>
+                    <div className="text-sm font-black text-white tracking-tight">{speeds.down} Mbps</div>
                   </div>
                   <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 flex flex-col justify-between h-14">
                     <div className="flex items-center gap-1.5 opacity-80 text-blue-400">
                       <Activity className="w-2.5 h-2.5" />
                       <span className="text-[7px] text-slate-300 font-bold uppercase tracking-wider">UP</span>
                     </div>
-                    <div className="text-sm font-black text-white tracking-tight">12.8 Mbps</div>
+                    <div className="text-sm font-black text-white tracking-tight">{speeds.up} Mbps</div>
                   </div>
               </div>
 
-              <p className="text-[7px] text-slate-600 italic mt-2">// Traffic mimicry active: resembling HTTPS/2 stream</p>
+              <p className="text-[7px] text-slate-600 font-bold mt-2">// Traffic mimicry active: resembling HTTPS/2 stream</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -752,12 +732,12 @@ const LorapokVpnDemo = () => {
       <button 
         onClick={toggleConnection}
         disabled={status === 'CONNECTING'}
-        className={`relative z-10 mt-6 w-full py-4 rounded-2xl font-black text-[11px] transition-all group overflow-hidden ${
+        className={`relative z-10 mt-6 w-full py-4 rounded-xl font-bold text-[11px] transition-all group overflow-hidden ${
           status === 'CONNECTED' 
-            ? 'bg-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.3)]' 
+            ? 'bg-red-500 text-white hover:bg-red-600' 
             : status === 'CONNECTING'
             ? 'bg-amber-500/10 text-amber-500 cursor-not-allowed'
-            : 'bg-[#22c55e] text-black shadow-[0_0_20px_rgba(34,197,94,0.3)]'
+            : 'bg-[#22c55e] text-black hover:bg-[#1ea34d]'
         }`}
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
@@ -769,16 +749,13 @@ const LorapokVpnDemo = () => {
             <>INITIATE TUNNEL <Zap className="w-3 h-3 fill-current" /></>
           )}
         </span>
-        {status !== 'CONNECTING' && (
-          <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-        )}
       </button>
     </div>
   );
 };
 
 export default function LandingPage() {
-  const [isTabManOpen, setIsTabManOpen] = useState(false);
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('');
@@ -797,7 +774,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#030711] text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
       <AnimatePresence>
-        {isTabManOpen && <TabManModal isOpen={isTabManOpen} onClose={() => setIsTabManOpen(false)} />}
+        {isDownloadOpen && <DownloadModal isOpen={isDownloadOpen} onClose={() => setIsDownloadOpen(false)} />}
         {isWishlistOpen && (
           <WishlistModal 
             isOpen={isWishlistOpen} 
@@ -871,7 +848,7 @@ export default function LandingPage() {
                 <motion.button
                   whileHover={{ scale: 1.05, background: 'rgba(255,255,255,0.08)' }}
                   whileTap={{ scale: 0.97 }}
-                  onClick={() => setIsTabManOpen(true)}
+                  onClick={() => setIsDownloadOpen(true)}
                   className="px-10 py-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md font-bold text-lg flex items-center gap-3"
                 >
                   <Download className="w-5 h-5" /> Get App

@@ -56,7 +56,7 @@ export default function LandingPage() {
           </motion.a>
           
           <motion.a 
-            href="/#/admin" 
+            href="#/admin" 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-2 bg-[#111] border border-[#222] text-gray-300 px-8 py-3 rounded-full font-bold hover:bg-[#1A1A1A] transition"

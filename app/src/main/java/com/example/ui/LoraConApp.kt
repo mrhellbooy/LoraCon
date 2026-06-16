@@ -10,6 +10,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -1060,6 +1062,7 @@ fun AccountSubscriptionScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Text(
             text = localizer("PIONEER IDENTIFICATION & PLANS", "MEMBRESÍAS Y PLANES DE ACCESO", "MITGLIEDSCHAFT & ABRECHNUNG", "メンバーシップ & 精算プラン", "身份授权与隐私套餐"),
@@ -1938,6 +1941,7 @@ fun FloatingSentientAiAssistant(
                         },
                         modifier = Modifier
                             .background(CyberEmerald, RoundedCornerShape(4.dp))
+                            .testTag("ai_assistant_send_button")
                     ) {
                         Text("▶", color = Color(0xFF090D14), fontSize = 11.sp)
                     }
@@ -1973,9 +1977,11 @@ fun VpnBottomBar(
                 onClick = { onTabSelected(item.tab) },
                 icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
                 label = { Text(item.label, fontSize = 9.sp, fontFamily = FontFamily.Monospace) },
+                modifier = Modifier.testTag("nav_tab_${item.tab.name}"),
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFF090D14),
                     selectedTextColor = CyberEmerald,
+
                     indicatorColor = CyberEmerald,
                     unselectedIconColor = TextMuted,
                     unselectedTextColor = TextMuted
@@ -1990,12 +1996,12 @@ fun formatBytes(bytes: Long): String {
     if (bytes <= 0) return "0 B"
     val units = listOf("B", "KB", "MB", "GB", "TB")
     val i = (Math.log10(bytes.toDouble()) / Math.log10(1024.0)).toInt()
-    return String.format("%.2f %s", bytes / Math.pow(1024.0, i.toDouble()), units[i])
+    return String.format(java.util.Locale.getDefault(), "%.2f %s", bytes / Math.pow(1024.0, i.toDouble()), units[i])
 }
 
 fun formatDuration(seconds: Long): String {
     val h = seconds / 3600
     val m = (seconds % 3600) / 60
     val s = seconds % 60
-    return String.format("%02d:%02d:%02d", h, m, s)
+    return String.format(java.util.Locale.getDefault(), "%02d:%02d:%02d", h, m, s)
 }

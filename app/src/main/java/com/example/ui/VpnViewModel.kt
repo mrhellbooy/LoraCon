@@ -280,8 +280,8 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
                 val down = (Math.random() * 12.0 + 1.0) * rateMultiplier
                 val up = (Math.random() * 3.5 + 0.2) * rateMultiplier
 
-                _currentSpeedDown.value = String.format("%.2f", down).toDouble()
-                _currentSpeedUp.value = String.format("%.2f", up).toDouble()
+                _currentSpeedDown.value = String.format(java.util.Locale.ROOT, "%.2f", down).toDouble()
+                _currentSpeedUp.value = String.format(java.util.Locale.ROOT, "%.2f", up).toDouble()
 
                 sent += (up * 1024 * 1024).toLong()
                 rec += (down * 1024 * 1024).toLong()

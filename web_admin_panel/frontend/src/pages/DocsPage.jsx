@@ -56,7 +56,7 @@ export default function DocsPage() {
         <h2 className="text-4xl font-black mb-8 border-l-4 border-[#22c55e] pl-6">04. Node Configuration</h2>
         <div className="prose prose-invert text-slate-400 space-y-6 text-base leading-relaxed">
           <p>Manual orchestration allows for granular control over entry and exit locations. We support various transport protocols including TCP, UDP, and QUIC-based tunneling for extreme latency reduction.</p>
-          <div className="p-8 rounded-3xl bg-[#050505] border border-white/5 font-mono text-sm">
+          <div className="p-8 rounded-3xl bg-[#030711] border border-white/5 font-mono text-sm">
             <p className="text-slate-500 mb-2">// Current active configuration...</p>
             <p className="text-white">transport: stealth_quic</p>
             <p className="text-white">fragment_size: 1500_mtu</p>

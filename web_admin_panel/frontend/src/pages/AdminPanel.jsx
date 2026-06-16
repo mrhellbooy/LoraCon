@@ -179,9 +179,9 @@ export default function AdminPanel() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-[#F1F5F9] flex flex-col md:flex-row selection:bg-[#22c55e]/20">
+    <div className="min-h-screen bg-[#030711] text-[#F1F5F9] flex flex-col md:flex-row selection:bg-[#22c55e]/20">
       {/* Mobile Header Menu */}
-      <div className="md:hidden flex items-center justify-between p-4 border-b border-[#1a1a1a] bg-[#050505] z-50">
+      <div className="md:hidden flex items-center justify-between p-4 border-b border-[#1a1a1a] bg-[#030711] z-50">
         <div className="flex items-center gap-3">
           <Shield className="text-[#22c55e]" size={24} />
           <span className="font-bold text-lg tracking-tight">LoraCon</span>
@@ -191,7 +191,7 @@ export default function AdminPanel() {
         </button>
       </div>
 
-      <aside className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:flex absolute md:relative z-40 bg-[#050505] w-64 h-full border-r border-[#1a1a1a] flex-col pt-6 md:pt-10 transition-transform`}>
+      <aside className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:flex absolute md:relative z-40 bg-[#030711] w-64 h-full border-r border-[#1a1a1a] flex-col pt-6 md:pt-10 transition-transform`}>
         <div className="px-8 mb-12 hidden md:flex items-center gap-3">
             <Shield className="text-[#22c55e]" size={28} />
             <span className="font-bold text-xl tracking-tight">LoraCon</span>
@@ -294,7 +294,7 @@ export default function AdminPanel() {
                     {nodes.map(node => (
                     <div key={node.id} className="flex flex-col md:flex-row md:items-center justify-between p-4 md:p-5 bg-[#111] rounded-xl border border-[#222] gap-4 md:gap-0">
                         <div className="flex items-center gap-4">
-                            <div className="p-3 bg-[#050505] rounded-lg border border-[#222]"><Cpu size={20} className="text-gray-500" /></div>
+                            <div className="p-3 bg-[#030711] rounded-lg border border-[#222]"><Cpu size={20} className="text-gray-500" /></div>
                             <div>
                                 <h4 className="font-bold text-sm md:text-base">{node.name}</h4>
                                 <p className={`text-[10px] md:text-xs ${node.isActive ? 'text-[#22c55e]' : 'text-gray-500'}`}>{node.isActive ? 'Active' : 'Inactive'}</p>
@@ -383,14 +383,14 @@ export default function AdminPanel() {
                 <div className="bg-[#111] p-6 md:p-8 rounded-2xl border border-[#222]">
                   <h3 className="text-xs md:text-sm font-bold mb-6 flex items-center gap-2 uppercase tracking-widest italic opacity-50"><Shield size={14} /> Global Operations</h3>
                   <div className="space-y-4">
-                    <div className="p-4 md:p-5 bg-[#050505] rounded-xl border border-white/5">
+                    <div className="p-4 md:p-5 bg-[#030711] rounded-xl border border-white/5">
                       <p className="text-[#22c55e] mb-2 font-bold text-[9px] md:text-[10px] tracking-widest uppercase italic truncate">// SOLANA_MAINNET</p>
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-[10px] text-slate-400 font-mono gap-1 sm:gap-0">
                         <span>Balance: 124.5 SOL</span>
                         <span className="text-[#22c55e]">Node Sync: 100%</span>
                       </div>
                     </div>
-                    <div className="p-4 md:p-5 bg-[#050505] rounded-xl border border-white/5">
+                    <div className="p-4 md:p-5 bg-[#030711] rounded-xl border border-white/5">
                       <p className="text-[#f3ba2f] mb-2 font-bold text-[9px] md:text-[10px] tracking-widest uppercase italic truncate">// BINANCE_SMART_CHAIN</p>
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-[10px] text-slate-400 font-mono gap-1 sm:gap-0">
                         <span>Balance: 14.8 BNB</span>
@@ -425,7 +425,7 @@ export default function AdminPanel() {
                   <div className="flex-1 relative">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                     <input 
-                      className="w-full bg-[#050505] border border-white/10 rounded-xl pl-10 pr-4 py-3 text-xs md:text-sm focus:outline-none focus:border-[#22c55e] transition-colors"
+                      className="w-full bg-[#030711] border border-white/10 rounded-xl pl-10 pr-4 py-3 text-xs md:text-sm focus:outline-none focus:border-[#22c55e] transition-colors"
                       placeholder="Input Tx Hash (SOL / BSC)..."
                     />
                   </div>
@@ -441,7 +441,7 @@ export default function AdminPanel() {
                     { id: '0x3k...p9a', user: 'Warp-Pilot', chain: 'BSC', amount: '0.1 BNB', time: '5m ago' },
                     { id: '0xabc...123', user: 'Prime-Op', chain: 'BSC', amount: '0.25 BNB', time: '2m ago' }
                   ].map((tx, i) => (
-                    <div key={i} className="p-4 md:p-5 bg-[#050505] rounded-xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between group hover:border-[#22c55e]/30 transition-all font-mono gap-4 md:gap-0">
+                    <div key={i} className="p-4 md:p-5 bg-[#030711] rounded-xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between group hover:border-[#22c55e]/30 transition-all font-mono gap-4 md:gap-0">
                       <div className="flex items-center gap-4 md:gap-6 w-full md:w-auto justify-between md:justify-start">
                         <div className={`p-2 rounded-lg ${tx.chain === 'Solana' ? 'bg-[#9945FF]/10 text-[#9945FF]' : 'bg-[#f3ba2f]/10 text-[#f3ba2f]'}`}>
                            <p className="text-[9px] font-bold uppercase">{tx.chain}</p>
@@ -513,7 +513,7 @@ export default function AdminPanel() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="flex flex-col">
                   <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Real-time Logs</h3>
-                  <div className="flex-1 bg-[#050505] p-4 md:p-6 rounded-xl border border-[#222] font-mono text-[9px] md:text-[10px] text-gray-500 min-h-[200px] md:h-64 overflow-y-auto space-y-1">
+                  <div className="flex-1 bg-[#030711] p-4 md:p-6 rounded-xl border border-[#222] font-mono text-[9px] md:text-[10px] text-gray-500 min-h-[200px] md:h-64 overflow-y-auto space-y-1">
                     <p>11:05:16 SYSTEM: VARIABLES INJECTED...</p>
                     <p>11:05:17 SYSTEM: FINALIZING STARTUP...</p>
                     <p>11:05:18 SYSTEM: FIRST DEPLOYMENT DETECTED...</p>

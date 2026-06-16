@@ -5,7 +5,19 @@ const Logo = ({ size = 40, className, isConnected = true, isConnecting = false }
   const neonColor = isConnected ? "#22c55e" : isConnecting ? "#f97316" : "#64748b";
   
   return (
-    <div className={`relative flex items-center justify-center ${className}`} style={{ width: size, height: size }}>
+    <motion.div 
+      className={`relative flex items-center justify-center ${className}`} 
+      style={{ width: size, height: size }}
+      animate={{ 
+        scale: isConnecting ? [1, 1.05, 1] : [1, 1.02, 1],
+        filter: isConnecting ? ["brightness(1)", "brightness(1.5)", "brightness(1)"] : "none"
+      }}
+      transition={{ 
+        duration: isConnecting ? 1 : 4, 
+        repeat: Infinity, 
+        ease: "easeInOut" 
+      }}
+    >
       <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         {/* Legs */}
         {[1, 2, 3].map((i) => (

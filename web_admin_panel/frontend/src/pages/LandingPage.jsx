@@ -20,12 +20,18 @@ import {
   Facebook,
   Activity,
   Cpu,
-  Lock
+  Lock,
+  ChevronRight,
+  Star,
+  Wallet,
+  Clock
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Logo from '../components/Logo';
+import { useToast } from '../components/Toast';
 
 const FeatureCard = ({ icon: Icon, title, description, delay }) => (
   <motion.div
@@ -48,7 +54,21 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => (
 );
 
 const TabManModal = ({ isOpen, onClose }) => {
+  const addToast = useToast();
   if (!isOpen) return null;
+
+  const handleDownload = (e, item) => {
+    e.preventDefault();
+    if (item.name === 'Android APK') {
+      addToast(`Preparing LoraCon-v4.0.2.apk... Redirecting to secure export mirror.`, 'success');
+      setTimeout(() => {
+        addToast(`Security Handshake required. Please use the AI Studio Export menu to download the latest build.`, 'info');
+      }, 2000);
+    } else {
+      addToast(`${item.name} is currently in restricted developer beta. Contact Lorapok Labs for early access keys.`, 'warning');
+    }
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0 }} 
@@ -87,6 +107,7 @@ const TabManModal = ({ isOpen, onClose }) => {
             <motion.a
               key={item.name}
               href={item.link}
+              onClick={(e) => handleDownload(e, item)}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
@@ -103,62 +124,279 @@ const TabManModal = ({ isOpen, onClose }) => {
   );
 };
 
-const LorapokVpnDemo = () => {
-  const [status, setStatus] = useState('IDLE'); // IDLE, CONNECTING, CONNECTED
+const PlanCard = ({ title, price, features, delay, onWishlist }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay }}
+    className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/10 hover:border-[#22c55e]/50 transition-all group relative overflow-hidden"
+  >
+    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+      <Shield className="w-24 h-24 text-[#22c55e]" />
+    </div>
+    <h3 className="text-2xl font-black text-white mb-2 italic uppercase tracking-tighter">{title}</h3>
+    <div className="flex items-baseline gap-1 mb-8">
+      <span className="text-4xl font-black text-[#22c55e]">{price}</span>
+      <span className="text-slate-500 text-sm font-mono tracking-widest uppercase">/cycle</span>
+    </div>
+    <ul className="space-y-4 mb-10">
+      {features.map((f, i) => (
+        <li key={i} className="flex items-center gap-3 text-sm text-slate-400">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]/50" />
+          {f}
+        </li>
+      ))}
+    </ul>
+    <button 
+      onClick={() => onWishlist(title)}
+      className="w-full py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] hover:bg-[#22c55e] hover:text-black hover:border-transparent transition-all flex items-center justify-center gap-2 group-hover:scale-[1.02] active:scale-95"
+    >
+      <Star className="w-4 h-4" /> Add to Workspace Wishlist
+    </button>
+  </motion.div>
+);
+
+const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
+  const addToast = useToast();
+  const [formData, setFormData] = useState({ name: '', email: '', service: selectedPlan || 'Protocol Stealth' });
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addToast(`Verification Link Sent! ${formData.name}, you are now in the LoraCon backlog.`, 'success');
+    onClose();
+  };
 
   return (
-    <div className="relative w-full h-full bg-[#050505] p-8 flex flex-col font-mono text-[10px]">
-      <div className="flex items-center justify-between mb-8">
+    <motion.div 
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-xl p-4"
+      onClick={onClose}
+    >
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }}
+        className="w-full max-w-md bg-[#0D0D0D] border border-white/10 rounded-[3rem] p-10 relative overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-[#22c55e] to-transparent" />
+        <h2 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase italic">Protocol Access</h2>
+        <p className="text-slate-500 text-xs mb-8 font-mono leading-relaxed uppercase tracking-wider">Join the encrypted service queue for LoraCon infrastructure.</p>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Operator Name</label>
+            <input 
+              required
+              type="text" 
+              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#22c55e] transition-colors font-mono text-sm"
+              placeholder="e.g. SENTINEL-01"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+            />
+          </div>
+          <div>
+            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Secure Endpoint</label>
+            <input 
+              required
+              type="email" 
+              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#22c55e] transition-colors font-mono text-sm"
+              placeholder="operator@sentinel.net"
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+            />
+          </div>
+          <div>
+            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Service Tier</label>
+            <select 
+              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#22c55e] transition-colors font-mono text-sm appearance-none"
+              value={formData.service}
+              onChange={(e) => setFormData({...formData, service: e.target.value})}
+            >
+              <option>Protocol Stealth</option>
+              <option>Protocol Warp</option>
+              <option>Sentinel Prime</option>
+            </select>
+          </div>
+          <button type="submit" className="w-full py-5 bg-[#22c55e] text-black font-black uppercase tracking-widest text-[11px] rounded-[1.5rem] hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(34,197,94,0.4)]">
+            AUTHORIZE PROTOCOL REQUEST
+          </button>
+        </form>
+        
+        <button onClick={onClose} className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors">
+          <X size={24} />
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const LorapokVpnDemo = () => {
+  const [status, setStatus] = useState('IDLE'); // IDLE, CONNECTING, CONNECTED
+  const [connInfo, setConnInfo] = useState(null);
+
+  const mockNodes = [
+    { name: 'us_east_sentinel', city: 'Washington DC', country: 'United States', ip: '142.250.190.46' },
+    { name: 'swiss_alpine_core', city: 'Zurich', country: 'Switzerland', ip: '179.43.144.157' },
+    { name: 'jp_neo_tokyo', city: 'Tokyo', country: 'Japan', ip: '103.2.146.12' },
+    { name: 'sg_merlion_relay', city: 'Singapore', country: 'Singapore', ip: '111.90.141.134' }
+  ];
+
+  const toggleConnection = () => {
+    if (status === 'IDLE') {
+      setStatus('CONNECTING');
+      const randomNode = mockNodes[Math.floor(Math.random() * mockNodes.length)];
+      setTimeout(() => {
+        setConnInfo(randomNode);
+        setStatus('CONNECTED');
+      }, 2500);
+    } else {
+      setStatus('IDLE');
+      setConnInfo(null);
+    }
+  };
+
+  return (
+    <div className="relative w-full h-full bg-[#050505] p-8 flex flex-col font-mono text-[10px] overflow-hidden">
+      {/* Background Tunnel Animation when connected */}
+      <AnimatePresence>
+        {status === 'CONNECTED' && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-0 pointer-events-none"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1)_0%,transparent_70%)]" />
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-gradient-to-r from-transparent via-[#22c55e]/50 to-transparent" />
+            
+            {/* Moving particles represent data flow */}
+            {[...Array(10)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ x: '-10%', opacity: 0 }}
+                animate={{ x: '110%', opacity: [0, 1, 1, 0] }}
+                transition={{ 
+                  duration: 2 + Math.random() * 2, 
+                  repeat: Infinity, 
+                  delay: i * 0.4,
+                  ease: "linear"
+                }}
+                className="absolute top-1/2 -translate-y-1/2 w-4 h-[2px] bg-[#22c55e] blur-[2px]"
+                style={{ top: `calc(50% + ${(i - 5) * 4}px)` }}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="relative z-10 flex items-center justify-between mb-8">
         <div className="flex items-center gap-2">
           <Logo size={20} isConnecting={status === 'CONNECTING'} isConnected={status === 'CONNECTED'} />
-          <span className="text-[#22c55e] font-bold">LORA-CON PORTAL v2</span>
+          <span className="text-[#22c55e] font-bold tracking-tight">LORA-CON PORTAL v2</span>
         </div>
-        <div className={`px-2 py-0.5 rounded-full border ${status === 'CONNECTED' ? 'bg-[#22c55e]/10 border-[#22c55e] text-[#22c55e]' : 'bg-white/5 border-white/10 text-slate-500'}`}>
+        <div className={`px-2 py-0.5 rounded-full border text-[8px] font-bold ${status === 'CONNECTED' ? 'bg-[#22c55e]/10 border-[#22c55e] text-[#22c55e]' : 'bg-white/5 border-white/10 text-slate-500'}`}>
           {status}
         </div>
       </div>
 
-      <div className="flex-1 space-y-2 overflow-hidden">
+      <div className="relative z-10 flex-1 space-y-2 overflow-hidden">
         <p className="text-slate-600">$ lora --status</p>
-        <p className="text-slate-400">Node: [NONE]</p>
-        <p className="text-slate-400">Latency: 0ms</p>
-        {status !== 'IDLE' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-1">
-            <p className="text-blue-400">$ lora --connect to us_east_sentinel</p>
-            <p className="text-slate-500">>> Initiating Handshake [ChaCha20-Poly1305]</p>
-            <p className="text-slate-500">>> Generating Ephemeral Keys [Curve25519]</p>
-            {status === 'CONNECTED' && (
-              <>
-                <p className="text-[#22c55e]">>> ENCRYPTED TUNNEL ESTABLISHED</p>
-                <p className="text-[#22c55e]">>> IP: 194.22.18.243 (MASKED)</p>
-                <div className="pt-4 grid grid-cols-2 gap-4">
-                   <div className="p-3 rounded-xl bg-[#22c55e]/5 border border-[#22c55e]/20">
-                      <div className="text-slate-500 mb-1">DOWNLINK</div>
-                      <div className="text-lg font-bold text-white">42.5 Mbps</div>
-                   </div>
-                   <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/20">
-                      <div className="text-slate-500 mb-1">UPLINK</div>
-                      <div className="text-lg font-bold text-white">12.8 Mbps</div>
-                   </div>
+        <p className="text-slate-400">Node: <span className={connInfo ? "text-white" : ""}>[{connInfo?.name || 'NONE'}]</span></p>
+        <p className="text-slate-400">Latency: <span className={connInfo ? "text-[#22c55e]" : ""}>{connInfo ? Math.floor(Math.random() * 40 + 10) + 'ms' : '0ms'}</span></p>
+        
+        <AnimatePresence mode="wait">
+          {status === 'CONNECTING' && (
+            <motion.div 
+              key="connecting"
+              initial={{ opacity: 0, y: 5 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0 }}
+              className="space-y-1 pt-2"
+            >
+              <p className="text-blue-400">$ lora --connect --mode stealth</p>
+              <p className="text-slate-500 animate-pulse">>> Initiating Handshake [ChaCha20-Poly1305]</p>
+              <p className="text-slate-500">>> Generating Ephemeral Keys [Curve25519]</p>
+              <p className="text-slate-500 italic">>> Hunting for optimal entropy node...</p>
+            </motion.div>
+          )}
+
+          {status === 'CONNECTED' && connInfo && (
+            <motion.div 
+              key="connected"
+              initial={{ opacity: 0, y: 5 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              className="space-y-2 pt-2"
+            >
+              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-2 opacity-10">
+                  <Shield className="w-12 h-12 text-[#22c55e]" />
                 </div>
-              </>
-            )}
-          </motion.div>
-        )}
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse" />
+                    <p className="text-[#22c55e] font-bold text-[9px] uppercase tracking-widest">Tunnel Established</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                    <div>
+                      <p className="text-slate-500 uppercase text-[7px] tracking-tighter">Location</p>
+                      <p className="text-white font-bold">{connInfo.city}, {connInfo.country}</p>
+                    </div>
+                    <div>
+                      <p className="text-slate-500 uppercase text-[7px] tracking-tighter">Assigned IP</p>
+                      <p className="text-[#22c55e] font-mono">{connInfo.ip}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                 <div className="p-3 rounded-xl bg-[#22c55e]/5 border border-[#22c55e]/20 flex flex-col justify-between h-14">
+                    <div className="flex items-center gap-1.5 opacity-50">
+                      <Zap className="w-2.5 h-2.5 text-[#22c55e]" />
+                      <span className="text-[7px] text-slate-500">DOWN</span>
+                    </div>
+                    <div className="text-sm font-bold text-white tracking-tight">42.5 Mbps</div>
+                 </div>
+                 <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/20 flex flex-col justify-between h-14">
+                    <div className="flex items-center gap-1.5 opacity-50 text-blue-400">
+                      <Activity className="w-2.5 h-2.5" />
+                      <span className="text-[7px] text-slate-500">UP</span>
+                    </div>
+                    <div className="text-sm font-bold text-white tracking-tight">12.8 Mbps</div>
+                 </div>
+              </div>
+
+              <p className="text-[7px] text-slate-600 italic mt-2">// Traffic mimicry active: resembling HTTPS/2 stream</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <button 
-        onClick={() => {
-          if (status === 'IDLE') {
-            setStatus('CONNECTING');
-            setTimeout(() => setStatus('CONNECTED'), 2000);
-          } else {
-            setStatus('IDLE');
-          }
-        }}
-        className={`mt-4 w-full py-4 rounded-2xl font-bold transition-all ${status === 'CONNECTED' ? 'bg-red-500/10 border border-red-500/50 text-red-500 hover:bg-red-500/20' : 'bg-[#22c55e]/10 border border-[#22c55e]/50 text-[#22c55e] hover:bg-[#22c55e]/20'}`}
+        onClick={toggleConnection}
+        disabled={status === 'CONNECTING'}
+        className={`relative z-10 mt-6 w-full py-4 rounded-2xl font-black text-[11px] transition-all group overflow-hidden ${
+          status === 'CONNECTED' 
+            ? 'bg-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.3)]' 
+            : status === 'CONNECTING'
+            ? 'bg-amber-500/10 text-amber-500 cursor-not-allowed'
+            : 'bg-[#22c55e] text-black shadow-[0_0_20px_rgba(34,197,94,0.3)]'
+        }`}
       >
-        {status === 'CONNECTED' ? 'DISCONNECT' : status === 'CONNECTING' ? 'ARMING...' : 'INITIATE TUNNEL'}
+        <span className="relative z-10 flex items-center justify-center gap-2">
+          {status === 'CONNECTED' ? (
+            <>TERMINATE LINK <X className="w-3 h-3" /></>
+          ) : status === 'CONNECTING' ? (
+            <>ARMING NODES<span className="animate-bounce">...</span></>
+          ) : (
+            <>INITIATE TUNNEL <Zap className="w-3 h-3 fill-current" /></>
+          )}
+        </span>
+        {status !== 'CONNECTING' && (
+          <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+        )}
       </button>
     </div>
   );
@@ -166,11 +404,25 @@ const LorapokVpnDemo = () => {
 
 export default function LandingPage() {
   const [isTabManOpen, setIsTabManOpen] = useState(false);
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState('');
+
+  const openWishlist = (plan) => {
+    setSelectedPlan(plan);
+    setIsWishlistOpen(true);
+  };
 
   return (
-    <div className="min-h-screen text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
+    <div className="min-h-screen bg-[#030711] text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
       <AnimatePresence>
         {isTabManOpen && <TabManModal isOpen={isTabManOpen} onClose={() => setIsTabManOpen(false)} />}
+        {isWishlistOpen && (
+          <WishlistModal 
+            isOpen={isWishlistOpen} 
+            onClose={() => setIsWishlistOpen(false)} 
+            selectedPlan={selectedPlan} 
+          />
+        )}
       </AnimatePresence>
 
       {/* Hero Section */}
@@ -291,6 +543,48 @@ export default function LandingPage() {
               description="We enforce a strict no-logs policy, audited by automated Solana-based transparency tools."
               delay={0.3}
             />
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-32 px-6 relative z-10 border-t border-white/5 bg-black/20">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-24 max-w-3xl mx-auto">
+            <span className="text-[#22c55e] font-mono text-sm uppercase tracking-[0.4em] block mb-6 animate-pulse">// SERVICE ACCESS LAYERS</span>
+            <h2 className="text-5xl md:text-7xl font-black text-white italic uppercase tracking-tighter mb-8">Protocol Tiers</h2>
+            <p className="text-slate-400 text-lg leading-relaxed">Scale your anonymity based on operational requirements. Decentralized billing via Solana blockchain integration.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 pb-10">
+            <PlanCard 
+              title="Protocol Stealth" 
+              price="0.5 SOL" 
+              features={['Single Sentinel Node', 'Standard Encapsulation', '100GB Data Cap', '24h Log Flush', 'Priority Entry']}
+              delay={0.1}
+              onWishlist={openWishlist}
+            />
+            <PlanCard 
+              title="Protocol Warp" 
+              price="1.2 SOL" 
+              features={['Multi-Hop Routing', 'Quantum-Resistant Layer', 'Unlimited Bandwidth', 'AI Adaptive Pathing', 'Dynamic IP Masking']}
+              delay={0.2}
+              onWishlist={openWishlist}
+            />
+            <PlanCard 
+              title="Sentinel Prime" 
+              price="2.5 SOL" 
+              features={['Dedicated Mesh Cluster', 'Full Traffic Mimicry', 'Prioritized Exit Nodes', 'Custom Protocol Tuning', '24/7 Admin Direct']}
+              delay={0.3}
+              onWishlist={openWishlist}
+            />
+          </div>
+
+          <div className="flex justify-center mt-12">
+            <div className="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-white/[0.03] border border-white/10 text-xs font-mono text-slate-500 uppercase tracking-widest">
+              <Wallet className="w-4 h-4 text-[#22c55e]" />
+              Accepted Assets: SOL, USDC, USDT (Solana Network)
+            </div>
           </div>
         </div>
       </section>

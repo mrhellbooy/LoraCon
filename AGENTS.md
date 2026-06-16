@@ -14,3 +14,4 @@
 ## 📦 Documentation Management
 - Keep `PROJECT_CONTEXT.md` updated with technical architectural shifts.
 - Update `INSTRUCTIONS.md` when deployment or backend handshake protocols change.
+- **Project Skills**: Consult files in `/skills/` (`loracon-aesthetic.md`, `loracon-protocol.md`, `loracon-admin-terminal.md`) for platform-specific and aesthetic guidance.

@@ -11,12 +11,15 @@ import { useToast } from '../components/Toast';
 const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   <button 
     onClick={onClick}
-    className={`w-full flex items-center gap-4 px-6 py-4 transition-all duration-300 font-medium ${
-      active ? 'bg-[#1a1a1a] text-green-500 border-r-2 border-green-500' : 'text-gray-500 hover:text-white hover:bg-[#0d0d0d]'
+    className={`w-full flex items-center justify-between px-6 py-4 transition-all duration-300 font-medium ${
+      active ? 'bg-[#1a1a1a] text-[#22c55e] border-r-2 border-[#22c55e]' : 'text-slate-500 hover:text-white hover:bg-[#0d0d0d]'
     }`}
   >
-    <Icon size={20} />
-    {label}
+    <div className="flex items-center gap-4">
+      <Icon size={18} />
+      {label}
+    </div>
+    {active && <motion.div layoutId="activeTab" className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />}
   </button>
 );
 
@@ -112,9 +115,18 @@ export default function AdminPanel() {
     }
     setIsRefreshing(false);
   };
-  const [bandwidthData, setBandwidthData] = useState(
-      Array.from({ length: 20 }, (_, i) => ({ time: i, value: Math.random() * 50 }))
-  );
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [adminWallet, setAdminWallet] = useState('...');
+
+  const connectWallet = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setWalletConnected(true);
+      setAdminWallet('6xP...j7vV');
+      setIsRefreshing(false);
+      showToast("Phantom Wallet connected successfully.", "success");
+    }, 1500);
+  };
 
   useEffect(() => {
       const interval = setInterval(() => {
@@ -281,19 +293,61 @@ export default function AdminPanel() {
 
           {activeTab === 'BILLING' && (
             <div>
-              <h2 className="text-lg font-semibold mb-8 flex items-center gap-2"><CreditCard size={18} className="text-green-500" /> Financial Overview</h2>
-              <div className="grid grid-cols-3 gap-6">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-lg font-semibold flex items-center gap-2"><CreditCard size={18} className="text-[#22c55e]" /> Protocol Finance</h2>
+                <button 
+                  onClick={connectWallet}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-all ${
+                    walletConnected 
+                      ? 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30' 
+                      : 'bg-[#22c55e] text-black hover:scale-[1.02]'
+                  }`}
+                >
+                  <Wallet size={16} />
+                  {walletConnected ? adminWallet : 'Connect Admin Wallet'}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-3 gap-6 mb-8">
                 <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Monthly Revenue</p>
-                  <p className="text-2xl font-bold">$12,450.00</p>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Total Revenue (SOL)</p>
+                  <p className="text-2xl font-black text-white">42.50 SOL</p>
                 </div>
                 <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Provider Costs</p>
-                  <p className="text-2xl font-bold text-orange-500">$4,200.00</p>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Active Subs</p>
+                  <p className="text-2xl font-black text-[#22c55e]">142</p>
                 </div>
                 <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Profit Margin</p>
-                  <p className="text-2xl font-bold text-green-500">66.2%</p>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Wishlist backlog</p>
+                  <p className="text-2xl font-black text-blue-500">2,410</p>
+                </div>
+              </div>
+
+              <div className="bg-[#111] p-8 rounded-2xl border border-[#222]">
+                <h3 className="text-sm font-bold mb-6 flex items-center gap-2 uppercase tracking-widest italic opacity-50"><Sliders size={14} /> Subscription Management</h3>
+                <div className="space-y-4">
+                  {[
+                    { plan: 'Protocol Stealth', price: '0.5 SOL', pool: 'sentinel_east_cluster' },
+                    { plan: 'Protocol Warp', price: '1.2 SOL', pool: 'global_mimic_relay' },
+                    { plan: 'Sentinel Prime', price: '2.5 SOL', pool: 'dedicated_mesh_sg_01' }
+                  ].map((p, i) => (
+                    <div key={i} className="flex items-center justify-between p-5 bg-[#050505] rounded-xl border border-white/5 hover:border-[#22c55e]/30 transition-all group">
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 rounded-lg bg-white/5"><Shield size={18} className="text-slate-500 group-hover:text-[#22c55e]" /></div>
+                        <div>
+                          <p className="font-bold text-white tracking-tight">{p.plan}</p>
+                          <p className="text-[10px] text-slate-600 font-mono">POOL: {p.pool}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-6">
+                        <div className="text-right">
+                          <p className="text-sm font-black text-[#22c55e]">{p.price}</p>
+                          <p className="text-[8px] text-slate-500 font-mono">PER CYCLE</p>
+                        </div>
+                        <button className="p-2 hover:bg-white/5 rounded-lg text-slate-500 hover:text-white transition-colors"><Cog size={16} /></button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

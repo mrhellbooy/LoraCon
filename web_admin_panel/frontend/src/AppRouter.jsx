@@ -20,10 +20,26 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const pageTransitions = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -10 },
-  transition: { duration: 0.3 }
+  initial: { 
+    opacity: 0, 
+    clipPath: 'inset(10% 0 10% 0)',
+    filter: 'brightness(0.5) blur(10px)'
+  },
+  animate: { 
+    opacity: 1, 
+    clipPath: 'inset(0% 0 0% 0)',
+    filter: 'brightness(1) blur(0px)'
+  },
+  exit: { 
+    opacity: 0, 
+    clipPath: 'inset(10% 0 10% 0)',
+    filter: 'brightness(0.5) blur(10px)'
+  },
+  transition: { 
+    type: "spring",
+    stiffness: 100,
+    damping: 20
+  }
 };
 
 const AnimatedRoute = ({ children }) => (

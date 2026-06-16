@@ -21,7 +21,7 @@ const Terminal = () => {
   }, []);
 
   return (
-    <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl p-6 font-mono text-sm text-green-500 text-left w-full max-w-lg mb-12 shadow-2xl relative overflow-hidden">
+    <div className="bg-[#0a0a0a] border border-green-900 rounded-xl p-6 font-mono text-sm text-green-500 text-left w-full max-w-lg mb-12 shadow-[0_0_50px_-10px_rgba(34,197,94,0.3)] relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-cyan-500"></div>
       <div className="text-xs text-gray-500 mb-4 uppercase tracking-wider">sys.log</div>
       {lines.map((line, i) => (
@@ -34,6 +34,53 @@ const Terminal = () => {
           {line.text}
         </motion.div>
       ))}
+    </div>
+  );
+};
+
+const VPNService = () => {
+  const [connected, setConnected] = useState(false);
+  const [stats, setStats] = useState({ ping: "0ms", upload: "0Mbps", download: "0Mbps" });
+
+  useEffect(() => {
+    if (!connected) {
+      setStats({ ping: "0ms", upload: "0Mbps", download: "0Mbps" });
+      return;
+    }
+    const interval = setInterval(() => {
+      setStats({
+        ping: `${Math.floor(Math.random() * 20) + 10}ms`,
+        upload: `${Math.floor(Math.random() * 20) + 50}Mbps`,
+        download: `${Math.floor(Math.random() * 50) + 200}Mbps`
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [connected]);
+
+  return (
+    <div className="bg-[#0a0a0a] border border-green-900 rounded-2xl p-8 w-full max-w-md mb-12 shadow-[0_0_50px_-10px_rgba(34,197,94,0.3)]">
+        <h3 className="text-xl font-bold mb-6">Active VPN Service</h3>
+        <motion.button
+            onClick={() => setConnected(!connected)}
+            animate={{ backgroundColor: connected ? "#ef4444" : "#22c55e" }}
+            className="w-full py-4 rounded-xl font-bold text-black mb-6"
+        >
+            {connected ? "DISCONNECT" : "CONNECT NOW"}
+        </motion.button>
+        <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+                <p className="text-gray-500 text-xs uppercase">Ping</p>
+                <p className="font-mono text-green-400">{stats.ping}</p>
+            </div>
+            <div>
+                <p className="text-gray-500 text-xs uppercase">Upload</p>
+                <p className="font-mono text-green-400">{stats.upload}</p>
+            </div>
+            <div>
+                <p className="text-gray-500 text-xs uppercase">Download</p>
+                <p className="font-mono text-green-400">{stats.download}</p>
+            </div>
+        </div>
     </div>
   );
 };
@@ -99,6 +146,7 @@ export default function LandingPage() {
         </p>
 
         <Terminal />
+        <VPNService />
         
         <div className="relative flex flex-col items-center gap-4">
           <motion.button 
@@ -146,7 +194,7 @@ export default function LandingPage() {
               key={i}
               variants={itemVariants}
               whileHover={{ borderColor: "rgba(34, 197, 94, 0.4)" }}
-              className="p-8 bg-[#0a0a0a] border border-[#1a1a1a] rounded-2xl transition-all duration-300 flex flex-col items-start hover:shadow-[0_0_30px_-5px_rgba(34,197,94,0.1)]"
+              className="p-8 bg-[#0a0a0a] border border-green-900/30 rounded-2xl transition-all duration-300 flex flex-col items-start shadow-[0_0_20px_-10px_rgba(34,197,94,0.1)] hover:shadow-[0_0_30px_-5px_rgba(34,197,94,0.3)]"
             >
               <div className="bg-[#111] p-3 rounded-xl mb-6 border border-[#222]">
                 <f.icon className="text-green-500" size={24} />

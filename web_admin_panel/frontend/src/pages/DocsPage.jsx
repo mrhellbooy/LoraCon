@@ -85,7 +85,7 @@ export default function DocsPage() {
                     </div>
                     <p className="text-slate-500 mb-2">// Verifying transaction hash...</p>
                     <p className="text-white">tx_hash: 5uS...k8q [SOLANA_DEVNET]</p>
-                    <p className="text-[#22c55e] mt-4">>> PRIVILEGE_KEY_UPGRADE: SUCCESS</p>
+                    <p className="text-[#22c55e] mt-4">{" >> "}PRIVILEGE_KEY_UPGRADE: SUCCESS</p>
                   </div>
                 </div>
               </section>

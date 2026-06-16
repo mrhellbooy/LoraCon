@@ -25,6 +25,7 @@
 ## 🚀 Key Features
 
 *   **Cybernetic Aesthetic**: Neon Green/Carbon Black theme inspired by black soldier fly larvae with Framer Motion page transitions.
+*   **Multi-Chain Settlement**: Integrated Solana (Phantom) and Binance (BSC) payment flows for anonymous, decentralized subscription management.
 *   **Performance First**: Low-latency routing & real-time connection optimization with recursive API health polling.
 *   **Comprehensive Management**: Integrated admin portal for node load telemetry, analytics, and persistent API status monitoring.
 *   **Firefox Integration**: Dedicated landing page modules for Firefox Add-on distribution and local installation guides.

@@ -100,7 +100,7 @@ const Logo = ({ size = 40, className, isConnected = true, isConnecting = false }
           transition={{ repeat: Infinity, duration: 2 }}
         />
       </svg>
-    </div>
+    </motion.div>
   );
 };
 

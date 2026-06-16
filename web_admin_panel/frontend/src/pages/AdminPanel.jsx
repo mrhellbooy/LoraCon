@@ -42,10 +42,11 @@ export default function AdminPanel() {
     freeBandwidthLimit: 50, 
     freeDailyQuotaLimit: 500, 
     activeApiProvider: "Gemini API", 
-    cryptoSolAddress: "...", 
+    cryptoSolAddress: "LoRaConVpnSol...P7yX9wQz", 
+    cryptoBnbAddress: "0xLoraConAdmin...Fb32c7",
     cryptoUsdtAddress: "...", 
-    priceStandardSol: 0, 
-    pricePremiumSol: 0 
+    priceStandardSol: 0.5, 
+    pricePremiumSol: 2.5 
   });
   
   const [nodes, setNodes] = useState([]);
@@ -324,11 +325,27 @@ export default function AdminPanel() {
               </div>
 
               <div className="bg-[#111] p-8 rounded-2xl border border-[#222]">
-                <h3 className="text-sm font-bold mb-6 flex items-center gap-2 uppercase tracking-widest italic opacity-50"><Sliders size={14} /> Subscription Management</h3>
+                <h3 className="text-sm font-bold mb-6 flex items-center gap-2 uppercase tracking-widest italic opacity-50"><Shield size={14} /> Multi-Chain Operations</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-xs text-slate-400 font-mono leading-relaxed">
+                  <div className="p-5 bg-[#050505] rounded-xl border border-white/5">
+                    <p className="text-[#22c55e] mb-2 font-bold">// SOLANA_MAINNET</p>
+                    <p>Status: Monitoring Active</p>
+                    <p>Asset: SOL, USDC-SPL, USDT-SPL</p>
+                    <p>Endpoint: https://api.mainnet-beta.solana.com</p>
+                  </div>
+                  <div className="p-5 bg-[#050505] rounded-xl border border-white/5">
+                    <p className="text-[#f3ba2f] mb-2 font-bold">// BINANCE_SMART_CHAIN</p>
+                    <p>Status: Handshake Operational</p>
+                    <p>Asset: BNB, BUSD-BEP20, USDT-BEP20</p>
+                    <p>Endpoint: https://bsc-dataseed.binance.org/</p>
+                  </div>
+                </div>
+                
                 <div className="space-y-4">
+                  <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-50">Subscription Management</h4>
                   {[
-                    { plan: 'Protocol Stealth', price: '0.5 SOL', pool: 'sentinel_east_cluster' },
-                    { plan: 'Protocol Warp', price: '1.2 SOL', pool: 'global_mimic_relay' },
+                    { plan: 'Protocol Stealth', price: '0.5 SOL / 0.1 BNB', pool: 'sentinel_east_cluster' },
+                    { plan: 'Protocol Warp', price: '1.2 SOL / 0.25 BNB', pool: 'global_mimic_relay' },
                     { plan: 'Sentinel Prime', price: '2.5 SOL', pool: 'dedicated_mesh_sg_01' }
                   ].map((p, i) => (
                     <div key={i} className="flex items-center justify-between p-5 bg-[#050505] rounded-xl border border-white/5 hover:border-[#22c55e]/30 transition-all group">
@@ -372,13 +389,53 @@ export default function AdminPanel() {
           )}
 
             {activeTab === 'SYSTEM' && (
-            <div>
-              <h2 className="text-lg font-semibold mb-8 flex items-center gap-2"><Terminal size={18} className="text-green-500" /> System Logs</h2>
-              <div className="bg-[#050505] p-6 rounded-xl border border-[#222] font-mono text-xs text-gray-400 h-64 overflow-y-auto">
-                <p>11:05:16 SYSTEM: VARIABLES INJECTED...</p>
-                <p>11:05:17 SYSTEM: FINALIZING STARTUP...</p>
-                <p>11:05:18 SYSTEM: FIRST DEPLOYMENT DETECTED...</p>
-                <p className="text-green-500">11:05:19 SYSTEM: HELLO, WORLD!</p>
+            <div className="space-y-8">
+              <h2 className="text-lg font-semibold mb-8 flex items-center gap-2"><Terminal size={18} className="text-green-500" /> Operational Suite</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Real-time Logs</h3>
+                  <div className="bg-[#050505] p-6 rounded-xl border border-[#222] font-mono text-[10px] text-gray-500 h-64 overflow-y-auto space-y-1">
+                    <p>11:05:16 SYSTEM: VARIABLES INJECTED...</p>
+                    <p>11:05:17 SYSTEM: FINALIZING STARTUP...</p>
+                    <p>11:05:18 SYSTEM: FIRST DEPLOYMENT DETECTED...</p>
+                    <p className="text-[#22c55e]">11:05:19 SYSTEM: HELLO, WORLD!</p>
+                    <p>12:45:01 NETWORK: ROTATING EPHEMERAL KEYS [Curve25519]</p>
+                    <p>12:50:22 PAYMENTS: MONITORING SOLANA_MAINNET...</p>
+                    <p className="text-blue-500">12:51:30 PAYMENTS: BSC_SMART_CHAIN HANDSHAKE OK</p>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                   <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
+                      <h3 className="text-xs font-bold text-[#22c55e] uppercase tracking-widest mb-3">Testing Guide</h3>
+                      <ul className="text-xs text-slate-400 space-y-3 font-mono">
+                         <li className="flex gap-2">
+                           <span className="text-[#22c55e]">•</span>
+                           <span><strong>Checkout:</strong> Visit Landing -> Plans -> "Secure Subscription" to test Multi-Chain Payment UI.</span>
+                         </li>
+                         <li className="flex gap-2">
+                           <span className="text-[#22c55e]">•</span>
+                           <span><strong>Admin Wallet:</strong> Use the button at the top of Billing tab to simulate Phantom connection.</span>
+                         </li>
+                         <li className="flex gap-2">
+                           <span className="text-[#22c55e]">•</span>
+                           <span><strong>Wishlist:</strong> Test "Add to Wishlist" on plans. Requests are logged for developer review.</span>
+                         </li>
+                         <li className="flex gap-2">
+                           <span className="text-[#22c55e]">•</span>
+                           <span><strong>VPN Simulation:</strong> Check the "Live Demo" on Landing Page for handshake visuals.</span>
+                         </li>
+                      </ul>
+                   </div>
+                   
+                   <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
+                      <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Security Note</h3>
+                      <p className="text-[10px] text-slate-500 leading-relaxed font-mono italic">
+                        Access to actual VPN encryption keys and user traffic data is strictly restricted to secure cluster nodes. The Admin Panel only handles orchestration and billing oversight.
+                      </p>
+                   </div>
+                </div>
               </div>
             </div>
           )}

@@ -124,36 +124,46 @@ const TabManModal = ({ isOpen, onClose }) => {
   );
 };
 
-const PlanCard = ({ title, price, features, delay, onWishlist }) => (
+const PlanCard = ({ title, price, features, delay, onSelect, onWishlist }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ delay }}
-    className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/10 hover:border-[#22c55e]/50 transition-all group relative overflow-hidden"
+    className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/10 hover:border-[#22c55e]/50 transition-all group relative overflow-hidden flex flex-col h-full"
   >
     <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
       <Shield className="w-24 h-24 text-[#22c55e]" />
     </div>
-    <h3 className="text-2xl font-black text-white mb-2 italic uppercase tracking-tighter">{title}</h3>
-    <div className="flex items-baseline gap-1 mb-8">
-      <span className="text-4xl font-black text-[#22c55e]">{price}</span>
-      <span className="text-slate-500 text-sm font-mono tracking-widest uppercase">/cycle</span>
+    <div className="flex-1">
+      <h3 className="text-2xl font-black text-white mb-2 italic uppercase tracking-tighter">{title}</h3>
+      <div className="flex items-baseline gap-1 mb-8">
+        <span className="text-4xl font-black text-[#22c55e]">{price}</span>
+        <span className="text-slate-500 text-sm font-mono tracking-widest uppercase">/cycle</span>
+      </div>
+      <ul className="space-y-4 mb-10">
+        {features.map((f, i) => (
+          <li key={i} className="flex items-center gap-3 text-sm text-slate-400">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]/50" />
+            {f}
+          </li>
+        ))}
+      </ul>
     </div>
-    <ul className="space-y-4 mb-10">
-      {features.map((f, i) => (
-        <li key={i} className="flex items-center gap-3 text-sm text-slate-400">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]/50" />
-          {f}
-        </li>
-      ))}
-    </ul>
-    <button 
-      onClick={() => onWishlist(title)}
-      className="w-full py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] hover:bg-[#22c55e] hover:text-black hover:border-transparent transition-all flex items-center justify-center gap-2 group-hover:scale-[1.02] active:scale-95"
-    >
-      <Star className="w-4 h-4" /> Add to Workspace Wishlist
-    </button>
+    <div className="space-y-3 mt-auto">
+      <button 
+        onClick={() => onSelect(title, price)}
+        className="w-full py-4 rounded-2xl bg-[#22c55e] border border-transparent text-black font-black uppercase tracking-widest text-[11px] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(34,197,94,0.2)]"
+      >
+        <Zap className="w-4 h-4 fill-current" /> Secure Subscription
+      </button>
+      <button 
+        onClick={() => onWishlist(title)}
+        className="w-full py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] hover:bg-[#22c55e] hover:text-black hover:border-transparent transition-all flex items-center justify-center gap-2 group-hover:scale-[1.02] active:scale-95"
+      >
+        <Star className="w-4 h-4" /> Add to Wishlist
+      </button>
+    </div>
   </motion.div>
 );
 
@@ -165,14 +175,15 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addToast(`Verification Link Sent! ${formData.name}, you are now in the LoraCon backlog.`, 'success');
+    // In a real app, this would hit an endpoint like /api/wishlist that emails lorapokdev@gmail.com
+    addToast(`Protocol Request Received! We'll reach out to ${formData.email} soon.`, 'success');
     onClose();
   };
 
   return (
     <motion.div 
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-xl p-4"
+      className="fixed inset-0 z-[130] flex items-center justify-center bg-black/90 backdrop-blur-xl p-4"
       onClick={onClose}
     >
       <motion.div 
@@ -181,12 +192,12 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
         onClick={e => e.stopPropagation()}
       >
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-[#22c55e] to-transparent" />
-        <h2 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase italic">Protocol Access</h2>
-        <p className="text-slate-500 text-xs mb-8 font-mono leading-relaxed uppercase tracking-wider">Join the encrypted service queue for LoraCon infrastructure.</p>
+        <h2 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase italic">Protocol Wishlist</h2>
+        <p className="text-slate-500 text-xs mb-8 font-mono leading-relaxed uppercase tracking-wider">Join the alpha testing queue for our upcoming clusters.</p>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Operator Name</label>
+            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Operator Alias</label>
             <input 
               required
               type="text" 
@@ -197,7 +208,7 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
             />
           </div>
           <div>
-            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Secure Endpoint</label>
+            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Communication Link</label>
             <input 
               required
               type="email" 
@@ -208,7 +219,7 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
             />
           </div>
           <div>
-            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Service Tier</label>
+            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Cluster Target</label>
             <select 
               className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#22c55e] transition-colors font-mono text-sm appearance-none"
               value={formData.service}
@@ -220,13 +231,264 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
             </select>
           </div>
           <button type="submit" className="w-full py-5 bg-[#22c55e] text-black font-black uppercase tracking-widest text-[11px] rounded-[1.5rem] hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(34,197,94,0.4)]">
-            AUTHORIZE PROTOCOL REQUEST
+            TRANSMIT REQUEST
           </button>
         </form>
         
         <button onClick={onClose} className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors">
           <X size={24} />
         </button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const CheckoutModal = ({ isOpen, onClose, plan }) => {
+  const addToast = useToast();
+  const [step, setStep] = useState('CHECKOUT'); // CHECKOUT, PAYMENT, SUCCESS
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [activeTab, setActiveTab] = useState('PAYMENT'); // PAYMENT, HISTORY, USAGE
+
+  if (!isOpen) return null;
+
+  const handlePayment = () => {
+    if (!walletConnected) {
+      addToast("Please connect your Solana wallet first.", "warning");
+      return;
+    }
+    setStep('PAYMENT');
+    setTimeout(() => {
+      setStep('SUCCESS');
+      addToast(`Subscription for ${plan.title} activated via Solana Mainnet.`, "success");
+    }, 3000);
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[120] flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4 lg:p-0"
+      onClick={onClose}
+    >
+      <motion.div 
+        initial={{ y: "100%", opacity: 0 }} 
+        animate={{ y: 0, opacity: 1 }} 
+        exit={{ y: "100%", opacity: 0 }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className="w-full max-w-4xl bg-[#080808] border border-white/10 rounded-[3rem] overflow-hidden flex flex-col lg:flex-row h-[90vh] lg:h-auto lg:max-h-[85vh]"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Left Side: Summary & Branding */}
+        <div className="w-full lg:w-1/3 bg-white/[0.02] border-r border-white/5 p-10 flex flex-col justify-between relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full bg-[#22c55e]/5 blur-[80px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none" />
+          <div className="relative z-10">
+            <Logo size={40} className="mb-10" />
+            <span className="p-1 px-3 bg-[#22c55e]/10 border border-[#22c55e]/20 text-[#22c55e] text-[8px] font-black uppercase tracking-[0.3em] rounded-full">Secure Checkout</span>
+            <h2 className="text-4xl font-black text-white mt-6 mb-2 tracking-tighter uppercase italic">{plan.title}</h2>
+            <p className="text-slate-500 font-mono text-xs uppercase tracking-widest mb-10">Access Tier Alpha</p>
+            
+            <div className="space-y-4">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-500">Plan Rate:</span>
+                <span className="text-white font-bold">{plan.price}</span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-500">Network Fee:</span>
+                <span className="text-[#22c55e] font-bold">~0.00005 SOL / BNB</span>
+              </div>
+              <div className="h-px bg-white/5 my-6" />
+              <div className="flex justify-between items-center">
+                <span className="text-white font-black uppercase text-xs tracking-widest italic">Total Due:</span>
+                <span className="text-2xl font-black text-[#22c55e]">{plan.price}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative z-10 pt-10">
+            <p className="text-[9px] text-slate-600 leading-relaxed font-mono uppercase tracking-tighter">
+              // Multi-Chain Settlement Active (Solana/BSC)<br />
+              // Direct Wallet-to-Wallet Authentication<br />
+              // Handshake rotation: 15min cycles
+            </p>
+          </div>
+        </div>
+
+        {/* Right Side: Interactive Module */}
+        <div className="flex-1 p-10 flex flex-col relative">
+          <button onClick={onClose} className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors z-20">
+            <X size={24} />
+          </button>
+
+          {step === 'SUCCESS' ? (
+            <div className="flex-1 flex flex-col items-center justify-center text-center">
+               <div className="w-20 h-20 bg-[#22c55e]/10 rounded-full flex items-center justify-center mb-8 animate-pulse">
+                  <Shield size={40} className="text-[#22c55e]" />
+               </div>
+               <h3 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-4">Link Established</h3>
+               <p className="text-slate-400 max-w-sm mb-10 leading-relaxed uppercase font-mono text-[10px] tracking-widest italic">
+                  Your sentinel node allocation is complete. Privilege keys have been signed and delivered to your workspace terminal.
+               </p>
+               <button 
+                onClick={onClose}
+                className="px-10 py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-black uppercase tracking-widest text-xs hover:bg-[#22c55e] hover:text-black transition-all"
+               >
+                 Close Gate
+               </button>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-6 border-b border-white/5 mb-8">
+                {['PAYMENT', 'HISTORY', 'USAGE'].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`pb-4 text-[9px] font-black uppercase tracking-[0.3em] transition-all relative ${activeTab === tab ? 'text-[#22c55e]' : 'text-slate-600 hover:text-slate-400'}`}
+                  >
+                    {tab}
+                    {activeTab === tab && <motion.div layoutId="tabUnderline" className="absolute bottom-0 left-0 w-full h-[2px] bg-[#22c55e]" />}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                {activeTab === 'PAYMENT' && (
+                  <div className="space-y-8 py-4">
+                    <div className="p-8 rounded-3xl bg-white/[0.02] border border-white/10 relative overflow-hidden">
+                       <div className="flex items-center justify-between mb-8">
+                          <div className="flex items-center gap-3">
+                             <Wallet className="w-6 h-6 text-[#22c55e]" />
+                             <h4 className="font-bold text-white uppercase tracking-tighter italic">Solana / Binance Wallet</h4>
+                          </div>
+                          {!walletConnected ? (
+                            <div className="flex gap-2">
+                               <button 
+                                onClick={() => setWalletConnected(true)}
+                                className="px-4 py-2 bg-[#22c55e] text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all"
+                              >
+                                Phantom
+                              </button>
+                              <button 
+                                onClick={() => setWalletConnected(true)}
+                                className="px-4 py-2 bg-[#f3ba2f] text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all"
+                              >
+                                Binance
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-[#22c55e]/10 border border-[#22c55e]/30 rounded-xl">
+                               <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse" />
+                               <span className="text-[10px] text-[#22c55e] font-mono">0x7...E4d1 / 6xP...j7vV</span>
+                            </div>
+                          )}
+                       </div>
+                       
+                       <div className="space-y-4">
+                          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-mono">Admin Deposit Endpoints</p>
+                          <div className="space-y-2">
+                            <div className="p-4 bg-black rounded-2xl border border-white/5 font-mono text-[9px] text-slate-300 break-all select-all flex items-center justify-between">
+                               <span className="opacity-50 mr-2">SOL:</span> 
+                               <span>LoRaConVpnSol...P7yX9wQz</span>
+                               <Clock className="w-3 h-3 text-slate-600 shrink-0" />
+                            </div>
+                            <div className="p-4 bg-black rounded-2xl border border-white/5 font-mono text-[9px] text-slate-300 break-all select-all flex items-center justify-between">
+                               <span className="opacity-50 mr-2">BNB:</span> 
+                               <span>0xLoraConAdmin...Fb32c7</span>
+                               <Clock className="w-3 h-3 text-slate-600 shrink-0" />
+                            </div>
+                          </div>
+                       </div>
+                    </div>
+
+                    <div className="space-y-4">
+                       <h4 className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Select Network Asset</h4>
+                       <div className="grid grid-cols-4 gap-4">
+                          {['SOL', 'BNB', 'USDC', 'USDT'].map(asset => (
+                            <button key={asset} className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-[#22c55e]/50 transition-all font-black text-center group">
+                               <div className="text-[#22c55e] mb-1 group-hover:scale-110 transition-transform text-xs">{asset}</div>
+                               <div className="text-[7px] text-slate-600 font-mono tracking-tighter">Ready</div>
+                            </button>
+                          ))}
+                       </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'HISTORY' && (
+                  <div className="space-y-4 py-4">
+                    {[
+                      { date: '2026-05-14', amount: '0.5 SOL', status: 'CONFIRMED', tx: '62Xp...8R2' },
+                      { date: '2026-04-14', amount: '0.5 SOL', status: 'CONFIRMED', tx: 'A9yQ...1Lp' },
+                      { date: '2026-03-14', amount: '0.5 SOL', status: 'EXPIRED', tx: '---' }
+                    ].map((h, i) => (
+                      <div key={i} className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center justify-between group hover:border-white/20 transition-all">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-2 h-2 rounded-full ${h.status === 'CONFIRMED' ? 'bg-[#22c55e]' : 'bg-red-500'}`} />
+                          <div>
+                            <p className="text-xs font-bold text-white">{h.amount}</p>
+                            <p className="text-[8px] text-slate-500 font-mono uppercase tracking-widest">{h.date} • {h.tx}</p>
+                          </div>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-slate-700 group-hover:text-slate-400 transition-colors" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === 'USAGE' && (
+                  <div className="space-y-10 py-6">
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-end">
+                        <div>
+                          <h4 className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-1">Global Throughput</h4>
+                          <p className="text-2xl font-black text-white italic tracking-tighter">742.8 GB <span className="text-[#22c55e] text-sm italic">/ 1 TB</span></p>
+                        </div>
+                        <Activity className="w-5 h-5 text-[#22c55e] animate-pulse" />
+                      </div>
+                      <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: "74.2%" }}
+                          transition={{ duration: 1, ease: "easeOut" }}
+                          className="h-full bg-gradient-to-r from-[#166534] to-[#22c55e]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6">
+                       <div className="p-6 rounded-[2rem] bg-white/[0.03] border border-white/5">
+                          <p className="text-[9px] text-slate-500 uppercase tracking-widest font-mono mb-2">Relay Nodes Touched</p>
+                          <p className="text-2xl font-black text-white">42 Nodes</p>
+                       </div>
+                       <div className="p-6 rounded-[2rem] bg-white/[0.03] border border-white/5">
+                          <p className="text-[9px] text-slate-500 uppercase tracking-widest font-mono mb-2">Crypto Keys Rotated</p>
+                          <p className="text-2xl font-black text-[#22c55e]">1,280</p>
+                       </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {activeTab === 'PAYMENT' && (
+                <div className="pt-8 mt-auto border-t border-white/5">
+                  <button 
+                    onClick={handlePayment}
+                    disabled={step === 'PAYMENT'}
+                    className={`w-full py-5 rounded-[1.5rem] font-black uppercase tracking-widest text-[11px] transition-all flex items-center justify-center gap-3 ${
+                      step === 'PAYMENT' 
+                        ? 'bg-white/5 text-slate-500 cursor-not-allowed' 
+                        : 'bg-[#22c55e] text-black shadow-[0_0_40px_rgba(34,197,94,0.3)] hover:scale-[1.02] active:scale-95'
+                    }`}
+                  >
+                    {step === 'PAYMENT' ? (
+                      <>Validating on Ledger <Activity className="w-4 h-4 animate-spin" /></>
+                    ) : (
+                      <>Authorize Transaction <ChevronRight className="w-4 h-4" /></>
+                    )}
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </motion.div>
     </motion.div>
   );
@@ -316,9 +578,9 @@ const LorapokVpnDemo = () => {
               className="space-y-1 pt-2"
             >
               <p className="text-blue-400">$ lora --connect --mode stealth</p>
-              <p className="text-slate-500 animate-pulse">>> Initiating Handshake [ChaCha20-Poly1305]</p>
-              <p className="text-slate-500">>> Generating Ephemeral Keys [Curve25519]</p>
-              <p className="text-slate-500 italic">>> Hunting for optimal entropy node...</p>
+              <p className="text-slate-500 animate-pulse">{" >> "}Initiating Handshake [ChaCha20-Poly1305]</p>
+              <p className="text-slate-500">{" >> "}Generating Ephemeral Keys [Curve25519]</p>
+              <p className="text-slate-500 italic">{" >> "}Hunting for optimal entropy node...</p>
             </motion.div>
           )}
 
@@ -405,11 +667,18 @@ const LorapokVpnDemo = () => {
 export default function LandingPage() {
   const [isTabManOpen, setIsTabManOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('');
+  const [selectedPlanData, setSelectedPlanData] = useState({ title: '', price: '' });
 
   const openWishlist = (plan) => {
     setSelectedPlan(plan);
     setIsWishlistOpen(true);
+  };
+
+  const openCheckout = (title, price) => {
+    setSelectedPlanData({ title, price });
+    setIsCheckoutOpen(true);
   };
 
   return (
@@ -421,6 +690,13 @@ export default function LandingPage() {
             isOpen={isWishlistOpen} 
             onClose={() => setIsWishlistOpen(false)} 
             selectedPlan={selectedPlan} 
+          />
+        )}
+        {isCheckoutOpen && (
+          <CheckoutModal 
+            isOpen={isCheckoutOpen} 
+            onClose={() => setIsCheckoutOpen(false)} 
+            plan={selectedPlanData} 
           />
         )}
       </AnimatePresence>
@@ -562,6 +838,7 @@ export default function LandingPage() {
               price="0.5 SOL" 
               features={['Single Sentinel Node', 'Standard Encapsulation', '100GB Data Cap', '24h Log Flush', 'Priority Entry']}
               delay={0.1}
+              onSelect={openCheckout}
               onWishlist={openWishlist}
             />
             <PlanCard 
@@ -569,6 +846,7 @@ export default function LandingPage() {
               price="1.2 SOL" 
               features={['Multi-Hop Routing', 'Quantum-Resistant Layer', 'Unlimited Bandwidth', 'AI Adaptive Pathing', 'Dynamic IP Masking']}
               delay={0.2}
+              onSelect={openCheckout}
               onWishlist={openWishlist}
             />
             <PlanCard 
@@ -576,6 +854,7 @@ export default function LandingPage() {
               price="2.5 SOL" 
               features={['Dedicated Mesh Cluster', 'Full Traffic Mimicry', 'Prioritized Exit Nodes', 'Custom Protocol Tuning', '24/7 Admin Direct']}
               delay={0.3}
+              onSelect={openCheckout}
               onWishlist={openWishlist}
             />
           </div>
@@ -647,17 +926,17 @@ export default function LandingPage() {
                    <p className="text-slate-400"># system.status()</p>
                    <div className="grid grid-cols-2 gap-4 py-2">
                       <div className="space-y-1">
-                         <p className="text-slate-600">>> CPU_LOAD</p>
+                         <p className="text-slate-600">{" >> "}CPU_LOAD</p>
                          <p className="text-white">12.4%</p>
                       </div>
                       <div className="space-y-1">
-                         <p className="text-slate-600">>> ACTIVE_NODES</p>
+                         <p className="text-slate-600">{" >> "}ACTIVE_NODES</p>
                          <p className="text-white">42 / 64</p>
                       </div>
                    </div>
                    <p className="text-slate-400"># nodes.deploy(rk_swiss_alpine)</p>
-                   <p className="text-yellow-500 animate-pulse">>> DEPLOYING NODE TO SOLANA DEVNET...</p>
-                   <p className="text-[#22c55e]">>> DEPLOYMENT SUCCESS [7820ms]</p>
+                   <p className="text-yellow-500 animate-pulse">{" >> "}DEPLOYING NODE TO SOLANA DEVNET...</p>
+                   <p className="text-[#22c55e]">{" >> "}DEPLOYMENT SUCCESS [7820ms]</p>
                    <div className="mt-6 flex items-center gap-2">
                       <span className="block w-2 h-4 bg-[#22c55e] animate-pulse" />
                    </div>

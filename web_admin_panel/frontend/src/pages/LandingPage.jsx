@@ -53,7 +53,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => (
       <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center mb-8 group-hover:bg-[#22c55e]/10 group-hover:border-[#22c55e]/30 transition-all duration-300">
         <Icon className="w-8 h-8 text-slate-500 group-hover:text-[#22c55e] transition-colors" />
       </div>
-      <h3 className="text-xl font-bold text-white mb-4 italic uppercase tracking-tighter">{title}</h3>
+      <h3 className="text-xl font-bold text-white mb-4">{title}</h3>
       <p className="text-slate-400 leading-relaxed text-sm font-light">{description}</p>
     </div>
   </motion.div>
@@ -99,12 +99,12 @@ const TabManModal = ({ isOpen, onClose }) => {
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
-        className="w-full max-h-[90vh] max-w-3xl bg-[#030303] border border-white/10 rounded-[2rem] overflow-hidden shadow-[0_0_100px_rgba(34,197,94,0.15)] relative"
+        className="w-full max-h-[90vh] max-w-3xl bg-[#030303] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col shadow-[0_0_100px_rgba(34,197,94,0.15)] relative"
         onClick={e => e.stopPropagation()}
       >
-        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.08)_0%,transparent_70%)] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-full h-[300px] bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.08)_0%,transparent_70%)] pointer-events-none" />
         
-        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.01] relative z-10">
+        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.01] relative z-10 shrink-0">
           <div className="flex items-center gap-6">
             <div className="p-4 rounded-2xl bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.2)]">
               <Download className="w-8 h-8 text-[#22c55e]" />
@@ -122,12 +122,11 @@ const TabManModal = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <div className="p-8 gap-4 grid grid-cols-1 sm:grid-cols-2 relative z-10">
+        <div className="p-8 gap-4 grid grid-cols-1 sm:grid-cols-2 relative z-10 overflow-y-auto">
           {[
             { name: 'Android APK', size: '24.5 MB', icon: Smartphone, color: '#22c55e', desc: 'Secure Mobile Client' },
             { name: 'Windows Client', size: '48.2 MB', icon: Monitor, color: '#4ade80', desc: 'Desktop Sentinel' },
             { name: 'macOS DMG', size: '42.1 MB', icon: Apple, color: '#fbbf24', desc: 'Darwin Core Build' },
-            { name: 'Firefox Extension', size: '1.2 MB', icon: Zap, color: '#38bdf8', desc: 'Proxy Injection' },
           ].map((item, i) => (
             <motion.a
               key={item.name}
@@ -153,7 +152,7 @@ const TabManModal = ({ isOpen, onClose }) => {
           ))}
         </div>
 
-        <div className="p-10 bg-black/60 border-t border-white/5 text-center relative z-10">
+        <div className="p-6 bg-black/60 border-t border-white/5 text-center relative z-10 shrink-0">
           <p className="text-[10px] text-slate-500 font-mono uppercase tracking-[0.5em] italic opacity-40">
             // ALL PACKAGES ARE CRYPTOGRAPHICALLY SIGNED BY LORAPOK LABS //
           </p>
@@ -175,7 +174,7 @@ const PlanCard = ({ title, price, features, delay, onSelect, onWishlist }) => (
       <Shield className="w-24 h-24 text-[#22c55e]" />
     </div>
     <div className="flex-1">
-      <h3 className="text-2xl font-black text-white mb-2 italic uppercase tracking-tighter">{title}</h3>
+      <h3 className="text-2xl font-black text-white mb-2">{title}</h3>
       <div className="flex items-baseline gap-1 mb-8">
         <span className="text-4xl font-black text-[#22c55e]">{price}</span>
         <span className="text-slate-500 text-sm font-mono tracking-widest uppercase">/cycle</span>
@@ -645,26 +644,7 @@ const LorapokVpnDemo = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1)_0%,transparent_70%)]" />
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-gradient-to-r from-transparent via-[#22c55e]/50 to-transparent" />
             
-            {/* Dynamic Telemetry Overlay */}
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="absolute top-1/4 left-10 p-4 border-l-2 border-[#22c55e] hidden md:block"
-            >
-               <p className="text-[#22c55e] font-black italic uppercase text-[8px] tracking-[0.4em] mb-1">Transit Node</p>
-               <p className="text-white text-base font-black italic uppercase tracking-tighter">{connInfo?.name}</p>
-               <p className="text-slate-500 text-[10px] font-mono mt-2 opacity-60">Handshake Rotation: 820ms</p>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="absolute bottom-1/4 right-10 p-4 border-r-2 border-[#22c55e] text-right hidden md:block"
-            >
-               <p className="text-[#22c55e] font-black italic uppercase text-[8px] tracking-[0.4em] mb-1">Exit Point</p>
-               <p className="text-white text-base font-black italic uppercase tracking-tighter">{connInfo?.country}</p>
-               <p className="text-slate-500 text-[10px] font-mono mt-2 opacity-60">IP: {connInfo?.ip}</p>
-            </motion.div>
+            {/* Dynamic Telemetry Overlay Removed to avoid overlap */}
             
             {/* Moving particles represent data flow */}
             {[...Array(6)].map((_, i) => (
@@ -697,9 +677,9 @@ const LorapokVpnDemo = () => {
       </div>
 
       <div className="relative z-10 flex-1 space-y-2 overflow-hidden">
-        <p className="text-slate-600">$ lora --status</p>
-        <p className="text-slate-400">Node: <span className={connInfo ? "text-white" : ""}>[{connInfo?.name || 'NONE'}]</span></p>
-        <p className="text-slate-400">Latency: <span className={connInfo ? "text-[#22c55e]" : ""}>{ping}ms</span></p>
+        <p className="text-slate-400 font-bold">$ lora --status</p>
+        <p className="text-slate-300 font-bold">Node: <span className={connInfo ? "text-white" : ""}>[{connInfo?.name || 'NONE'}]</span></p>
+        <p className="text-slate-300 font-bold">Latency: <span className={connInfo ? "text-[#22c55e] drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]" : ""}>{ping}ms</span></p>
         
         <AnimatePresence mode="wait">
           {status === 'CONNECTING' && (
@@ -735,12 +715,12 @@ const LorapokVpnDemo = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                     <div>
-                      <p className="text-slate-400 uppercase text-[9px] tracking-widest font-black mb-0.5">Location</p>
-                      <p className="text-white font-bold text-sm tracking-tight">{connInfo.city}, {connInfo.country}</p>
+                      <p className="text-slate-300 uppercase text-[9px] tracking-widest font-black mb-0.5">Location</p>
+                      <p className="text-white font-black text-sm tracking-tight">{connInfo.city}, {connInfo.country}</p>
                     </div>
                     <div>
-                      <p className="text-slate-400 uppercase text-[9px] tracking-widest font-black mb-0.5">Assigned IP</p>
-                      <p className="text-[#22c55e] font-mono text-sm font-bold">{connInfo.ip}</p>
+                      <p className="text-slate-300 uppercase text-[9px] tracking-widest font-black mb-0.5">Assigned IP</p>
+                      <p className="text-[#22c55e] font-mono text-sm font-black drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]">{connInfo.ip}</p>
                     </div>
                   </div>
                 </div>
@@ -977,12 +957,12 @@ export default function LandingPage() {
                      </div>
                    ))}
                 </div>
-                <button 
-                  onClick={() => setIsTabManOpen(true)}
-                  className="px-10 py-5 bg-[#38bdf8] text-black font-black uppercase tracking-widest text-[11px] rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(56,189,248,0.2)]"
+                <a 
+                  href="#"
+                  className="inline-block px-10 py-5 bg-[#38bdf8] text-black font-black uppercase tracking-widest text-[11px] rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(56,189,248,0.2)]"
                 >
                   Download for Firefox
-                </button>
+                </a>
              </div>
              <div className="relative group">
                 <div className="absolute inset-0 bg-[#38bdf8]/10 blur-[60px] rounded-full group-hover:bg-[#38bdf8]/20 transition-all" />

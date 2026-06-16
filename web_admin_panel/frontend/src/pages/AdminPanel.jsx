@@ -530,7 +530,7 @@ export default function AdminPanel() {
                       <ul className="text-[10px] md:text-xs text-slate-400 space-y-3 font-mono">
                          <li className="flex gap-2">
                            <span className="text-[#22c55e]">•</span>
-                           <span><strong>Checkout:</strong> Visit Landing -> Plans -> "Secure Subscription" to test Multi-Chain Payment UI.</span>
+                           <span><strong>Checkout:</strong> Visit Landing &rarr; Plans &rarr; "Secure Subscription" to test Multi-Chain Payment UI.</span>
                          </li>
                          <li className="flex gap-2">
                            <span className="text-[#22c55e]">•</span>

@@ -1,15 +1,22 @@
-# LoraCon Protocol Specification 🛡️
+# LoraCon Multi-Chain Billing & Protocol Guidelines (loracon-protocol)
 
-## 1. Handshake Protocol
-- **Ephemeral Keys**: Curve25519 rotated every 15 minutes.
-- **Encryption**: ChaCha20-Poly1305 for data packets, AES-256-GCM for control channel.
-- **Entropy Source**: Distributed mesh node pool tracking global background radiation (Simulation).
+This guide documents the decentralized payment flows and multi-chain settlement structures of LoraCon.
 
-## 2. Multi-Chain Settlement
-- **Solana**: SPL-Token support (USDC/USDT). Immediate privilege key issuance upon finalization.
-- **Binance Smart Chain**: BEP20 support. Settlement through admin-monitored escrow endpoints.
+---
 
-## 3. Node Clustering
-- **Sentinel**: Entry relays with high-bandwidth peering.
-- **Core**: Obfuscation layer in privacy-friendly jurisdictions (CH, SG).
-- **Exit**: High-reputation rotating endpoints for standard browsing mimicry.
+## 💳 Settlement Infrastructure
+LoraCon supports decentralized payments across multiple chains to ensure privacy and trust-less settlement.
+
+### Supported Networks
+1.  **Solana Network**: Settlement via Native SOL, USDC, USDT, and utility tokens.
+2.  **Binance Smart Chain (BSC)**: Settlement via BNB, USDT, USDC, and CAKE.
+
+---
+
+## 🔐 Payment Handshake Lifecycle
+1.  **Checkout Initialization**: Users click on a "Secure Subscription" trigger from pricing cards, prompting the `CheckoutModal`.
+2.  **Wallet Linkage**: Supports web3 injection (Phantom / Binance Wallet simulation). State variables track connection address formatting (e.g. `6xP...j7vV`).
+3.  **Direct Escrow Transfer**: Instructs users to send subscription values to the LoraCon cold escrow deposit arrays.
+4.  **Transaction Verification**:
+    -   *Hash Submission*: Users enter their transaction signatures/hashes.
+    -   *Admin Verification*: Super-admins view pending hashes via the Admin Panel and cross-examine them on block explorers before issuing the encrypted VPN Privilege Keys.

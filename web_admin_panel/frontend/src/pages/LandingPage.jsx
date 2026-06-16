@@ -42,7 +42,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => (
     viewport={{ once: true }}
     transition={{ duration: 0.6, delay, ease: "easeOut" }}
     whileHover={{ y: -5, transition: { duration: 0.2 } }}
-    className="relative p-8 rounded-[2rem] bg-gradient-to-br from-[#0D0D0D] to-[#050505] border border-white/5 hover:border-[#22c55e]/30 transition-all group overflow-hidden shadow-2xl shadow-black"
+    className="relative p-8 rounded-[2rem] bg-gradient-to-br from-[#0D0D0D] to-[#030711] border border-white/5 hover:border-[#22c55e]/30 transition-all group overflow-hidden shadow-2xl shadow-black"
   >
     <motion.div 
       initial={{ opacity: 0 }}
@@ -323,6 +323,8 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
   const [activeTab, setActiveTab] = useState('PAYMENT'); // PAYMENT, HISTORY, USAGE
   const [selectedChain, setSelectedChain] = useState('SOLANA'); // SOLANA, BINANCE
   const [verificationTx, setVerificationTx] = useState('');
+
+  if (!plan) return null;
 
   useEffect(() => {
     if (isOpen) {
@@ -736,7 +738,7 @@ const LorapokVpnDemo = () => {
               animate={{ opacity: 1, y: 0 }} 
               className="space-y-2 pt-2"
             >
-              <div className="p-4 rounded-2xl bg-[#050505]/80 border border-white/10 backdrop-blur-md relative overflow-hidden">
+              <div className="p-4 rounded-2xl bg-[#030711]/80 border border-white/10 backdrop-blur-md relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-2 opacity-10">
                   <Shield className="w-12 h-12 text-[#22c55e]" />
                 </div>
@@ -759,7 +761,7 @@ const LorapokVpnDemo = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-3 relative z-10">
-                  <div className="p-3 rounded-xl bg-[#050505]/80 backdrop-blur-md border border-[#22c55e]/30 flex flex-col justify-between h-14 overflow-hidden relative">
+                  <div className="p-3 rounded-xl bg-[#030711]/80 backdrop-blur-md border border-[#22c55e]/30 flex flex-col justify-between h-14 overflow-hidden relative">
                     <div className="absolute inset-0 bg-[#22c55e]/5"></div>
                     <div className="relative z-10 flex items-center gap-1.5 opacity-80">
                       <Zap className="w-2.5 h-2.5 text-[#22c55e]" />
@@ -767,7 +769,7 @@ const LorapokVpnDemo = () => {
                     </div>
                     <div className="relative z-10 text-sm font-black text-white tracking-tight">{speeds.down} Mbps</div>
                   </div>
-                  <div className="p-3 rounded-xl bg-[#050505]/80 backdrop-blur-md border border-blue-500/30 flex flex-col justify-between h-14 overflow-hidden relative">
+                  <div className="p-3 rounded-xl bg-[#030711]/80 backdrop-blur-md border border-blue-500/30 flex flex-col justify-between h-14 overflow-hidden relative">
                     <div className="absolute inset-0 bg-blue-500/5"></div>
                     <div className="relative z-10 flex items-center gap-1.5 opacity-80 text-blue-400">
                       <Activity className="w-2.5 h-2.5" />
@@ -826,7 +828,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
+    <div className="min-h-screen bg-[#030711] text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
       <AnimatePresence>
         {isDownloadOpen && (
           <DownloadModal 
@@ -937,7 +939,7 @@ export default function LandingPage() {
       </section>
 
       {/* Feature Cards Section */}
-      <section className="py-32 px-6 bg-[#050505]/50 relative">
+      <section className="py-32 px-6 bg-[#030711]/50 relative">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-20">
             <div className="max-w-2xl">

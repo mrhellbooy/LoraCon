@@ -1,17 +1,38 @@
-# LoraCon Admin Terminal Standards 🛠️
+# LoraCon Admin Terminal & Central Orchestration (loracon-admin-terminal)
 
-## 1. Operational Controls
-- **Node Management**: Real-time load balancing and telemetry.
-- **Security Logs**: Filtered, anonymized connection logs (RAM-only).
-- **Payment Verification**: Manual and automated hash checking terminal.
+This guide outlines developer patterns for building real-time telemetry systems, recursive polling engines, and administrative console interfaces.
 
-## 2. Component library
-- **Cards**: `p-8 rounded-3xl bg-white/[0.02] border border-white/10`
-- **Buttons**: `px-8 py-4 bg-[#22c55e] text-black font-black uppercase tracking-widest`
-- **Tables**: Monospaced, high-contrast text for high-density data.
+---
 
-## 3. Deployment Checklists
-- [ ] API Health synchronized.
-- [ ] Wallet endpoints verified.
-- [ ] Handshake rotation operational.
-- [ ] Privilege Key generator online.
+## 🛰️ Persistent Polling Engine
+To prevent thread starvation and request stacking under high network lag, **never use standard setInterval**. Always use recursive `setTimeout` callbacks!
+
+### Core Pattern
+```javascript
+useEffect(() => {
+  let active = true;
+  
+  async function poll() {
+    if (!active) return;
+    try {
+      await fetchTelemetryData();
+    } catch (e) {
+      console.error("Telemetry failed:", e);
+    }
+    // Schedule next poll recursively
+    setTimeout(poll, 8000);
+  }
+  
+  poll();
+  return () => {
+    active = false;
+  };
+}, []);
+```
+
+---
+
+## 📟 Super Admin CLI Terminal
+- **Log Buffering**: Render status logs within styled custom scrolls (`custom-scrollbar overflow-y-auto`).
+- **Interactive Commands**: Support console commands (e.g. decommission node, restart gateway and whitelist address) that immediately reflect on visual maps and trigger API sync logs.
+- **Node Topology Charts**: Render interconnected gateways styled with responsive neon pulses representing healthy, warning, or offline node classes.

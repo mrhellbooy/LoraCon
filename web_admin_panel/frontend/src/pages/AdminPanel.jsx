@@ -5,6 +5,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import NodeMap from '../components/NodeMap';
+import { useToast } from '../components/Toast';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
@@ -26,6 +27,7 @@ export default function AdminPanel() {
   const [autoConnect, setAutoConnect] = useState(() => {
     return localStorage.getItem('autoConnect') === 'true';
   });
+  const showToast = useToast();
 
   useEffect(() => {
     localStorage.setItem('autoConnect', autoConnect);
@@ -58,12 +60,16 @@ export default function AdminPanel() {
       if (configRes.success) {
         setConfig(configRes.config);
         setNodes(configRes.nodes);
+        showToast("System dashboard data synchronized.");
+      } else {
+        showToast("Failed to fetch dashboard data.", "error");
       }
       if (sessionRes.success) {
         setSessions(sessionRes.sessions);
       }
     } catch (error) {
       console.error("Failed to fetch admin data:", error);
+      showToast("Unable to reach backend services.", "error");
     } finally {
       setIsRefreshing(false);
     }
@@ -91,13 +97,13 @@ export default function AdminPanel() {
       });
       const data = await response.json();
       if (data.success) {
-        alert("Configuration deployed successfully!");
+        showToast("Configuration deployed successfully!");
       } else {
-        alert("Failed to deploy: " + data.message);
+        showToast("Failed to deploy: " + data.message, "error");
       }
     } catch (error) {
       console.error("Deploy failed:", error);
-      alert("Deployment failed.");
+      showToast("Deployment handshake failed.", "error");
     } finally {
       setIsRefreshing(false);
     }

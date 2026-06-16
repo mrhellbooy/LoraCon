@@ -6,6 +6,7 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import { ToastProvider } from './components/Toast';
 
 const ProtectedRoute = ({ children }) => {
   const role = sessionStorage.getItem('role');
@@ -14,20 +15,22 @@ const ProtectedRoute = ({ children }) => {
 
 export default function AppRouter() {
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<LandingPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
-          <Route path="reset-password" element={<ResetPasswordPage />} />
-          <Route path="admin" element={
-            <ProtectedRoute>
-              <AdminPanel />
-            </ProtectedRoute>
-          } />
-        </Route>
-      </Routes>
-    </HashRouter>
+    <ToastProvider>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<LandingPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="reset-password" element={<ResetPasswordPage />} />
+            <Route path="admin" element={
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            } />
+          </Route>
+        </Routes>
+      </HashRouter>
+    </ToastProvider>
   );
 }

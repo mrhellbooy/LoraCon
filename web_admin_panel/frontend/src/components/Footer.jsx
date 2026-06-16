@@ -40,7 +40,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 pt-10 border-t border-white/5">
           <div className="flex items-center gap-2">
-            <p className="text-slate-600 text-[10px] font-mono tracking-tighter uppercase grayscale opacity-50">
+            <p className="text-slate-400 text-[10px] font-mono tracking-widest uppercase">
               &copy; {new Date().getFullYear()} LORAPOK LABS - BANGLADESH - ALL RIGHTS RESERVED
             </p>
           </div>

@@ -99,30 +99,30 @@ const TabManModal = ({ isOpen, onClose }) => {
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
-        className="w-full max-w-4xl bg-[#030303] border border-white/10 rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(34,197,94,0.15)] relative"
+        className="w-full max-h-[90vh] max-w-3xl bg-[#030303] border border-white/10 rounded-[2rem] overflow-hidden shadow-[0_0_100px_rgba(34,197,94,0.15)] relative"
         onClick={e => e.stopPropagation()}
       >
-        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.1)_0%,transparent_70%)] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.08)_0%,transparent_70%)] pointer-events-none" />
         
-        <div className="p-12 border-b border-white/5 flex items-center justify-between bg-white/[0.01] relative z-10">
-          <div className="flex items-center gap-8">
-            <div className="p-6 rounded-[2rem] bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center shadow-[0_0_30px_rgba(34,197,94,0.2)]">
-              <Download className="w-10 h-10 text-[#22c55e]" />
+        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.01] relative z-10">
+          <div className="flex items-center gap-6">
+            <div className="p-4 rounded-2xl bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.2)]">
+              <Download className="w-8 h-8 text-[#22c55e]" />
             </div>
             <div>
-              <h3 className="text-4xl font-black text-white italic uppercase tracking-tighter leading-none mb-2">Secure Distribution</h3>
-              <p className="text-[11px] text-slate-500 font-mono tracking-[0.4em] uppercase italic opacity-60">// CHANNEL: SENTINEL-EXPORT-v1.0.10 //</p>
+              <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter leading-none mb-1">Secure Distribution</h3>
+              <p className="text-[9px] text-slate-500 font-mono tracking-[0.3em] uppercase italic opacity-60">// CHANNEL: SENTINEL-EXPORT-v1.0.10 //</p>
             </div>
           </div>
           <button 
             onClick={onClose} 
-            className="p-5 bg-white/5 hover:bg-white/10 rounded-2xl transition-all group active:scale-90 border border-white/10"
+            className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all group active:scale-90 border border-white/10"
           >
-            <X size={32} className="text-slate-500 group-hover:text-white" />
+            <X size={24} className="text-slate-500 group-hover:text-white" />
           </button>
         </div>
 
-        <div className="p-12 gap-6 grid grid-cols-1 sm:grid-cols-2 relative z-10">
+        <div className="p-8 gap-4 grid grid-cols-1 sm:grid-cols-2 relative z-10">
           {[
             { name: 'Android APK', size: '24.5 MB', icon: Smartphone, color: '#22c55e', desc: 'Secure Mobile Client' },
             { name: 'Windows Client', size: '48.2 MB', icon: Monitor, color: '#4ade80', desc: 'Desktop Sentinel' },
@@ -135,19 +135,19 @@ const TabManModal = ({ isOpen, onClose }) => {
               onClick={(e) => handleDownload(e, item)}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ x: 10, backgroundColor: 'rgba(34,197,94,0.03)', borderColor: 'rgba(34,197,94,0.2)' }}
+              whileHover={{ x: 5, backgroundColor: 'rgba(34,197,94,0.02)', borderColor: 'rgba(34,197,94,0.1)' }}
               transition={{ delay: i * 0.05 }}
-              className="p-8 rounded-[2.5rem] bg-white/[0.01] border border-white/5 transition-all group flex items-center gap-6"
+              className="p-5 rounded-2xl bg-white/[0.01] border border-white/5 transition-all group flex items-center gap-4"
             >
               <div 
-                className="w-16 h-16 rounded-[1.5rem] bg-black border border-white/10 flex items-center justify-center transition-all group-hover:scale-110 shadow-xl"
+                className="w-12 h-12 rounded-xl bg-black border border-white/10 flex items-center justify-center transition-all group-hover:scale-105"
               >
-                 <item.icon className="w-8 h-8" style={{ color: item.color }} />
+                 <item.icon className="w-6 h-6" style={{ color: item.color }} />
               </div>
               <div className="flex-1">
-                <div className="font-black text-white text-xl italic uppercase tracking-tighter mb-1">{item.name}</div>
-                <div className="text-[10px] text-slate-500 font-mono tracking-widest opacity-60 uppercase mb-2">{item.desc}</div>
-                <div className="text-xs text-[#22c55e] font-mono font-bold tracking-widest">{item.size}</div>
+                <div className="font-black text-white text-base italic uppercase tracking-tighter mb-0.5">{item.name}</div>
+                <div className="text-[8px] text-slate-500 font-mono tracking-widest opacity-60 uppercase mb-1">{item.desc}</div>
+                <div className="text-[10px] text-[#22c55e] font-mono font-bold">{item.size}</div>
               </div>
             </motion.a>
           ))}
@@ -563,7 +563,7 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
 
 const LorapokVpnDemo = () => {
   const [status, setStatus] = useState('CONNECTED'); // Set to connected initially
-  const [connInfo, setConnInfo] = useState({ name: 'swiss_alpine_core', city: 'Zurich', country: 'Switzerland', ip: '179.43.144.157' });
+  const [connInfo, setConnInfo] = useState({ name: 'node_ch_105', city: 'Zurich', country: 'Switzerland', ip: '179.43.144.157' });
   const [ping, setPing] = useState(32);
 
   const mockNodes = [
@@ -594,9 +594,31 @@ const LorapokVpnDemo = () => {
     return () => clearInterval(interval);
   }, [status]);
 
-  const toggleConnection = () => {
+  const toggleConnection = async () => {
     if (status === 'IDLE') {
       setStatus('CONNECTING');
+      
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        if (data && data.ip) {
+          setTimeout(() => {
+            setConnInfo({
+              name: `node_${data.country_code?.toLowerCase() || 'unknown'}_${Math.floor(Math.random() * 1000)}`,
+              city: data.city || 'Unknown',
+              country: data.country_name || 'Unknown',
+              ip: data.ip
+            });
+            setStatus('CONNECTED');
+            setPing(Math.floor(Math.random() * 40 + 10));
+          }, 2500);
+          return;
+        }
+      } catch (e) {
+        console.error("Failed to fetch real IP data", e);
+      }
+      
+      // Fallback
       const randomNode = mockNodes[Math.floor(Math.random() * mockNodes.length)];
       setTimeout(() => {
         setConnInfo(randomNode);
@@ -610,7 +632,7 @@ const LorapokVpnDemo = () => {
   };
 
   return (
-    <div className="relative w-full h-full bg-[#050505] p-8 flex flex-col font-mono text-[10px] overflow-hidden">
+    <div className="relative w-full h-full bg-[#030303] p-6 lg:p-10 flex flex-col font-mono text-[11px] lg:text-xs overflow-hidden border border-white/5 rounded-[2rem]">
       {/* Background Tunnel Animation when connected */}
       <AnimatePresence>
         {status === 'CONNECTED' && (
@@ -713,32 +735,32 @@ const LorapokVpnDemo = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                     <div>
-                      <p className="text-slate-500 uppercase text-[7px] tracking-tighter">Location</p>
-                      <p className="text-white font-bold">{connInfo.city}, {connInfo.country}</p>
+                      <p className="text-slate-400 uppercase text-[9px] tracking-widest font-black mb-0.5">Location</p>
+                      <p className="text-white font-bold text-sm tracking-tight">{connInfo.city}, {connInfo.country}</p>
                     </div>
                     <div>
-                      <p className="text-slate-500 uppercase text-[7px] tracking-tighter">Assigned IP</p>
-                      <p className="text-[#22c55e] font-mono">{connInfo.ip}</p>
+                      <p className="text-slate-400 uppercase text-[9px] tracking-widest font-black mb-0.5">Assigned IP</p>
+                      <p className="text-[#22c55e] font-mono text-sm font-bold">{connInfo.ip}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                 <div className="p-3 rounded-xl bg-[#22c55e]/5 border border-[#22c55e]/20 flex flex-col justify-between h-14">
-                    <div className="flex items-center gap-1.5 opacity-50">
+                  <div className="p-3 rounded-xl bg-[#22c55e]/10 border border-[#22c55e]/30 flex flex-col justify-between h-14">
+                    <div className="flex items-center gap-1.5 opacity-80">
                       <Zap className="w-2.5 h-2.5 text-[#22c55e]" />
-                      <span className="text-[7px] text-slate-500">DOWN</span>
+                      <span className="text-[7px] text-slate-300 font-bold uppercase tracking-wider">DOWN</span>
                     </div>
-                    <div className="text-sm font-bold text-white tracking-tight">42.5 Mbps</div>
-                 </div>
-                 <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/20 flex flex-col justify-between h-14">
-                    <div className="flex items-center gap-1.5 opacity-50 text-blue-400">
+                    <div className="text-sm font-black text-white tracking-tight">42.5 Mbps</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 flex flex-col justify-between h-14">
+                    <div className="flex items-center gap-1.5 opacity-80 text-blue-400">
                       <Activity className="w-2.5 h-2.5" />
-                      <span className="text-[7px] text-slate-500">UP</span>
+                      <span className="text-[7px] text-slate-300 font-bold uppercase tracking-wider">UP</span>
                     </div>
-                    <div className="text-sm font-bold text-white tracking-tight">12.8 Mbps</div>
-                 </div>
+                    <div className="text-sm font-black text-white tracking-tight">12.8 Mbps</div>
+                  </div>
               </div>
 
               <p className="text-[7px] text-slate-600 italic mt-2">// Traffic mimicry active: resembling HTTPS/2 stream</p>
@@ -837,18 +859,9 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 }}
-                className="text-6xl md:text-[9.5rem] font-black leading-[0.8] tracking-tighter mb-10 italic uppercase font-monasans"
+                className="text-6xl md:text-8xl font-black leading-tight tracking-tighter mb-10"
               >
-                SECURE THE <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#22c55e] to-[#166534] drop-shadow-[0_0_30px_rgba(34,197,94,0.4)]">EDGE</span>.<br />
-                OWN THE <span className="text-white relative">
-                  FLOW.
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 1.5, delay: 1 }}
-                    className="absolute bottom-4 left-0 h-2 bg-[#22c55e] opacity-40 blur-[2px]"
-                  />
-                </span>
+                Master <span className="text-[#22c55e] drop-shadow-[0_0_20px_rgba(34,197,94,0.3)]">Control<br />Gate.</span>
               </motion.h1>
 
               <motion.p 
@@ -1072,8 +1085,8 @@ export default function LandingPage() {
             <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-slate-400 text-xs font-bold uppercase tracking-wider">
                <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" /> Infrastructure Suite
             </div>
-            <h2 className="text-5xl md:text-6xl font-black tracking-tight leading-tight italic uppercase">
-              Sentinel <span className="text-[#22c55e]">Infrastructure</span>.
+            <h2 className="text-5xl md:text-6xl font-black tracking-tight leading-tight">
+               Global Node <span className="text-[#22c55e]">Orchestration</span>.
             </h2>
             <p className="text-slate-400 text-lg leading-relaxed max-w-xl">
               Manage your global VPN node orchestration through our high-tech terminal interface. Monitor load telemetry, active sessions, and network health in real-time.

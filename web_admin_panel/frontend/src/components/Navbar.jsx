@@ -6,7 +6,7 @@ const Navbar = () => (
   <nav className="fixed top-0 left-0 w-full px-8 py-6 z-[100] flex justify-between items-center group">
     <div className="absolute inset-0 bg-black/40 backdrop-blur-xl border-b border-white/5 pointer-events-none group-hover:bg-black/60 transition-all" />
     <Link to="/" className="relative flex items-center gap-3 text-white font-black tracking-tighter hover:scale-105 transition-transform">
-      <Logo size={28} className="text-[#22c55e]" /> 
+      <Logo size={36} className="text-[#22c55e]" /> 
       <span className="hidden sm:block">LoraCon.</span>
     </Link>
     

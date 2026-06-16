@@ -96,33 +96,33 @@ const TabManModal = ({ isOpen, onClose }) => {
       onClick={onClose}
     >
       <motion.div 
-        initial={{ scale: 0.9, opacity: 0 }}
+        initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-2xl bg-[#050505] border border-white/10 rounded-[2rem] overflow-hidden shadow-[0_0_80px_rgba(34,197,94,0.1)] relative"
+        exit={{ scale: 0.8, opacity: 0 }}
+        className="w-full max-w-4xl bg-[#030303] border border-white/10 rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(34,197,94,0.15)] relative"
         onClick={e => e.stopPropagation()}
       >
-        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.05)_0%,transparent_70%)] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.1)_0%,transparent_70%)] pointer-events-none" />
         
-        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.01] relative z-10">
-          <div className="flex items-center gap-6">
-            <div className="p-4 rounded-2xl bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center">
-              <Download className="w-8 h-8 text-[#22c55e]" />
+        <div className="p-12 border-b border-white/5 flex items-center justify-between bg-white/[0.01] relative z-10">
+          <div className="flex items-center gap-8">
+            <div className="p-6 rounded-[2rem] bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center shadow-[0_0_30px_rgba(34,197,94,0.2)]">
+              <Download className="w-10 h-10 text-[#22c55e]" />
             </div>
             <div>
-              <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter">Get App</h3>
-              <p className="text-[9px] text-slate-500 font-mono tracking-widest uppercase italic opacity-60">// LORA-CON-DISTRIBUTION-v1.0.10 //</p>
+              <h3 className="text-4xl font-black text-white italic uppercase tracking-tighter leading-none mb-2">Secure Distribution</h3>
+              <p className="text-[11px] text-slate-500 font-mono tracking-[0.4em] uppercase italic opacity-60">// CHANNEL: SENTINEL-EXPORT-v1.0.10 //</p>
             </div>
           </div>
           <button 
             onClick={onClose} 
-            className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all group active:scale-90 border border-white/10"
+            className="p-5 bg-white/5 hover:bg-white/10 rounded-2xl transition-all group active:scale-90 border border-white/10"
           >
-            <X size={24} className="text-slate-500 group-hover:text-white" />
+            <X size={32} className="text-slate-500 group-hover:text-white" />
           </button>
         </div>
 
-        <div className="p-8 gap-4 grid grid-cols-1 sm:grid-cols-2 relative z-10">
+        <div className="p-12 gap-6 grid grid-cols-1 sm:grid-cols-2 relative z-10">
           {[
             { name: 'Android APK', size: '24.5 MB', icon: Smartphone, color: '#22c55e', desc: 'Secure Mobile Client' },
             { name: 'Windows Client', size: '48.2 MB', icon: Monitor, color: '#4ade80', desc: 'Desktop Sentinel' },
@@ -135,18 +135,19 @@ const TabManModal = ({ isOpen, onClose }) => {
               onClick={(e) => handleDownload(e, item)}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ x: 5, backgroundColor: 'rgba(255,255,255,0.02)' }}
+              whileHover={{ x: 10, backgroundColor: 'rgba(34,197,94,0.03)', borderColor: 'rgba(34,197,94,0.2)' }}
               transition={{ delay: i * 0.05 }}
-              className="p-5 rounded-2xl bg-white/[0.01] border border-white/5 hover:border-[#22c55e]/20 transition-all group flex items-center gap-4"
+              className="p-8 rounded-[2.5rem] bg-white/[0.01] border border-white/5 transition-all group flex items-center gap-6"
             >
               <div 
-                className="w-12 h-12 rounded-xl bg-black border border-white/10 flex items-center justify-center transition-all group-hover:scale-105"
+                className="w-16 h-16 rounded-[1.5rem] bg-black border border-white/10 flex items-center justify-center transition-all group-hover:scale-110 shadow-xl"
               >
-                 <item.icon className="w-6 h-6" style={{ color: item.color }} />
+                 <item.icon className="w-8 h-8" style={{ color: item.color }} />
               </div>
               <div className="flex-1">
-                <div className="font-bold text-white text-sm uppercase tracking-tight">{item.name}</div>
-                <div className="text-[10px] text-[#22c55e] font-mono">{item.size}</div>
+                <div className="font-black text-white text-xl italic uppercase tracking-tighter mb-1">{item.name}</div>
+                <div className="text-[10px] text-slate-500 font-mono tracking-widest opacity-60 uppercase mb-2">{item.desc}</div>
+                <div className="text-xs text-[#22c55e] font-mono font-bold tracking-widest">{item.size}</div>
               </div>
             </motion.a>
           ))}
@@ -403,7 +404,7 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
                 ))}
               </div>
 
-              <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="flex-1 pr-2 custom-scrollbar">
                 {activeTab === 'PAYMENT' && (
                   <div className="space-y-8 py-4">
                     <div className="flex gap-2 p-1 bg-white/[0.03] border border-white/10 rounded-2xl">
@@ -563,6 +564,7 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
 const LorapokVpnDemo = () => {
   const [status, setStatus] = useState('CONNECTED'); // Set to connected initially
   const [connInfo, setConnInfo] = useState({ name: 'swiss_alpine_core', city: 'Zurich', country: 'Switzerland', ip: '179.43.144.157' });
+  const [ping, setPing] = useState(32);
 
   const mockNodes = [
     { name: 'us_east_sentinel', city: 'Washington DC', country: 'United States', ip: '142.250.190.46' },
@@ -579,6 +581,19 @@ const LorapokVpnDemo = () => {
     }
   }, [status]);
 
+  useEffect(() => {
+    let interval;
+    if (status === 'CONNECTED') {
+      interval = setInterval(() => {
+        setPing(prev => {
+          const delta = Math.floor(Math.random() * 5) - 2;
+          return Math.max(12, Math.min(80, prev + delta));
+        });
+      }, 1500);
+    }
+    return () => clearInterval(interval);
+  }, [status]);
+
   const toggleConnection = () => {
     if (status === 'IDLE') {
       setStatus('CONNECTING');
@@ -586,6 +601,7 @@ const LorapokVpnDemo = () => {
       setTimeout(() => {
         setConnInfo(randomNode);
         setStatus('CONNECTED');
+        setPing(Math.floor(Math.random() * 40 + 10));
       }, 2500);
     } else {
       setStatus('IDLE');
@@ -661,7 +677,7 @@ const LorapokVpnDemo = () => {
       <div className="relative z-10 flex-1 space-y-2 overflow-hidden">
         <p className="text-slate-600">$ lora --status</p>
         <p className="text-slate-400">Node: <span className={connInfo ? "text-white" : ""}>[{connInfo?.name || 'NONE'}]</span></p>
-        <p className="text-slate-400">Latency: <span className={connInfo ? "text-[#22c55e]" : ""}>{connInfo ? Math.floor(Math.random() * 40 + 10) + 'ms' : '0ms'}</span></p>
+        <p className="text-slate-400">Latency: <span className={connInfo ? "text-[#22c55e]" : ""}>{ping}ms</span></p>
         
         <AnimatePresence mode="wait">
           {status === 'CONNECTING' && (
@@ -821,9 +837,18 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 }}
-                className="text-6xl md:text-8xl font-black leading-[0.85] tracking-tighter mb-10"
+                className="text-6xl md:text-[9.5rem] font-black leading-[0.8] tracking-tighter mb-10 italic uppercase font-monasans"
               >
-                Master <span className="text-[#22c55e] drop-shadow-[0_0_20px_rgba(34,197,94,0.3)]">Control<br />Gate.</span>
+                SECURE THE <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#22c55e] to-[#166534] drop-shadow-[0_0_30px_rgba(34,197,94,0.4)]">EDGE</span>.<br />
+                OWN THE <span className="text-white relative">
+                  FLOW.
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 1.5, delay: 1 }}
+                    className="absolute bottom-4 left-0 h-2 bg-[#22c55e] opacity-40 blur-[2px]"
+                  />
+                </span>
               </motion.h1>
 
               <motion.p 
@@ -832,7 +857,7 @@ export default function LandingPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-slate-400 text-lg md:text-xl max-w-xl mb-12 leading-relaxed font-light"
               >
-                Manage your global VPN node orchestration through our high-tech terminal interface. Monitor load telemetry, active sessions, and network health in real-time.
+                LoraCon provides a decentralized, high-speed encrypted tunneling ecosystem designed for the next generation of privacy. High-performance relays, military-grade encryption, and zero-latency routing.
               </motion.p>
 
               <motion.div 
@@ -920,7 +945,7 @@ export default function LandingPage() {
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#38bdf8]/10 border border-[#38bdf8]/20 text-[#38bdf8] text-[9px] font-black uppercase tracking-widest rounded-full mb-8">
                    Firefox Dedicated Extension
                 </div>
-                <h2 className="text-4xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-8 leading-[0.9]">
+                <h2 className="text-4xl md:text-6xl font-black text-white mb-8 leading-[1.1]">
                    One-Click <span className="text-[#38bdf8]">Proxy</span> Injection.
                 </h2>
                 <p className="text-slate-400 text-lg leading-relaxed mb-10 max-w-lg">
@@ -993,7 +1018,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-24 max-w-3xl mx-auto">
             <span className="text-[#22c55e] font-mono text-sm uppercase tracking-[0.4em] block mb-6 animate-pulse">// SERVICE ACCESS LAYERS</span>
-            <h2 className="text-5xl md:text-7xl font-black text-white italic uppercase tracking-tighter mb-8">Protocol Tiers</h2>
+            <h2 className="text-5xl md:text-7xl font-black text-white mb-8">Protocol Tiers</h2>
             <p className="text-slate-400 text-lg leading-relaxed">Scale your anonymity based on operational requirements. Decentralized billing via Solana blockchain integration.</p>
           </div>
           
@@ -1047,8 +1072,8 @@ export default function LandingPage() {
             <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-slate-400 text-xs font-bold uppercase tracking-wider">
                <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" /> Infrastructure Suite
             </div>
-            <h2 className="text-5xl md:text-6xl font-black tracking-tight leading-tight">
-              Master <span className="text-[#22c55e]">Control</span> Gate.
+            <h2 className="text-5xl md:text-6xl font-black tracking-tight leading-tight italic uppercase">
+              Sentinel <span className="text-[#22c55e]">Infrastructure</span>.
             </h2>
             <p className="text-slate-400 text-lg leading-relaxed max-w-xl">
               Manage your global VPN node orchestration through our high-tech terminal interface. Monitor load telemetry, active sessions, and network health in real-time.

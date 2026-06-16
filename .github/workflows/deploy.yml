@@ -81,7 +81,8 @@ jobs:
           # 1. Copy full React portal build (SaaS landing page & admin control panel) to root
           cp -r web_admin_panel/frontend/dist/* staging/
 
-          # 2. Copy the freshly compiled APK to /downloads
+          # 2. Copy the freshly compiled APK to the root as requested by LandingPage logic
+          cp app/build/outputs/apk/debug/app-debug.apk staging/LoraCon-Sentinel-v1.0.10.apk
           cp app/build/outputs/apk/debug/app-debug.apk staging/downloads/loracon-latest.apk
 
           # 3. Create .nojekyll to prevent Jekyll from discarding folders

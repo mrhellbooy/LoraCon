@@ -697,7 +697,7 @@ function App() {
       {/* FOOTER */}
       <footer className="mt-12 border-t border-[#1A1A1A] bg-[#0A0A0A] py-6 text-center text-xs text-gray-600">
         <div className="mx-auto max-w-7xl px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span>LoraCon Admin Console v2.0 • Produced by Lorapok Labs</span>
+          <span>LoraCon Admin Console v1.0.10 • Produced by Lorapok Labs</span>
           <span className="text-green-500 font-bold">100% SECURE CLIENT TUNNEL SYNCHRONY</span>
         </div>
       </footer>

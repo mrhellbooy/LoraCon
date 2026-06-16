@@ -1,12 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Book, Code, Shield, Cpu, Activity, ExternalLink } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import { Book, Code, Shield, Cpu, Activity, ExternalLink, CreditCard, Zap } from 'lucide-react';
 
 export default function DocsPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen text-white">
       <div className="pt-32 pb-20 px-6 max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -16,7 +14,7 @@ export default function DocsPage() {
             <div className="p-4 rounded-2xl bg-[#22c55e]/10">
               <Book className="w-8 h-8 text-[#22c55e]" />
             </div>
-            <h1 className="text-5xl font-black tracking-tighter">Documentation <span className="text-slate-500 text-2xl font-light ml-4">v2.0.4</span></h1>
+            <h1 className="text-5xl font-black tracking-tighter">Documentation <span className="text-slate-500 text-2xl font-light ml-4">v1.0.10</span></h1>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

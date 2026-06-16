@@ -68,14 +68,14 @@ const TabManModal = ({ isOpen, onClose }) => {
     if (item.name === 'Android APK') {
       addToast(`Initiating Secure Handshake for APK...`, 'info');
       setTimeout(() => {
-        // Mock download trigger
+        // Real download trigger
         const dummy = document.createElement('a');
-        dummy.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent('LoraCon APK Placeholder');
-        dummy.download = 'LoraCon-Sentinel-v4.apk';
+        dummy.href = './LoraCon-Sentinel-v1.0.10.apk'; // Use relative path for sub-folder deployment
+        dummy.download = 'LoraCon-Sentinel-v1.0.10.apk';
         document.body.appendChild(dummy);
         dummy.click();
         document.body.removeChild(dummy);
-        addToast(`LORAPOK-SENTINEL-v4.0.2.apk (24.5MB) download started. Verify checksum in AI Studio Export.`, 'success');
+        addToast(`LORAPOK-SENTINEL-v1.0.10.apk (24.5MB) download started. Verify checksum in AI Studio Export.`, 'success');
       }, 2000);
     } else if (item.name === 'Firefox Extension') {
       addToast(`Connecting to Mozilla Add-on Proxy...`, 'info');
@@ -92,66 +92,62 @@ const TabManModal = ({ isOpen, onClose }) => {
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/95 backdrop-blur-[40px]"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-3xl"
       onClick={onClose}
     >
       <motion.div 
-        initial={{ scale: 0.8, y: 50, opacity: 0 }}
-        animate={{ scale: 1, y: 0, opacity: 1 }}
-        exit={{ scale: 0.8, y: 50, opacity: 0 }}
-        transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="w-full max-w-4xl bg-[#050505] border border-white/10 rounded-[4rem] overflow-hidden shadow-[0_0_150px_rgba(34,197,94,0.15)] relative"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="w-full max-w-2xl bg-[#050505] border border-white/10 rounded-[2rem] overflow-hidden shadow-[0_0_80px_rgba(34,197,94,0.1)] relative"
         onClick={e => e.stopPropagation()}
       >
-        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.08)_0%,transparent_70%)] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.05)_0%,transparent_70%)] pointer-events-none" />
         
-        <div className="p-16 border-b border-white/5 flex items-center justify-between bg-white/[0.01] relative z-10">
-          <div className="flex items-center gap-8">
-            <div className="p-6 rounded-[2rem] bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center shadow-[0_0_40px_rgba(34,197,94,0.2)]">
-              <Download className="w-10 h-10 text-[#22c55e]" />
+        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.01] relative z-10">
+          <div className="flex items-center gap-6">
+            <div className="p-4 rounded-2xl bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center">
+              <Download className="w-8 h-8 text-[#22c55e]" />
             </div>
             <div>
-              <h3 className="text-4xl font-black text-white italic uppercase tracking-tighter">Secure Distribution</h3>
-              <p className="text-[11px] text-slate-500 font-mono tracking-[0.4em] uppercase italic mt-1 opacity-60">// CHANNEL: SENTINEL-EXPORT-v4.0.2</p>
+              <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter">Get App</h3>
+              <p className="text-[9px] text-slate-500 font-mono tracking-widest uppercase italic opacity-60">// LORA-CON-DISTRIBUTION-v1.0.10 //</p>
             </div>
           </div>
           <button 
             onClick={onClose} 
-            className="p-5 bg-white/5 hover:bg-white/10 rounded-[2rem] transition-all group active:scale-90 border border-white/10 shadow-lg"
+            className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all group active:scale-90 border border-white/10"
           >
-            <X size={32} className="text-slate-500 group-hover:text-white" />
+            <X size={24} className="text-slate-500 group-hover:text-white" />
           </button>
         </div>
 
-        <div className="p-16 gap-8 grid grid-cols-1 sm:grid-cols-2 relative z-10">
+        <div className="p-8 gap-4 grid grid-cols-1 sm:grid-cols-2 relative z-10">
           {[
-            { name: 'Android APK', size: '24.5 MB', icon: Smartphone, color: '#22c55e', desc: 'Full Sentinel Access' },
-            { name: 'Firefox Extension', size: '1.2 MB', icon: Zap, color: '#38bdf8', desc: 'One-Click Proxy Injection' },
-            { name: 'Windows Client', size: '48.2 MB', icon: Monitor, color: '#4ade80', desc: 'System-Wide Tunneling' },
-            { name: 'macOS DMG', size: '42.1 MB', icon: Apple, color: '#fbbf24', desc: 'Optimized for M1/M2' },
+            { name: 'Android APK', size: '24.5 MB', icon: Smartphone, color: '#22c55e', desc: 'Secure Mobile Client' },
+            { name: 'Windows Client', size: '48.2 MB', icon: Monitor, color: '#4ade80', desc: 'Desktop Sentinel' },
+            { name: 'macOS DMG', size: '42.1 MB', icon: Apple, color: '#fbbf24', desc: 'Darwin Core Build' },
+            { name: 'Firefox Extension', size: '1.2 MB', icon: Zap, color: '#38bdf8', desc: 'Proxy Injection' },
           ].map((item, i) => (
             <motion.a
               key={item.name}
               href="#"
               onClick={(e) => handleDownload(e, item)}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              whileHover={{ x: 10, backgroundColor: 'rgba(255,255,255,0.03)' }}
-              transition={{ delay: i * 0.1 }}
-              className="p-8 rounded-[3rem] bg-white/[0.01] border border-white/5 hover:border-white/20 transition-all group relative flex items-center gap-8"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ x: 5, backgroundColor: 'rgba(255,255,255,0.02)' }}
+              transition={{ delay: i * 0.05 }}
+              className="p-5 rounded-2xl bg-white/[0.01] border border-white/5 hover:border-[#22c55e]/20 transition-all group flex items-center gap-4"
             >
               <div 
-                className="w-20 h-20 rounded-[1.8rem] bg-black border border-white/10 flex items-center justify-center transition-all group-hover:scale-110 shadow-2xl relative overflow-hidden"
+                className="w-12 h-12 rounded-xl bg-black border border-white/10 flex items-center justify-center transition-all group-hover:scale-105"
               >
-                 <div className="absolute inset-0 opacity-10" style={{ backgroundColor: item.color }} />
-                 <item.icon className="w-10 h-10 relative z-10" style={{ color: item.color }} />
+                 <item.icon className="w-6 h-6" style={{ color: item.color }} />
               </div>
               <div className="flex-1">
-                <div className="font-black text-white text-xl italic uppercase tracking-tighter leading-tight mb-1">{item.name}</div>
-                <div className="text-[10px] text-slate-500 font-mono uppercase tracking-widest mb-2 opacity-50">{item.desc}</div>
-                <div className="text-[11px] text-[#22c55e] font-mono italic">{item.size}</div>
+                <div className="font-bold text-white text-sm uppercase tracking-tight">{item.name}</div>
+                <div className="text-[10px] text-[#22c55e] font-mono">{item.size}</div>
               </div>
-              <ChevronRight className="w-6 h-6 text-slate-800 group-hover:text-white transition-colors" />
             </motion.a>
           ))}
         </div>
@@ -565,8 +561,8 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
 };
 
 const LorapokVpnDemo = () => {
-  const [status, setStatus] = useState('IDLE'); // IDLE, CONNECTING, CONNECTED
-  const [connInfo, setConnInfo] = useState(null);
+  const [status, setStatus] = useState('CONNECTED'); // Set to connected initially
+  const [connInfo, setConnInfo] = useState({ name: 'swiss_alpine_core', city: 'Zurich', country: 'Switzerland', ip: '179.43.144.157' });
 
   const mockNodes = [
     { name: 'us_east_sentinel', city: 'Washington DC', country: 'United States', ip: '142.250.190.46' },
@@ -574,6 +570,14 @@ const LorapokVpnDemo = () => {
     { name: 'jp_neo_tokyo', city: 'Tokyo', country: 'Japan', ip: '103.2.146.12' },
     { name: 'sg_merlion_relay', city: 'Singapore', country: 'Singapore', ip: '111.90.141.134' }
   ];
+
+  useEffect(() => {
+    // If it's IDLE, auto-connect after a delay
+    if (status === 'IDLE') {
+        const timer = setTimeout(() => toggleConnection(), 2000);
+        return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   const toggleConnection = () => {
     if (status === 'IDLE') {
@@ -817,18 +821,9 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 }}
-                className="text-6xl md:text-8xl font-black leading-[0.85] tracking-tighter mb-10 italic uppercase"
+                className="text-6xl md:text-8xl font-black leading-[0.85] tracking-tighter mb-10"
               >
-                SECURE THE <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#22c55e] to-[#166534] drop-shadow-[0_0_20px_rgba(34,197,94,0.3)]">EDGE</span>.<br />
-                OWN THE <span className="text-white relative">
-                  FLOW.
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 1, delay: 1 }}
-                    className="absolute bottom-0 left-0 h-1 bg-[#22c55e] opacity-40 blur-[2px]"
-                  />
-                </span>
+                Master <span className="text-[#22c55e] drop-shadow-[0_0_20px_rgba(34,197,94,0.3)]">Control<br />Gate.</span>
               </motion.h1>
 
               <motion.p 
@@ -837,9 +832,7 @@ export default function LandingPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-slate-400 text-lg md:text-xl max-w-xl mb-12 leading-relaxed font-light"
               >
-                LoraCon provides a decentralized, high-speed encrypted tunneling ecosystem 
-                designed for the next generation of privacy. High-performance relays,
-                military-grade encryption, and zero-latency routing.
+                Manage your global VPN node orchestration through our high-tech terminal interface. Monitor load telemetry, active sessions, and network health in real-time.
               </motion.p>
 
               <motion.div 

@@ -202,7 +202,7 @@ export default function AdminPanel() {
         <header className="mb-12 flex justify-between items-end">
             <div>
                 <h1 className="text-3xl font-bold mb-2">Control Plane</h1>
-                <p className="text-gray-500 font-light">Infrastructure oversight for Lorapok network.</p>
+                <p className="text-gray-500 font-light">Infrastructure oversight for Lorapok network. <span className="text-[#22c55e]/60 font-mono text-[10px]">v1.0.10</span></p>
             </div>
             <div className="flex gap-2">
                 <div className="flex items-center gap-2 px-4 py-2.5 bg-[#111] border border-[#222] rounded-lg">

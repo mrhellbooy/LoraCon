@@ -64,12 +64,12 @@ const Logo = ({ size = 40, className, isConnected = true, isConnecting = false }
 
         {/* Eyes */}
         <motion.circle 
-          cx="40" cy="30" r="10" fill="#030711" 
+          cx="40" cy="30" r="10" fill="#050505" 
           animate={{ r: [10, 11, 10] }}
           transition={{ repeat: Infinity, duration: 2 }}
         />
         <motion.circle 
-          cx="60" cy="30" r="10" fill="#030711" 
+          cx="60" cy="30" r="10" fill="#050505" 
           animate={{ r: [10, 11, 10] }}
           transition={{ repeat: Infinity, duration: 2 }}
         />

@@ -151,7 +151,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030711] text-[#F1F5F9] font-mono selection:bg-green-500 selection:text-black">
+    <div className="min-h-screen bg-[#050505] text-[#F1F5F9] font-mono selection:bg-green-500 selection:text-black">
       {/* HEADER BAR */}
       <header className="border-b border-[#1A1A1A] bg-[#0A0A0A] px-4 py-4 md:px-8">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">

@@ -5,8 +5,7 @@ import Footer from '../components/Footer';
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-[#030711] text-white">
-      <Navbar />
+    <div className="min-h-screen">
       <div className="pt-32 pb-20 px-6 max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -46,7 +45,6 @@ export default function PrivacyPage() {
           </section>
         </motion.div>
       </div>
-      <Footer />
     </div>
   );
 }

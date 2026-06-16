@@ -168,8 +168,7 @@ export default function LandingPage() {
   const [isTabManOpen, setIsTabManOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#030711] text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
-      <Navbar />
+    <div className="min-h-screen text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
       <AnimatePresence>
         {isTabManOpen && <TabManModal isOpen={isTabManOpen} onClose={() => setIsTabManOpen(false)} />}
       </AnimatePresence>
@@ -375,8 +374,6 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

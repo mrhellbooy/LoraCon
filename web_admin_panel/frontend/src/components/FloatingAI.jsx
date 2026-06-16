@@ -15,6 +15,18 @@ export default function FloatingAI() {
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="relative">
+          <motion.div
+            animate={{ 
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.3, 0.1]
+            }}
+            transition={{ 
+              duration: 3, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+            className="absolute -inset-8 bg-[#22c55e] blur-[30px] rounded-full pointer-events-none" 
+          />
           <div className="absolute -inset-4 bg-[#22c55e]/20 blur-[20px] rounded-full group-hover:bg-[#22c55e]/30 transition-all" />
           <Logo size={60} isConnected={true} className="relative z-10" />
         </div>

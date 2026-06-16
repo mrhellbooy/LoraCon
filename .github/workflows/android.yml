@@ -20,6 +20,10 @@ jobs:
         cache: gradle
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
+    - name: Restore Keystore & Environment Files
+      run: |
+        base64 -d debug.keystore.base64 > debug.keystore
+        cp .env.example .env
     - name: Build with Gradle
       run: gradle assembleDebug
       

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Shield, Activity, Server, Sliders, Monitor, Cpu, ChevronRight, CreditCard, Users, Terminal, RefreshCw, Cog
+  Shield, Activity, Server, Sliders, Monitor, Cpu, ChevronRight, CreditCard, Users, Terminal, RefreshCw, Cog, Wallet, CheckCircle, Search, HelpCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -52,6 +52,33 @@ export default function AdminPanel() {
   const [nodes, setNodes] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [apiStatus, setApiStatus] = useState('online');
+  const [bandwidthData, setBandwidthData] = useState(() => 
+    Array.from({ length: 20 }, (_, i) => ({ time: i, value: 20 + Math.random() * 30 }))
+  );
+
+  useEffect(() => {
+    let timeoutId;
+    const pollGateways = () => {
+      // Simulate real-time ledger sync
+      const logEntry = `[${new Date().toLocaleTimeString()}] LEDGER_POLL: Checking SOL/BSC clusters...`;
+      console.log(logEntry);
+      
+      // Simulate automated approval of pending transactions if they exist
+      const hasPending = Math.random() > 0.6;
+      if (hasPending) {
+        setApiStatus('syncing');
+        setTimeout(() => {
+          setApiStatus('online');
+          showToast("Automated Ledger Sync: 1 transaction verified and provisioned.", "success");
+        }, 3000);
+      }
+
+      timeoutId = setTimeout(pollGateways, 60000); // Poll every 60s for better performance
+    };
+
+    pollGateways();
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   useEffect(() => {
     let timeoutId;
@@ -144,6 +171,7 @@ export default function AdminPanel() {
     { id: 'SERVERS', label: 'Node Cluster', icon: Server },
     { id: 'MONITOR', label: 'Telemetry', icon: Monitor },
     { id: 'BILLING', label: 'Billing/Finance', icon: CreditCard },
+    { id: 'PAYMENT_VERIFY', label: 'Payment Verification', icon: CheckCircle },
     { id: 'USERS', label: 'User Directory', icon: Users },
     { id: 'SYSTEM', label: 'System Logs', icon: Terminal },
     { id: 'SETTINGS', label: 'Settings', icon: Cog }
@@ -296,75 +324,148 @@ export default function AdminPanel() {
             <div>
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-lg font-semibold flex items-center gap-2"><CreditCard size={18} className="text-[#22c55e]" /> Protocol Finance</h2>
-                <button 
-                  onClick={connectWallet}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-all ${
-                    walletConnected 
-                      ? 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30' 
-                      : 'bg-[#22c55e] text-black hover:scale-[1.02]'
-                  }`}
-                >
-                  <Wallet size={16} />
-                  {walletConnected ? adminWallet : 'Connect Admin Wallet'}
-                </button>
+            <div className="flex gap-4 items-center">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] border border-white/10 rounded-xl">
+                 <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse" />
+                 <span className="text-[9px] text-[#22c55e] font-black uppercase tracking-widest italic font-mono">Ledger Polling: Active</span>
+              </div>
+              <button 
+                onClick={connectWallet}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-all ${
+                  walletConnected 
+                    ? 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30' 
+                    : 'bg-[#22c55e] text-black hover:scale-[1.02]'
+                }`}
+              >
+                <Wallet size={16} />
+                {walletConnected ? adminWallet : 'Connect Admin Wallet'}
+              </button>
+            </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
                 <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
                   <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Total Revenue (SOL)</p>
                   <p className="text-2xl font-black text-white">42.50 SOL</p>
+                </div>
+                <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Total Revenue (BNB)</p>
+                  <p className="text-2xl font-black text-[#f3ba2f]">8.12 BNB</p>
                 </div>
                 <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
                   <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Active Subs</p>
                   <p className="text-2xl font-black text-[#22c55e]">142</p>
                 </div>
                 <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Wishlist backlog</p>
-                  <p className="text-2xl font-black text-blue-500">2,410</p>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Pending Clearance</p>
+                  <p className="text-2xl font-black text-amber-500">12</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div className="bg-[#111] p-8 rounded-2xl border border-[#222]">
+                  <h3 className="text-sm font-bold mb-6 flex items-center gap-2 uppercase tracking-widest italic opacity-50"><Shield size={14} /> Global Operations</h3>
+                  <div className="space-y-4">
+                    <div className="p-5 bg-[#050505] rounded-xl border border-white/5">
+                      <p className="text-[#22c55e] mb-2 font-bold text-[10px] tracking-widest uppercase italic">// SOLANA_MAINNET</p>
+                      <div className="flex justify-between items-center text-[10px] text-slate-400 font-mono">
+                        <span>Balance: 124.5 SOL</span>
+                        <span className="text-green-500">Node Sync: 100%</span>
+                      </div>
+                    </div>
+                    <div className="p-5 bg-[#050505] rounded-xl border border-white/5">
+                      <p className="text-[#f3ba2f] mb-2 font-bold text-[10px] tracking-widest uppercase italic">// BINANCE_SMART_CHAIN</p>
+                      <div className="flex justify-between items-center text-[10px] text-slate-400 font-mono">
+                        <span>Balance: 14.8 BNB</span>
+                        <span className="text-green-500">Handshake: OK</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-[#111] p-8 rounded-2xl border border-[#222]">
+                  <h3 className="text-sm font-bold mb-6 flex items-center gap-2 uppercase tracking-widest italic opacity-50"><HelpCircle size={14} /> Settlement Guide</h3>
+                  <div className="space-y-4 text-[11px] text-slate-400 font-mono leading-relaxed">
+                    <p className="border-b border-white/5 pb-2">1. All payments are peer-to-peer to admin wallets.</p>
+                    <p className="border-b border-white/5 pb-2">2. SOLANA: Transactions are verified via blockhash comparison on Solana Explorer.</p>
+                    <p className="border-b border-white/5 pb-2">3. BINANCE: Verification requires cross-checking BEP20 deposit event logs on BscScan.</p>
+                    <p>4. PRIVILEGE KEYS are automatically issued upon manual ledger confirmation in the "Verification" tab.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'PAYMENT_VERIFY' && (
+            <div className="space-y-8">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-lg font-semibold flex items-center gap-2"><CheckCircle size={18} className="text-green-500" /> Payment Verification Terminal</h2>
+                <span className="px-3 py-1 bg-green-500/10 border border-green-500/20 text-[#22c55e] text-[9px] font-black uppercase tracking-widest rounded-full">Secure Auth Active</span>
+              </div>
+
+              <div className="bg-[#111] p-8 rounded-2xl border border-[#222]">
+                <div className="flex gap-4 mb-10">
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
+                    <input 
+                      className="w-full bg-[#050505] border border-white/10 rounded-xl px-12 py-3 text-sm focus:outline-none focus:border-[#22c55e] transition-colors"
+                      placeholder="Input Transaction Hash (SOL / BSC)..."
+                    />
+                  </div>
+                  <button className="px-8 py-3 bg-[#22c55e] text-black font-bold rounded-xl hover:scale-105 transition-all text-sm">
+                    VERIFY ON LEDGER
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4">Pending Transactions for Manual Approval</h3>
+                  {[
+                    { id: '6Xp...8R2', user: 'Sentinel-01', chain: 'Solana', amount: '0.5 SOL', time: '12m ago' },
+                    { id: '0x3k4...p9a', user: 'Warp-Pilot', chain: 'BSC', amount: '0.1 BNB', time: '5m ago' },
+                    { id: '0xabc...123', user: 'Prime-Op', chain: 'BSC', amount: '0.25 BNB', time: '2m ago' }
+                  ].map((tx, i) => (
+                    <div key={i} className="p-5 bg-[#050505] rounded-xl border border-white/5 flex items-center justify-between group hover:border-[#22c55e]/30 transition-all font-mono">
+                      <div className="flex items-center gap-6">
+                        <div className={`p-2 rounded-lg ${tx.chain === 'Solana' ? 'bg-[#9945FF]/10 text-[#9945FF]' : 'bg-[#f3ba2f]/10 text-[#f3ba2f]'}`}>
+                           <p className="text-[9px] font-bold uppercase">{tx.chain}</p>
+                        </div>
+                        <div>
+                          <p className="text-white text-xs font-bold">{tx.amount} <span className="text-slate-500 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">({tx.id})</span></p>
+                          <p className="text-[9px] text-slate-600 uppercase tracking-widest">{tx.user} • {tx.time}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button className="px-3 py-1.5 bg-blue-500/10 text-blue-500 text-[9px] font-bold uppercase rounded-lg border border-blue-500/20 hover:bg-blue-500 hover:text-white transition-all">View Explorer</button>
+                        <button className="px-3 py-1.5 bg-green-500/10 text-green-500 text-[9px] font-bold uppercase rounded-lg border border-green-500/20 hover:bg-green-500 hover:text-black transition-all">Approve & Issue Key</button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
               <div className="bg-[#111] p-8 rounded-2xl border border-[#222]">
-                <h3 className="text-sm font-bold mb-6 flex items-center gap-2 uppercase tracking-widest italic opacity-50"><Shield size={14} /> Multi-Chain Operations</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-xs text-slate-400 font-mono leading-relaxed">
-                  <div className="p-5 bg-[#050505] rounded-xl border border-white/5">
-                    <p className="text-[#22c55e] mb-2 font-bold">// SOLANA_MAINNET</p>
-                    <p>Status: Monitoring Active</p>
-                    <p>Asset: SOL, USDC-SPL, USDT-SPL</p>
-                    <p>Endpoint: https://api.mainnet-beta.solana.com</p>
-                  </div>
-                  <div className="p-5 bg-[#050505] rounded-xl border border-white/5">
-                    <p className="text-[#f3ba2f] mb-2 font-bold">// BINANCE_SMART_CHAIN</p>
-                    <p>Status: Handshake Operational</p>
-                    <p>Asset: BNB, BUSD-BEP20, USDT-BEP20</p>
-                    <p>Endpoint: https://bsc-dataseed.binance.org/</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-50">Subscription Management</h4>
-                  {[
-                    { plan: 'Protocol Stealth', price: '0.5 SOL / 0.1 BNB', pool: 'sentinel_east_cluster' },
-                    { plan: 'Protocol Warp', price: '1.2 SOL / 0.25 BNB', pool: 'global_mimic_relay' },
-                    { plan: 'Sentinel Prime', price: '2.5 SOL', pool: 'dedicated_mesh_sg_01' }
-                  ].map((p, i) => (
-                    <div key={i} className="flex items-center justify-between p-5 bg-[#050505] rounded-xl border border-white/5 hover:border-[#22c55e]/30 transition-all group">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 rounded-lg bg-white/5"><Shield size={18} className="text-slate-500 group-hover:text-[#22c55e]" /></div>
-                        <div>
-                          <p className="font-bold text-white tracking-tight">{p.plan}</p>
-                          <p className="text-[10px] text-slate-600 font-mono">POOL: {p.pool}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-6">
-                        <div className="text-right">
-                          <p className="text-sm font-black text-[#22c55e]">{p.price}</p>
-                          <p className="text-[8px] text-slate-500 font-mono">PER CYCLE</p>
-                        </div>
-                        <button className="p-2 hover:bg-white/5 rounded-lg text-slate-500 hover:text-white transition-colors"><Cog size={16} /></button>
-                      </div>
-                    </div>
-                  ))}
+                <h3 className="text-sm font-bold text-white uppercase italic tracking-tighter mb-6 flex items-center gap-2"><HelpCircle size={16} className="text-[#22c55e]" /> Verification Documentation</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                   <div className="space-y-4">
+                      <h4 className="text-[10px] font-bold text-[#22c55e] uppercase tracking-widest border-b border-[#22c55e]/20 pb-2">Solana Verification (SOL/USDC/USDT)</h4>
+                      <ol className="text-[11px] text-slate-400 space-y-3 list-decimal pl-4">
+                         <li>Open <strong>Solscan</strong> or <strong>Solana Explorer</strong>.</li>
+                         <li>Paste the transaction hash from the user's request.</li>
+                         <li>Ensure the <strong>Recipient</strong> address matches: <code className="text-[#22c55e] bg-black px-1">LoRaConVpn...P7yX9wQz</code></li>
+                         <li>Confirm the <strong>Status</strong> is "Finalized".</li>
+                         <li>Verify the <strong>Amount</strong> matches the requested Protocol Tier.</li>
+                      </ol>
+                   </div>
+                   <div className="space-y-4">
+                      <h4 className="text-[10px] font-bold text-[#f3ba2f] uppercase tracking-widest border-b border-[#f3ba2f]/20 pb-2">Binance Verification (BNB/USDT)</h4>
+                      <ol className="text-[11px] text-slate-400 space-y-3 list-decimal pl-4">
+                         <li>Navigate to <strong>BscScan.com</strong>.</li>
+                         <li>Search for the provided tx hash or the User's Wallet Address.</li>
+                         <li>Check the "Bep-20 Token Transfers" tab if they sent stablecoins.</li>
+                         <li>Confirm the destination is: <code className="text-[#f3ba2f] bg-black px-1">0xLoraConAdmin...Fb32c7</code></li>
+                         <li>Identify the "Transaction Action" field for clear amount logs.</li>
+                      </ol>
+                   </div>
                 </div>
               </div>
             </div>

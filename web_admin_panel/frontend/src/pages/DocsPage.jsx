@@ -77,21 +77,64 @@ export default function DocsPage() {
               <section id="economics">
                 <h2 className="text-4xl font-black mb-8 border-l-4 border-[#22c55e] pl-6">04. Economic Layer</h2>
                 <div className="prose prose-invert text-slate-400 space-y-6 text-base leading-relaxed">
-                  <p>Access to ELITE nodes is managed via the **Solana Devnet**. By utilizing decentralized crypto verification, we ensure user anonymity while maintaining a sustainable infrastructure model.</p>
-                  <div className="p-8 rounded-3xl bg-[#050505] border border-white/5 font-mono text-sm">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" />
-                      <span className="text-[#22c55e] uppercase tracking-widest text-[10px]">Blockchain Sync</span>
+                  <p>Access to LoraCon high-bandwidth clusters is managed via decentralized settlement. By utilizing on-chain verification, we ensure user anonymity while maintaining a sustainable infrastructure model.</p>
+                </div>
+              </section>
+
+              <section id="crypto-integration">
+                <h2 className="text-4xl font-black mb-8 border-l-4 border-[#22c55e] pl-6">05. Crypto Payment Integration</h2>
+                <div className="prose prose-invert text-slate-400 space-y-8 text-base leading-relaxed">
+                  <div>
+                    <h3 className="text-white text-xl font-bold mb-4 flex items-center gap-2"><CreditCard className="w-5 h-5 text-[#22c55e]" /> Payment Verification Protocol</h3>
+                    <p>LoraCon supports peer-to-peer settlement via Solana and Binance Smart Chain. Transactions are verified in two stages: automated ledger polling and manual admin clearance for priority privilege keys.</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
+                       <h4 className="text-[#22c55e] font-black uppercase text-[10px] tracking-widest mb-4">Solana (SOL/USDC)</h4>
+                       <ul className="space-y-3 text-sm">
+                          <li><strong>Endpoint:</strong> Any Phantom-compatible wallet.</li>
+                          <li><strong>Verification:</strong> Solscan blockhash comparison.</li>
+                          <li><strong>Confirmation:</strong> 1-3 slots (~400ms).</li>
+                       </ul>
                     </div>
-                    <p className="text-slate-500 mb-2">// Verifying transaction hash...</p>
-                    <p className="text-white">tx_hash: 5uS...k8q [SOLANA_DEVNET]</p>
-                    <p className="text-[#22c55e] mt-4">{" >> "}PRIVILEGE_KEY_UPGRADE: SUCCESS</p>
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
+                       <h4 className="text-[#f3ba2f] font-black uppercase text-[10px] tracking-widest mb-4">Binance (BNB/USDT)</h4>
+                       <ul className="space-y-3 text-sm">
+                          <li><strong>Endpoint:</strong> BEP-20 compatible wallets.</li>
+                          <li><strong>Verification:</strong> BscScan transaction event logs.</li>
+                          <li><strong>Confirmation:</strong> 3-15 blocks (~3s).</li>
+                       </ul>
+                    </div>
+                  </div>
+
+                  <div className="p-8 rounded-3xl bg-[#050505] border border-white/5 font-mono text-sm">
+                    <h4 className="text-[#22c55e] text-xs font-bold mb-4 uppercase tracking-[0.2em] italic">// Integration Workflow</h4>
+                    <div className="space-y-4">
+                      <div className="flex gap-4">
+                        <span className="text-slate-600">01.</span>
+                        <span>Select Protocol Tier in Checkout Modal.</span>
+                      </div>
+                      <div className="flex gap-4">
+                        <span className="text-slate-600">02.</span>
+                        <span>Transmit assets to documented Admin Endpoints.</span>
+                      </div>
+                      <div className="flex gap-4 border-b border-white/5 pb-4">
+                        <span className="text-slate-600">03.</span>
+                        <span>Input Transaction Hash for instant synchronization.</span>
+                      </div>
+                      <div className="pt-2">
+                        <p className="text-slate-500 mb-2">// Initializing automated verification loop...</p>
+                        <p className="text-white">poll: SOLANA_MAINNET [status: healthy]</p>
+                        <p className="text-[#22c55e] mt-2">{ " >> " }PRIVILEGE_KEY_SYNC: OK</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>
 
               <section id="deployment">
-                <h2 className="text-4xl font-black mb-8 border-l-4 border-[#22c55e] pl-6">05. Handshake Protocol</h2>
+                <h2 className="text-4xl font-black mb-8 border-l-4 border-[#22c55e] pl-6">06. Handshake Protocol</h2>
                 <div className="bg-black/40 rounded-3xl p-8 border border-white/10 font-mono text-xs text-slate-300">
                   <span className="text-[#22c55e]"># Initialize LoraCon Node</span><br />
                   $ loracon init --mode stealth<br /><br />

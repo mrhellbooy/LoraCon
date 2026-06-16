@@ -1,25 +1,17 @@
----
-name: "loracon-aesthetic"
-description: "Guidelines for maintaining the 'Organism-inspired Cybernetic' visual identity of LoraCon."
----
+# LoraCon Aesthetic Blueprint 🎨
 
-# LoraCon Aesthetic & Design System
+## Core Visual Philosophy
+"Organism-inspired Cybernetic". The UI should feel like a living, breathing entity that facilitates secure transits.
 
-This skill defines the visual language for LoraCon across Android and Web platforms.
+## Design tokens
+- **Primary BG**: `#030711` (Deep Space Blue/Black)
+- **Accent Green**: `#22c55e` (Neon/Signal Green) - Used for primary status and "living" elements.
+- **Accent Blue**: `#38bdf8` (Sky Blue) - Used for network indicators and data flow.
+- **Accent Gold**: `#f3ba2f` (Binance Gold) - Used for BSC-related financial modules.
+- **Typography**: Sans-serif for UI, Monospace for technical readouts.
 
-## Core Visual Principles
-
-*   **Deep Space Canvas**: The primary background must always be **Obsidian Black** (`#030711` or `#050505`). Never use pure gray or white backgrounds.
-*   **Cyber Emerald Accents**: Use **Neon Green** (`#22c55e`) for primary actions, success states, and status indicators.
-*   **Glow & Radiance**: Apply subtle blurs and glowing borders (`border-white/10` or `CyberEmerald.copy(alpha = 0.2f)`) to create depth.
-*   **Atomic Monospace**: Use monospace fonts (JetBrains Mono, Roboto Mono) for technical data, logs, and "System" messages to reinforce the Super Admin aesthetic.
-
-## Component Styling
-
-*   **Cards**: Should have rounded corners (>= 24dp/px), subtle borders (`1px solid white/0.1`), and a backdrop blur effect if possible.
-*   **Buttons**: Use high-contrast pairings (Black text on Emerald background).
-*   **Logo Interaction**: The LoraCon logo (Larva) should always have a "breathing" or "pulse" animation using Framer Motion (Web) or Infinite Transition (Android).
-
-## Tone & Voice
-
-*   **Cybernetic Sentience**: System responses should be calm, objective, and slightly technical. Use prefixes like `[SYSTEM]`, `[PROCESS]`, or `$` to denote CLI-style feedback.
+## Interaction Principles
+- **Page Transitions**: Always use `AnimatePresence` and `motion.div` for route changes.
+- **Entry Animations**: Subtle upward slide + fade-in (e.g., `y: 20 -> 0`).
+- **Feedback**: Immediate visual response on button press (scale-95).
+- **Glassmorphism**: Use `backdrop-blur-xl` and `bg-white/5` for modals and cards.

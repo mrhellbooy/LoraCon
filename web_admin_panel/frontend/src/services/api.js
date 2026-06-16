@@ -30,4 +30,8 @@ export const apiHealth = {
   check: () => handleRequest(() => api.get('/api/health')),
 };
 
+export const wishlist = {
+  submit: (data) => handleRequest(() => api.post('/api/wishlist/submit', data)),
+};
+
 export default api;

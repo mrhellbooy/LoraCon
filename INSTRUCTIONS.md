@@ -22,7 +22,21 @@ The Super Admin panel implements a persistent health check.
 - **Transitions**: Every route in `AppRouter.jsx` is wrapped in `AnimatedRoute` (Framer Motion).
 - **Icons**: Use `lucide-react` for all functional iconography.
 
-## 3. Deployment Instructions
+## 3. Billing & Multi-Chain Settlement
+LoraCon supports decentralized payments via **Solana** and **Binance Smart Chain (BSC)**.
+
+### Payment Verification Process
+1. **User Side**: Users select their preferred chain (SOL/BSC) in the Checkout Modal.
+2. **Transfer**: Users send assets (SOL, BNB, USDT, etc.) to the documented Admin Wallet addresses.
+3. **Verification**: 
+   - Automatic: The system monitors the chain for incoming transfers (Simulated).
+   - Manual: Users can provide a Transaction Hash.
+4. **Admin Panel**: Admins use the **Payment Verification** tab to:
+   - Search for hashes.
+   - Cross-reference with Solscan or BscScan.
+   - Manually approve and issue **Privilege Keys**.
+
+## 4. Deployment Instructions
 
 This project is deployed to GitHub Pages via GitHub Actions.
 

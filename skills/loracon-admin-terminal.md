@@ -1,23 +1,17 @@
----
-name: "loracon-admin-terminal"
-description: "Guidelines for implementing the LoraCon 'Super Admin' terminal experience."
----
+# LoraCon Admin Terminal Standards 🛠️
 
-# LoraCon Admin Terminal Experience
+## 1. Operational Controls
+- **Node Management**: Real-time load balancing and telemetry.
+- **Security Logs**: Filtered, anonymized connection logs (RAM-only).
+- **Payment Verification**: Manual and automated hash checking terminal.
 
-Rules for the interactive terminal and high-density dashboard.
+## 2. Component library
+- **Cards**: `p-8 rounded-3xl bg-white/[0.02] border border-white/10`
+- **Buttons**: `px-8 py-4 bg-[#22c55e] text-black font-black uppercase tracking-widest`
+- **Tables**: Monospaced, high-contrast text for high-density data.
 
-## UX Principles
-
-*   **Execute-First**: Features should feel like immediate commands being executed on a remote cluster.
-*   **Visual Feedback**: Every user action should trigger a log entry or a status change in the terminal mockup.
-*   **High Density**: Don't shy away from showing technical metrics (CPU, Load, Node Count). Users should feel empowered by information.
-
-## Terminal Mockup Rules (Web)
-- Use `framer-motion` for staggered log entries.
-- Use a typing effect for "System" messages.
-- Prompt symbols (`$`, `#`, `>>`) should be color-coded based on their role (Emerald for success, Amber for warning, Red for error).
-
-## Interface Components (Web)
-- `FloatingAI.jsx`: The sentient network companion.
-- `NodeMap.jsx`: Visual representation of the decentralized mesh.
+## 3. Deployment Checklists
+- [ ] API Health synchronized.
+- [ ] Wallet endpoints verified.
+- [ ] Handshake rotation operational.
+- [ ] Privilege Key generator online.

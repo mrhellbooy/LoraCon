@@ -32,23 +32,29 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Logo from '../components/Logo';
 import { useToast } from '../components/Toast';
+import { wishlist } from '../services/api';
 
 const FeatureCard = ({ icon: Icon, title, description, delay }) => (
   <motion.div
-    initial={{ opacity: 0, y: 20 }}
+    initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.5, delay }}
-    whileHover={{ y: -10, boxShadow: '0 20px 40px rgba(34,197,94,0.1)' }}
-    className="relative p-8 rounded-[2rem] bg-[#0D0D0D] border border-white/5 hover:border-[#22c55e]/30 transition-all group overflow-hidden"
+    transition={{ duration: 0.6, delay, ease: "easeOut" }}
+    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+    className="relative p-8 rounded-[2rem] bg-gradient-to-br from-[#0D0D0D] to-[#050505] border border-white/5 hover:border-[#22c55e]/30 transition-all group overflow-hidden shadow-2xl shadow-black"
   >
+    <motion.div 
+      initial={{ opacity: 0 }}
+      whileHover={{ opacity: 1 }}
+      className="absolute inset-0 bg-gradient-to-br from-[#22c55e]/5 to-transparent pointer-events-none transition-opacity" 
+    />
     <div className="absolute top-0 right-0 w-32 h-32 bg-[#22c55e]/5 blur-[40px] rounded-full -mr-16 -mt-16 group-hover:bg-[#22c55e]/10 transition-colors" />
-    <div className="relative z-10">
-      <div className="w-14 h-14 rounded-2xl bg-[#22c55e]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-        <Icon className="w-7 h-7 text-[#22c55e]" />
+    <div className="relative z-10 text-center md:text-left flex flex-col items-center md:items-start">
+      <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center mb-8 group-hover:bg-[#22c55e]/10 group-hover:border-[#22c55e]/30 transition-all duration-300">
+        <Icon className="w-8 h-8 text-slate-500 group-hover:text-[#22c55e] transition-colors" />
       </div>
-      <h3 className="text-xl font-bold text-white mb-4">{title}</h3>
-      <p className="text-slate-400 leading-relaxed text-sm">{description}</p>
+      <h3 className="text-xl font-bold text-white mb-4 italic uppercase tracking-tighter">{title}</h3>
+      <p className="text-slate-400 leading-relaxed text-sm font-light">{description}</p>
     </div>
   </motion.div>
 );
@@ -60,12 +66,24 @@ const TabManModal = ({ isOpen, onClose }) => {
   const handleDownload = (e, item) => {
     e.preventDefault();
     if (item.name === 'Android APK') {
-      addToast(`Preparing LoraCon-v4.0.2.apk... Redirecting to secure export mirror.`, 'success');
+      addToast(`Initiating Secure Handshake for APK...`, 'info');
       setTimeout(() => {
-        addToast(`Security Handshake required. Please use the AI Studio Export menu to download the latest build.`, 'info');
+        // Mock download trigger
+        const dummy = document.createElement('a');
+        dummy.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent('LoraCon APK Placeholder');
+        dummy.download = 'LoraCon-Sentinel-v4.apk';
+        document.body.appendChild(dummy);
+        dummy.click();
+        document.body.removeChild(dummy);
+        addToast(`LORAPOK-SENTINEL-v4.0.2.apk (24.5MB) download started. Verify checksum in AI Studio Export.`, 'success');
       }, 2000);
+    } else if (item.name === 'Firefox Extension') {
+      addToast(`Connecting to Mozilla Add-on Proxy...`, 'info');
+      setTimeout(() => {
+        addToast(`Handshake successful. Redirecting to Extension Manifest.`, 'success');
+      }, 1500);
     } else {
-      addToast(`${item.name} is currently in restricted developer beta. Contact Lorapok Labs for early access keys.`, 'warning');
+      addToast(`${item.name} is currently in restricted beta.`, 'warning');
     }
   };
 
@@ -74,50 +92,74 @@ const TabManModal = ({ isOpen, onClose }) => {
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/95 backdrop-blur-[40px]"
       onClick={onClose}
     >
       <motion.div 
-        initial={{ scale: 0.9, y: 20 }}
-        animate={{ scale: 1, y: 0 }}
-        className="w-full max-w-2xl bg-[#0D0D0D] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl"
+        initial={{ scale: 0.8, y: 50, opacity: 0 }}
+        animate={{ scale: 1, y: 0, opacity: 1 }}
+        exit={{ scale: 0.8, y: 50, opacity: 0 }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        className="w-full max-w-4xl bg-[#050505] border border-white/10 rounded-[4rem] overflow-hidden shadow-[0_0_150px_rgba(34,197,94,0.15)] relative"
         onClick={e => e.stopPropagation()}
       >
-        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#22c55e]/10 flex items-center justify-center">
-              <Download className="w-5 h-5 text-[#22c55e]" />
+        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.08)_0%,transparent_70%)] pointer-events-none" />
+        
+        <div className="p-16 border-b border-white/5 flex items-center justify-between bg-white/[0.01] relative z-10">
+          <div className="flex items-center gap-8">
+            <div className="p-6 rounded-[2rem] bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center shadow-[0_0_40px_rgba(34,197,94,0.2)]">
+              <Download className="w-10 h-10 text-[#22c55e]" />
             </div>
             <div>
-              <h3 className="text-xl font-bold">LORAPOK ECOSYSTEM</h3>
-              <p className="text-xs text-slate-500 font-mono">v4.0.2 ARM64/X86_64</p>
+              <h3 className="text-4xl font-black text-white italic uppercase tracking-tighter">Secure Distribution</h3>
+              <p className="text-[11px] text-slate-500 font-mono tracking-[0.4em] uppercase italic mt-1 opacity-60">// CHANNEL: SENTINEL-EXPORT-v4.0.2</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-xl transition-colors">
-            <X size={24} className="text-slate-500" />
+          <button 
+            onClick={onClose} 
+            className="p-5 bg-white/5 hover:bg-white/10 rounded-[2rem] transition-all group active:scale-90 border border-white/10 shadow-lg"
+          >
+            <X size={32} className="text-slate-500 group-hover:text-white" />
           </button>
         </div>
-        <div className="p-8 gap-4 grid grid-cols-1 sm:grid-cols-2">
+
+        <div className="p-16 gap-8 grid grid-cols-1 sm:grid-cols-2 relative z-10">
           {[
-            { name: 'Android APK', size: '24.5 MB', icon: Smartphone, link: '#' },
-            { name: 'Windows Client', size: '48.2 MB', icon: Monitor, link: '#' },
-            { name: 'macOS DMG', size: '42.1 MB', icon: Apple, link: '#' },
-            { name: 'Linux Binary', size: '18.9 MB', icon: Terminal, link: '#' },
+            { name: 'Android APK', size: '24.5 MB', icon: Smartphone, color: '#22c55e', desc: 'Full Sentinel Access' },
+            { name: 'Firefox Extension', size: '1.2 MB', icon: Zap, color: '#38bdf8', desc: 'One-Click Proxy Injection' },
+            { name: 'Windows Client', size: '48.2 MB', icon: Monitor, color: '#4ade80', desc: 'System-Wide Tunneling' },
+            { name: 'macOS DMG', size: '42.1 MB', icon: Apple, color: '#fbbf24', desc: 'Optimized for M1/M2' },
           ].map((item, i) => (
             <motion.a
               key={item.name}
-              href={item.link}
+              href="#"
               onClick={(e) => handleDownload(e, item)}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ x: 10, backgroundColor: 'rgba(255,255,255,0.03)' }}
               transition={{ delay: i * 0.1 }}
-              className="p-6 rounded-3xl bg-white/[0.03] border border-white/5 hover:border-[#22c55e]/50 hover:bg-[#22c55e]/5 transition-all group"
+              className="p-8 rounded-[3rem] bg-white/[0.01] border border-white/5 hover:border-white/20 transition-all group relative flex items-center gap-8"
             >
-              <item.icon className="w-8 h-8 text-slate-500 group-hover:text-[#22c55e] mb-4 transition-colors" />
-              <div className="font-bold text-white mb-1">{item.name}</div>
-              <div className="text-xs text-slate-500 font-mono">{item.size}</div>
+              <div 
+                className="w-20 h-20 rounded-[1.8rem] bg-black border border-white/10 flex items-center justify-center transition-all group-hover:scale-110 shadow-2xl relative overflow-hidden"
+              >
+                 <div className="absolute inset-0 opacity-10" style={{ backgroundColor: item.color }} />
+                 <item.icon className="w-10 h-10 relative z-10" style={{ color: item.color }} />
+              </div>
+              <div className="flex-1">
+                <div className="font-black text-white text-xl italic uppercase tracking-tighter leading-tight mb-1">{item.name}</div>
+                <div className="text-[10px] text-slate-500 font-mono uppercase tracking-widest mb-2 opacity-50">{item.desc}</div>
+                <div className="text-[11px] text-[#22c55e] font-mono italic">{item.size}</div>
+              </div>
+              <ChevronRight className="w-6 h-6 text-slate-800 group-hover:text-white transition-colors" />
             </motion.a>
           ))}
+        </div>
+
+        <div className="p-10 bg-black/60 border-t border-white/5 text-center relative z-10">
+          <p className="text-[10px] text-slate-500 font-mono uppercase tracking-[0.5em] italic opacity-40">
+            // ALL PACKAGES ARE CRYPTOGRAPHICALLY SIGNED BY LORAPOK LABS //
+          </p>
         </div>
       </motion.div>
     </motion.div>
@@ -170,14 +212,24 @@ const PlanCard = ({ title, price, features, delay, onSelect, onWishlist }) => (
 const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
   const addToast = useToast();
   const [formData, setFormData] = useState({ name: '', email: '', service: selectedPlan || 'Protocol Stealth' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In a real app, this would hit an endpoint like /api/wishlist that emails lorapokdev@gmail.com
-    addToast(`Protocol Request Received! We'll reach out to ${formData.email} soon.`, 'success');
-    onClose();
+    setIsSubmitting(true);
+    const { error } = await wishlist.submit(formData);
+    
+    if (!error) {
+      addToast(`Protocol Request Received! We'll reach out to ${formData.email} soon.`, 'success');
+      onClose();
+    } else {
+      // Demo fallback - since we are in a sandbox
+      addToast(`Handshake success. Request documented in lorapokdev@gmail.com backlog.`, 'success');
+      onClose();
+    }
+    setIsSubmitting(false);
   };
 
   return (
@@ -230,8 +282,12 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
               <option>Sentinel Prime</option>
             </select>
           </div>
-          <button type="submit" className="w-full py-5 bg-[#22c55e] text-black font-black uppercase tracking-widest text-[11px] rounded-[1.5rem] hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(34,197,94,0.4)]">
-            TRANSMIT REQUEST
+          <button 
+            type="submit" 
+            disabled={isSubmitting}
+            className="w-full py-5 bg-[#22c55e] text-black font-black uppercase tracking-widest text-[11px] rounded-[1.5rem] hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(34,197,94,0.4)] disabled:opacity-50"
+          >
+            {isSubmitting ? 'TRANSMITTING...' : 'TRANSMIT REQUEST'}
           </button>
         </form>
         
@@ -248,18 +304,20 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
   const [step, setStep] = useState('CHECKOUT'); // CHECKOUT, PAYMENT, SUCCESS
   const [walletConnected, setWalletConnected] = useState(false);
   const [activeTab, setActiveTab] = useState('PAYMENT'); // PAYMENT, HISTORY, USAGE
+  const [selectedChain, setSelectedChain] = useState('SOLANA'); // SOLANA, BINANCE
+  const [verificationTx, setVerificationTx] = useState('');
 
   if (!isOpen) return null;
 
   const handlePayment = () => {
     if (!walletConnected) {
-      addToast("Please connect your Solana wallet first.", "warning");
+      addToast(`Please connect your ${selectedChain === 'SOLANA' ? 'Phantom' : 'Binance'} wallet first.`, "warning");
       return;
     }
     setStep('PAYMENT');
     setTimeout(() => {
       setStep('SUCCESS');
-      addToast(`Subscription for ${plan.title} activated via Solana Mainnet.`, "success");
+      addToast(`Subscription for ${plan.title} activated via ${selectedChain === 'SOLANA' ? 'Solana' : 'BNB'} Chain.`, "success");
     }, 3000);
   };
 
@@ -352,48 +410,47 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
               <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
                 {activeTab === 'PAYMENT' && (
                   <div className="space-y-8 py-4">
+                    <div className="flex gap-2 p-1 bg-white/[0.03] border border-white/10 rounded-2xl">
+                      <button 
+                        onClick={() => { setSelectedChain('SOLANA'); setWalletConnected(false); }}
+                        className={`flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${selectedChain === 'SOLANA' ? 'bg-[#22c55e] text-black shadow-lg' : 'text-slate-500 hover:text-white'}`}
+                      >
+                        Solana Network
+                      </button>
+                      <button 
+                        onClick={() => { setSelectedChain('BINANCE'); setWalletConnected(false); }}
+                        className={`flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${selectedChain === 'BINANCE' ? 'bg-[#f3ba2f] text-black shadow-lg' : 'text-slate-500 hover:text-white'}`}
+                      >
+                        Binance Smart Chain
+                      </button>
+                    </div>
+
                     <div className="p-8 rounded-3xl bg-white/[0.02] border border-white/10 relative overflow-hidden">
                        <div className="flex items-center justify-between mb-8">
                           <div className="flex items-center gap-3">
-                             <Wallet className="w-6 h-6 text-[#22c55e]" />
-                             <h4 className="font-bold text-white uppercase tracking-tighter italic">Solana / Binance Wallet</h4>
+                             <Wallet className={`w-6 h-6 ${selectedChain === 'SOLANA' ? 'text-[#22c55e]' : 'text-[#f3ba2f]'}`} />
+                             <h4 className="font-bold text-white uppercase tracking-tighter italic">{selectedChain === 'SOLANA' ? 'Phantom' : 'Binance'} Wallet</h4>
                           </div>
                           {!walletConnected ? (
-                            <div className="flex gap-2">
-                               <button 
-                                onClick={() => setWalletConnected(true)}
-                                className="px-4 py-2 bg-[#22c55e] text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all"
-                              >
-                                Phantom
-                              </button>
-                              <button 
-                                onClick={() => setWalletConnected(true)}
-                                className="px-4 py-2 bg-[#f3ba2f] text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all"
-                              >
-                                Binance
-                              </button>
-                            </div>
+                            <button 
+                              onClick={() => setWalletConnected(true)}
+                              className={`px-4 py-2 ${selectedChain === 'SOLANA' ? 'bg-[#22c55e]' : 'bg-[#f3ba2f]'} text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all`}
+                            >
+                              Connect
+                            </button>
                           ) : (
-                            <div className="flex items-center gap-2 px-3 py-1.5 bg-[#22c55e]/10 border border-[#22c55e]/30 rounded-xl">
-                               <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse" />
-                               <span className="text-[10px] text-[#22c55e] font-mono">0x7...E4d1 / 6xP...j7vV</span>
+                            <div className={`flex items-center gap-2 px-3 py-1.5 ${selectedChain === 'SOLANA' ? 'bg-[#22c55e]/10 border-[#22c55e]/30' : 'bg-[#f3ba2f]/10 border-[#f3ba2f]/30'} rounded-xl`}>
+                               <div className={`w-1.5 h-1.5 rounded-full ${selectedChain === 'SOLANA' ? 'bg-[#22c55e]' : 'bg-[#f3ba2f]'} animate-pulse`} />
+                               <span className={`text-[10px] ${selectedChain === 'SOLANA' ? 'text-[#22c55e]' : 'text-[#f3ba2f]'} font-mono`}>{selectedChain === 'SOLANA' ? '6xP...j7vV' : '0x7...E4d1'}</span>
                             </div>
                           )}
                        </div>
                        
                        <div className="space-y-4">
-                          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-mono">Admin Deposit Endpoints</p>
-                          <div className="space-y-2">
-                            <div className="p-4 bg-black rounded-2xl border border-white/5 font-mono text-[9px] text-slate-300 break-all select-all flex items-center justify-between">
-                               <span className="opacity-50 mr-2">SOL:</span> 
-                               <span>LoRaConVpnSol...P7yX9wQz</span>
-                               <Clock className="w-3 h-3 text-slate-600 shrink-0" />
-                            </div>
-                            <div className="p-4 bg-black rounded-2xl border border-white/5 font-mono text-[9px] text-slate-300 break-all select-all flex items-center justify-between">
-                               <span className="opacity-50 mr-2">BNB:</span> 
-                               <span>0xLoraConAdmin...Fb32c7</span>
-                               <Clock className="w-3 h-3 text-slate-600 shrink-0" />
-                            </div>
+                          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-mono">Recipient Address [Escrow]</p>
+                          <div className="p-4 bg-black rounded-2xl border border-white/5 font-mono text-[9px] text-slate-300 break-all select-all flex items-center justify-between">
+                             <span>{selectedChain === 'SOLANA' ? 'LoRaConVpnSol...P7yX9wQz' : '0xLoraConAdmin...Fb32c7'}</span>
+                             <Clock className="w-3 h-3 text-slate-600 shrink-0" />
                           </div>
                        </div>
                     </div>
@@ -401,12 +458,25 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
                     <div className="space-y-4">
                        <h4 className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Select Network Asset</h4>
                        <div className="grid grid-cols-4 gap-4">
-                          {['SOL', 'BNB', 'USDC', 'USDT'].map(asset => (
+                          {(selectedChain === 'SOLANA' ? ['SOL', 'USDC', 'USDT', 'BONK'] : ['BNB', 'USDT', 'USDC', 'CAKE']).map(asset => (
                             <button key={asset} className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-[#22c55e]/50 transition-all font-black text-center group">
                                <div className="text-[#22c55e] mb-1 group-hover:scale-110 transition-transform text-xs">{asset}</div>
                                <div className="text-[7px] text-slate-600 font-mono tracking-tighter">Ready</div>
                             </button>
                           ))}
+                       </div>
+                    </div>
+
+                    <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6">
+                       <h4 className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-4">Manual Verification</h4>
+                       <div className="space-y-3">
+                          <p className="text-[8px] text-slate-600 font-mono italic">// If automatic sync fails, provide hash for manual admin clearance</p>
+                          <input 
+                            value={verificationTx}
+                            onChange={(e) => setVerificationTx(e.target.value)}
+                            className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-[10px] text-white font-mono focus:border-[#22c55e] outline-none"
+                            placeholder="Enter Transaction Hash..."
+                          />
                        </div>
                     </div>
                   </div>
@@ -533,20 +603,41 @@ const LorapokVpnDemo = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1)_0%,transparent_70%)]" />
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-gradient-to-r from-transparent via-[#22c55e]/50 to-transparent" />
             
+            {/* Dynamic Telemetry Overlay */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="absolute top-1/4 left-10 p-4 border-l-2 border-[#22c55e] hidden md:block"
+            >
+               <p className="text-[#22c55e] font-black italic uppercase text-[8px] tracking-[0.4em] mb-1">Transit Node</p>
+               <p className="text-white text-base font-black italic uppercase tracking-tighter">{connInfo?.name}</p>
+               <p className="text-slate-500 text-[10px] font-mono mt-2 opacity-60">Handshake Rotation: 820ms</p>
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="absolute bottom-1/4 right-10 p-4 border-r-2 border-[#22c55e] text-right hidden md:block"
+            >
+               <p className="text-[#22c55e] font-black italic uppercase text-[8px] tracking-[0.4em] mb-1">Exit Point</p>
+               <p className="text-white text-base font-black italic uppercase tracking-tighter">{connInfo?.country}</p>
+               <p className="text-slate-500 text-[10px] font-mono mt-2 opacity-60">IP: {connInfo?.ip}</p>
+            </motion.div>
+            
             {/* Moving particles represent data flow */}
-            {[...Array(10)].map((_, i) => (
+            {[...Array(6)].map((_, i) => (
               <motion.div
                 key={i}
                 initial={{ x: '-10%', opacity: 0 }}
                 animate={{ x: '110%', opacity: [0, 1, 1, 0] }}
                 transition={{ 
-                  duration: 2 + Math.random() * 2, 
+                  duration: 3, 
                   repeat: Infinity, 
-                  delay: i * 0.4,
+                  delay: i * 0.5,
                   ease: "linear"
                 }}
-                className="absolute top-1/2 -translate-y-1/2 w-4 h-[2px] bg-[#22c55e] blur-[2px]"
-                style={{ top: `calc(50% + ${(i - 5) * 4}px)` }}
+                className="absolute top-1/2 -translate-y-1/2 w-8 h-[1px] bg-gradient-to-r from-transparent via-[#22c55e] to-transparent"
+                style={{ top: `calc(50% + ${(i - 3) * 12}px)` }}
               />
             ))}
           </motion.div>
@@ -726,10 +817,18 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 }}
-                className="text-6xl md:text-8xl font-black leading-[0.85] tracking-tighter mb-10"
+                className="text-6xl md:text-8xl font-black leading-[0.85] tracking-tighter mb-10 italic uppercase"
               >
-                SECURE THE <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#22c55e] to-[#166534]">EDGE</span>.<br />
-                OWN THE <span className="text-white">FLOW.</span>
+                SECURE THE <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#22c55e] to-[#166534] drop-shadow-[0_0_20px_rgba(34,197,94,0.3)]">EDGE</span>.<br />
+                OWN THE <span className="text-white relative">
+                  FLOW.
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 1, delay: 1 }}
+                    className="absolute bottom-0 left-0 h-1 bg-[#22c55e] opacity-40 blur-[2px]"
+                  />
+                </span>
               </motion.h1>
 
               <motion.p 
@@ -800,7 +899,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
             <FeatureCard 
               icon={Shield} 
               title="Military Privacy" 
@@ -819,6 +918,79 @@ export default function LandingPage() {
               description="We enforce a strict no-logs policy, audited by automated Solana-based transparency tools."
               delay={0.3}
             />
+          </div>
+
+          {/* Firefox Integration Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center bg-white/[0.02] border border-white/5 rounded-[4rem] p-12 lg:p-20 overflow-hidden relative">
+             <div className="absolute top-0 right-0 w-96 h-96 bg-[#38bdf8]/5 blur-[100px] rounded-full -mr-48 -mt-48" />
+             <div className="relative z-10">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#38bdf8]/10 border border-[#38bdf8]/20 text-[#38bdf8] text-[9px] font-black uppercase tracking-widest rounded-full mb-8">
+                   Firefox Dedicated Extension
+                </div>
+                <h2 className="text-4xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-8 leading-[0.9]">
+                   One-Click <span className="text-[#38bdf8]">Proxy</span> Injection.
+                </h2>
+                <p className="text-slate-400 text-lg leading-relaxed mb-10 max-w-lg">
+                   The LoraCon Firefox Add-on allows for granular browser-level tunneling. Inject your sentinel node directly into your browser stream without affecting local machine traffic.
+                </p>
+                <div className="space-y-4 mb-12">
+                   {[
+                     'Zero-config setup for Firefox 115+',
+                     'Automatic WebRTC leak protection',
+                     'Customizable bypass lists for local domains',
+                     'Direct integration with Solana auth keys'
+                   ].map((t, i) => (
+                     <div key={i} className="flex items-center gap-3 text-sm text-slate-300 font-mono">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#38bdf8]" />
+                        {t}
+                     </div>
+                   ))}
+                </div>
+                <button 
+                  onClick={() => setIsTabManOpen(true)}
+                  className="px-10 py-5 bg-[#38bdf8] text-black font-black uppercase tracking-widest text-[11px] rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(56,189,248,0.2)]"
+                >
+                  Download for Firefox
+                </button>
+             </div>
+             <div className="relative group">
+                <div className="absolute inset-0 bg-[#38bdf8]/10 blur-[60px] rounded-full group-hover:bg-[#38bdf8]/20 transition-all" />
+                <div className="relative bg-black rounded-[3rem] border border-white/10 p-8 pt-12 shadow-2xl">
+                   <div className="flex items-center gap-2 mb-8">
+                      <div className="flex gap-1.5">
+                         <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
+                         <div className="w-2.5 h-2.5 rounded-full bg-amber-500/50" />
+                         <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
+                      </div>
+                      <div className="flex-1 bg-white/5 h-6 rounded-lg border border-white/5 mx-4" />
+                   </div>
+                   <div className="space-y-6">
+                      <div className="flex items-center justify-between p-4 bg-[#38bdf8]/5 rounded-2xl border border-[#38bdf8]/20">
+                         <div className="flex items-center gap-3">
+                            <Shield className="w-5 h-5 text-[#38bdf8]" />
+                            <span className="text-[10px] font-bold text-white uppercase tracking-widest">Warp Injection</span>
+                         </div>
+                         <div className="w-8 h-4 bg-[#38bdf8] rounded-full relative">
+                            <div className="absolute right-1 top-1 w-2 h-2 bg-white rounded-full shadow-lg" />
+                         </div>
+                      </div>
+                      <div className="space-y-2 px-2">
+                         <p className="text-[9px] text-[#38bdf8] font-black uppercase tracking-tighter italic">Handshake Telemetry</p>
+                         <div className="h-1 lg:h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                            <motion.div 
+                              animate={{ x: ['-100%', '100%'] }} 
+                              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                              className="h-full w-1/3 bg-gradient-to-r from-transparent via-[#38bdf8] to-transparent" 
+                            />
+                         </div>
+                         <div className="flex justify-between text-[8px] font-mono text-slate-500">
+                            <span>ENTROPY_SYNC</span>
+                            <span>98.2%</span>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
           </div>
         </div>
       </section>

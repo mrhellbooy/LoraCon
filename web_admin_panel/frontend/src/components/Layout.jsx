@@ -9,7 +9,7 @@ export default function Layout() {
   const isAdmin = location.pathname.startsWith('/admin');
 
   return (
-    <div className="min-h-screen bg-[#030711] text-[#F1F5F9] flex flex-col">
+    <div className="min-h-screen bg-[#050505] text-[#F1F5F9] flex flex-col">
       {!isAdmin && <Navbar />}
       <main className="flex-1">
         <Outlet />

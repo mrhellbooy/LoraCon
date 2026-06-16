@@ -38,7 +38,7 @@ export default function FloatingAI() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed bottom-28 right-8 w-80 h-[480px] bg-[#030711] border border-white/10 rounded-3xl shadow-2xl z-50 flex flex-col overflow-hidden backdrop-blur-xl"
+            className="fixed bottom-28 right-8 w-80 h-[480px] bg-[#050505] border border-white/10 rounded-3xl shadow-2xl z-50 flex flex-col overflow-hidden backdrop-blur-xl"
           >
             <div className="p-4 bg-white/5 border-b border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-2">

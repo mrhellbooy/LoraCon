@@ -5,8 +5,8 @@ This guide defines the design system and motion graphics for **LoraCon Portal** 
 ---
 
 ## 🎨 Color Palette
-- **Primary Background**: `#030711` (Deep Space Blue/Black)
-  - *Tailwind Equivalent*: Use arbitrary arbitrary values such as `bg-[#030711]`. Do not use generic tailwind slate or black unless with a high opacity overlay.
+- **Primary Background**: `#050505` (Deep Cyber Pitch-Black)
+  - *Tailwind Equivalent*: Use arbitrary arbitrary values such as `bg-[#050505]`. Do not use generic tailwind slate or black unless with a high opacity overlay.
 - **Accents**: 
   - **Neon Green**: `#22c55e` (`text-[#22c55e]`, `bg-[#22c55e]`) — Primary brand signature representing active nodes and secure connections.
   - **Sky Blue**: `#38bdf8` (`text-[#38bdf8]`, `bg-[#38bdf8]`) — Used for subsidiary services, e.g. the Firefox Extension and utility modules.

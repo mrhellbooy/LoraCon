@@ -1,7 +1,7 @@
 # AI Agent Instructions for LoraCon
 
 ## 🎨 Visual Identity & Style Rules
-- **Color Palette**: Primary Background is `#030711` (Deep Space Blue/Black). Accent Color is Neon Green (`#22c55e`) or Sky Blue (`#38bdf8`) for specific labs branding.
+- **Color Palette**: Primary Background is `#050505` (Deep Cyber Pitch-Black). Accent Color is Neon Green (`#22c55e`) or Sky Blue (`#38bdf8`) for specific labs branding.
 - **Typography**: Clean, high-contrast sans-serif. Use monospace for status logs, API indicators, and technical readouts to reinforce the "Super Admin" aesthetic.
 - **Aesthetic**: "Organism-inspired Cybernetic". Use glowing borders, subtle blurs, and Framer Motion for smooth, deliberate entry/exit animations. Avoid generic UI components; prefer custom-styled containers with border-white/10.
 

@@ -24,7 +24,8 @@ import {
   ChevronRight,
   Star,
   Wallet,
-  Clock
+  Clock,
+  Globe
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -123,6 +124,7 @@ const DownloadModal = ({ isOpen, onClose }) => {
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { name: 'Android APK', size: '24.5 MB', icon: Smartphone },
+            { name: 'Firefox Extension', size: '2.1 MB', icon: Globe },
             { name: 'Windows Client', size: '48.2 MB', icon: Monitor },
             { name: 'macOS DMG', size: '42.1 MB', icon: Apple },
             { name: 'Linux Binary', size: '18.9 MB', icon: Terminal },
@@ -133,10 +135,12 @@ const DownloadModal = ({ isOpen, onClose }) => {
               onClick={(e) => handleDownload(e, item)}
               whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.03)' }}
               whileTap={{ scale: 0.98 }}
-              className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 transition-all group flex flex-col gap-4"
+              className={`p-6 rounded-2xl bg-white/[0.02] border border-white/5 transition-all group flex flex-col gap-4 ${
+                i === 4 ? 'sm:col-span-2 sm:text-center sm:items-center' : ''
+              }`}
             >
               <item.icon className="w-6 h-6 text-slate-400 group-hover:text-[#22c55e] transition-colors" />
-              <div>
+              <div className={i === 4 ? 'sm:flex sm:flex-col sm:items-center' : ''}>
                 <div className="font-bold text-white tracking-wide mb-1 text-sm">{item.name}</div>
                 <div className="text-[10px] text-slate-500 font-mono tracking-widest">{item.size}</div>
               </div>

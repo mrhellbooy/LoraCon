@@ -1,111 +1,69 @@
-# LoraCon Master Web Admin Dashboard (React & Node.js Suite)
+# LoraCon Infrastructure Suite
 
-This directory contains a complete, production-grade, responsive Web Admin Panel and Node.js API Gateway developed specifically to control LoraCon VPN node parameters, fetch blockchain subscription settlements, and proxy requests safely to the **xAI Grok AI API** and **Google Gemini API**.
+## 🏢 Overview
+LoraCon is a professional-grade, enterprise-scale secure tunneling solution. This repository contains the complete administrative control ecosystem designed for high-availability VPN cluster orchestration, real-time telemetry analytics, and decentralized subscription validation.
+
+**Powered by Lorapok Labs Partners**
 
 ---
 
-## 🏗️ System Architecture
+## 🧭 Project Architecture
 
-```
-                    ┌───────────────────────────────┐
-                    │  React Admin Client           │
-                    │  (Cyberpunk Tailwinds UI)     │
-                    └───────────────┬───────────────┘
-                                    │ HTTP / JSON
-                                    ▼
-                    ┌───────────────────────────────┐
-                    │  Node.js Express Server       │
-                    │  (REST API & API Keys Secure Vault) 
-                    └──────┬────────┬────────┬──────┘
-                           │        │        │
-      HTTP/REST Sync       │        │        │ Proxy xAI completions
-┌──────────────────────────▼┐      │        │┌──────────────────────────┐
-│  LoraCon Android Client   │      │        ││ xAI Grok API             │
-│ (Compose/Room Persistence)│      │        ││ (Bearer Handshakes)      │
-└───────────────────────────┘      │        │└──────────────────────────┘
-                                   │        │
-             SOL / USDT validation │        │ Query Gemini Model Content
-              ┌────────────────────▼┐      └▼─────────────────────────┐
-              │ Solana Devnet JSON  │       │ Google Gemini API       │
-              │ RCP Node Endpoint   │       │ (Secure REST Access)    │
-              └─────────────────────┘       └─────────────────────────┘
+```mermaid
+graph TD
+    A[End User] -->|Encrypted Tunnel| B[LoraCon Node]
+    B -->|Telemetry| C[Backend Orchestrator]
+    C -->|Real-time Data| D[Web Control Panel]
+    D -->|Configuration| C
+    C -->|Validation| E[Blockchain Devnet]
+    C -->|Cognitive Assist| F[Gemini/Grok API]
 ```
 
 ---
 
-## 🛠️ Folder Contents
+## 🏛️ Components
 
-1. **`backend/`**: Simple, high-speed Node.js + Express API server. Keeps your Gemini & Grok API keys safe from reverse-engineering on client binaries.
-2. **`frontend/`**: Beautiful single-page React app styled with CSS grids, live gauges, SVG network scopes, and dynamic pricing dials. Fully mobile-friendly and optimized for standard touch targets.
+### 🌐 Web Suite (React Admin & Product Page)
+The web interface consists of:
+- **Product Landing/Download Page**: A professional, responsive, research-informed page for users to discover and download LoraCon.
+- **Admin Dashboard**: A secure control center to manage node scaling, bandwidth throttling, and API provider switching.
 
----
-
-## 🚀 How to Launch the Web Suite
-
-### 1️⃣ Configure Environment Variables
-Inside `web_admin_panel/backend/`, create a `.env` file:
-```env
-PORT=5000
-LACON_SOLANA_WALLET=your_master_receiving_wallet_address
-X_AI_GROK_API_KEY=your_actual_xai_grok_bearer_token
-GEMINI_API_KEY=your_actual_google_gemini_api_token
-ADMIN_SECRET_TOKEN=a_secure_master_jwt_passphrase
-```
-
-### 2️⃣ Run the Node.js API Back-End
-```bash
-cd backend
-npm install
-npm run start
-```
-Your back-end is now active on `http://localhost:5000` exposing endpoints for syncing master settings, registering nodes, and streaming real-time client sessions.
-
-### 3️⃣ Run the React Front-End Dashboard
-```bash
-cd ../frontend
-npm install
-npm run dev
-```
-Open `http://localhost:5173` in your browser. The responsive dashboard will fit perfectly on all mobile, tablet, or monitor screens.
+### ⚙️ Node.js Backend API
+A secure, Node.js-based middleware orchestrator.
+- **Security**: Centralizes all API key management (`Grok`, `Gemini`) to prevent client-side credential exposure.
+- **Validation**: Seamlessly validates Solana/USDT subscription payments.
+- **Orchestration**: Manages real-time data flow between the Android VPN nodes and the web dashboard.
 
 ---
 
-## 🔗 Android Sync Integration
+## 🚀 Deployment Methodology
 
-To bridge the Android VPN client with this Web control panel, simply map the Retrofit endpoints inside `/app/src/main/java/com/example/api/` to query your server's `/api/admin/config` payload. Standard subscription verfications then sync immediately in real-time.
+### 1. Web Application Production
+Host the frontend (React) on GitHub Pages for high-availability global distribution. The automated CI/CD pipeline handles compilation and deployment via `.github/workflows/deploy-web-admin.yml`.
+
+### 2. Backend Service
+Deploy the Node.js API to a scalable Platform-as-a-Service (PaaS) like **Render** or **Railway**.
+
+1.  **Repository Setup**: Connect your repository.
+2.  **Configurations**: 
+    -   Root: `web_admin_panel/backend`
+    -   Environment: Inject `GEMINI_API_KEY`, `X_AI_GROK_API_KEY`, `LACON_SOLANA_WALLET`.
+3.  **Environment Link**: Point the GitHub environment secret `VITE_API_BASE_URL` to your live PaaS backend URL.
 
 ---
 
-## 🌐 Production Cloud Deployment
+## 🧪 Testing & Integration
+The LoraCon suite is designed for seamless data integration.
 
-To launch this suite in production, host the **React Admin Panel Frontend** on **GitHub Pages** (fully free) and deploy the **Node.js Express Server Backend** on a free web platform like **Render**, **Railway**, or a standard Virtual Private Server (VPS).
+1.  **Live Node Monitoring**: The Admin Panel streams real-time node loads via the `/api/admin/sessions` endpoint.
+2.  **API Resilience**: All API requests are wrapped in intelligent retry and error-handling logic, providing visual feedback via the integrated AI Assistant on the dashboard.
 
-### 1️⃣ Deploy Frontend on GitHub Pages
-We have provided an automated **GitHub Actions Workflow** (`.github/workflows/deploy-web-admin.yml`) to compile and deploy the frontend.
+---
 
-1. **Push your code** to your own GitHub repository (`main` or `master` branch).
-2. Go to your GitHub Repository -> **Settings** -> **Actions** -> **General**. Change "Workflow permissions" to **Read and write permissions** (this allows the action to commit built static web pages to `gh-pages` branch).
-3. The build runner will compile your React app automatically. Once complete, you will see a new branch in your repo named `gh-pages`.
-4. Go to **Settings** -> **Pages**, set the Source branch to `gh-pages` (root folder `/`) and press **Save**.
-5. Your custom admin panel will go live at:
-   `https://<YOUR_GITHUB_USERNAME>.github.io/<YOUR_REPOSITORY_NAME>/`
+## 🤝 Partners & Contributors
+*   **Lorapok Labs**: Technical infrastructure and core architecture.
+*   **Cognitive Integrators**: AI logic and neural network interface partners.
 
-### 2️⃣ Deploy backend on Render (or Railway / Fly.io)
-Because Render natively supports Node.js services:
-1. Log in to [Render](https://render.com) and create a **New -> Web Service**.
-2. Connect your GitHub repository.
-3. Configure the following service arguments:
-   - **Root Directory**: `web_admin_panel/backend`
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm run start`
-4. Expand **Advanced** and specify your secure `.env` variables (`LACON_SOLANA_WALLET`, `X_AI_GROK_API_KEY`, `GEMINI_API_KEY`, etc.).
-5. Render will launch your live web API at a secure HTTPS address (e.g. `https://loracon-backend.onrender.com`).
+---
 
-### 3️⃣ Connect Frontend with Backend API
-Provide your live Node.js Render URL to your compiled GitHub Pages client:
-- Go to your GitHub Repository -> **Settings** -> **Secrets and variables** -> **Actions**.
-- Click **New repository secret** and add:
-  - **Name**: `VITE_API_BASE_URL`
-  - **Value**: `https://<your-active-api-server>.onrender.com` (your backend Render address)
-- Trigger a quick code change or click **Actions** -> **Re-run all jobs** to compile. The React Frontend will now orchestrate live data directly from your deployed production servers!
-
+*This project is strictly for professional use. All rights reserved by Lorapok Labs Partners.*

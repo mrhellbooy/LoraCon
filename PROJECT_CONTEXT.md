@@ -16,16 +16,18 @@
 | Component | Stack/Role |
 | :--- | :--- |
 | **Android Client** | Kotlin, Jetpack Compose, WireGuard/OpenVPN |
-| **Web Portal** | React, Vite, Tailwind CSS, Framer Motion |
+| **Web Portal** | React, Vite, Axios, Tailwind CSS, Framer Motion |
 | **Backend API** | Node.js, Express, Socket.io |
+| **Service Layer** | Centralized Axios instance with recursive polling management |
 
 ---
 
 ## 🚀 Key Features
 
-*   **Cybernetic Aesthetic**: Neon Green/Carbon Black theme inspired by black soldier fly larvae.
-*   **Performance First**: Low-latency routing & real-time connection optimization.
-*   **Comprehensive Management**: Integrated admin portal for node load telemetry and analytics.
+*   **Cybernetic Aesthetic**: Neon Green/Carbon Black theme inspired by black soldier fly larvae with Framer Motion page transitions.
+*   **Performance First**: Low-latency routing & real-time connection optimization with recursive API health polling.
+*   **Comprehensive Management**: Integrated admin portal for node load telemetry, analytics, and persistent API status monitoring.
+*   **Firefox Integration**: Dedicated landing page modules for Firefox Add-on distribution and local installation guides.
 *   **Market Ready**: Full SaaS-ready landing, auth, and dashboard flows.
 
 ---

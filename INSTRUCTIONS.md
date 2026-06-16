@@ -5,7 +5,24 @@ This project ("LoraCon") consists of an Android client, a web-based Admin/Landin
 
 > **CRITICAL:** Before performing any modifications, you MUST read `/PROJECT_CONTEXT.md` to understand the architecture, design principles, and tech stack of the LoraCon ecosystem.
 
-## 2. Deployment Instructions
+## 2. Developer Guidelines
+
+### API Communication
+All backend communication MUST go through the centralized service layer in `web_admin_panel/frontend/src/services/api.js`.
+- **Axios Instance**: Use the exported `api` instance for custom requests.
+- **Service Modules**: Add new endpoints to modularized objects like `adminConfig` or `adminSessions`.
+- **Environment**: Ensure `import.meta.env.VITE_API_BASE_URL` is configured for local development.
+
+### Health Monitoring & Polling
+The Super Admin panel implements a persistent health check.
+- **Recursive Polling**: Polling is managed via recursive `setTimeout` to prevent request stacking during high latency.
+- **Visual Feedback**: The `apiStatus` state in `AdminPanel.jsx` drives the header indicator (Online/Offline).
+
+### UI & Animations
+- **Transitions**: Every route in `AppRouter.jsx` is wrapped in `AnimatedRoute` (Framer Motion).
+- **Icons**: Use `lucide-react` for all functional iconography.
+
+## 3. Deployment Instructions
 
 This project is deployed to GitHub Pages via GitHub Actions.
 

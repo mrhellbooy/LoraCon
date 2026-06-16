@@ -1,9 +1,9 @@
-# LoraCon Infrastructure Suite
+# LoraCon Infrastructure Suite 🛡️
 
 ## 🏢 Overview
-LoraCon is a professional-grade, enterprise-scale secure tunneling solution. This repository contains the complete administrative control ecosystem designed for high-availability VPN cluster orchestration, real-time telemetry analytics, and decentralized subscription validation.
+**LoraCon** is a professional-grade, enterprise-scale secure tunneling solution developed by **Lorapok Labs**. This repository contains the complete administrative control ecosystem designed for high-availability VPN cluster orchestration, real-time telemetry analytics, and decentralized subscription validation.
 
-**Powered by Lorapok Labs Partners**
+The suite is characterized by its **Organism-inspired Cybernetic** aesthetic, featuring high-contrast neon-on-carbon layouts and smooth, deliberate transitions.
 
 ---
 
@@ -23,47 +23,52 @@ graph TD
 
 ## 🏛️ Components
 
-### 🌐 Web Suite (React Admin & Product Page)
-The web interface consists of:
-- **Product Landing/Download Page**: A professional, responsive, research-informed page for users to discover and download LoraCon.
-- **Admin Dashboard**: A secure control center to manage node scaling, bandwidth throttling, and API provider switching.
+### 🌐 Web Suite (Vite + React + Tailwind)
+The web interface features a centralized **Axios service layer** and **Framer Motion** powered layout transitions:
+- **Product Landing Page**: A cybernetic display featuring high-performance asset pairings and modern terminal aesthetics.
+- **Super Admin Dashboard**: A high-tech control center featuring real-time bandwidth telemetry, node mapping, and persistent API health monitoring through recursive polling.
 
 ### ⚙️ Node.js Backend API
 A secure, Node.js-based middleware orchestrator.
 - **Security**: Centralizes all API key management (`Grok`, `Gemini`) to prevent client-side credential exposure.
-- **Validation**: Seamlessly validates Solana/USDT subscription payments.
-- **Orchestration**: Manages real-time data flow between the Android VPN nodes and the web dashboard.
+- **Handshakes**: Manages secure connection protocols between the Android client and the node network.
+- **Orchestration**: Processes real-time data flow for the administrative dashboard.
+
+---
+
+## 🛠️ Technical Standards
+
+- **Cybernetic UX**: Utilizes custom-styled containers with neon accents and monospace typography for technical readouts.
+- **Resilient Communication**: API health is maintained via recursive `setTimeout` polling to ensure UI responsiveness during network latency.
+- **Smooth Navigation**: All route changes are handled via `AnimatePresence` for a polished, modern terminal feel.
 
 ---
 
 ## 🚀 Deployment Methodology
 
 ### 1. Web Application Production
-Host the frontend (React) on GitHub Pages for high-availability global distribution. The automated CI/CD pipeline handles compilation and deployment via `.github/workflows/deploy-web-admin.yml`.
+Host the frontend (React) on GitHub Pages. The automated CI/CD pipeline handles compilation and deployment via `.github/workflows/deploy.yml`.
 
 ### 2. Backend Service
-Deploy the Node.js API to a scalable Platform-as-a-Service (PaaS) like **Render** or **Railway**.
+Deploy the Node.js API to a scalable PaaS like **Render** or **Railway**.
 
-1.  **Repository Setup**: Connect your repository.
+1.  **Repository Setup**: Connect your repository to the service.
 2.  **Configurations**: 
     -   Root: `web_admin_panel/backend`
-    -   Environment: Inject `GEMINI_API_KEY`, `X_AI_GROK_API_KEY`, `LACON_SOLANA_WALLET`.
-3.  **Environment Link**: Point the GitHub environment secret `VITE_API_BASE_URL` to your live PaaS backend URL.
+    -   Environment: Inject `GEMINI_API_KEY`, and other secrets via the service provider's panel.
+3.  **Environment Link**: Point the GitHub environment secret `VITE_API_BASE_URL` to your live backend URL.
 
 ---
 
-## 🧪 Testing & Integration
-The LoraCon suite is designed for seamless data integration.
-
-1.  **Live Node Monitoring**: The Admin Panel streams real-time node loads via the `/api/admin/sessions` endpoint.
-2.  **API Resilience**: All API requests are wrapped in intelligent retry and error-handling logic, providing visual feedback via the integrated AI Assistant on the dashboard.
+## ⚖️ License
+Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
 
 ## 🤝 Partners & Contributors
 *   **Lorapok Labs**: Technical infrastructure and core architecture.
-*   **Cognitive Integrators**: AI logic and neural network interface partners.
+*   **Global Node Network**: Infrastructure for decentralized routing.
 
 ---
 
-*This project is strictly for professional use. All rights reserved by Lorapok Labs Partners.*
+*This project is strictly for professional use. All rights reserved by Lorapok Labs.*

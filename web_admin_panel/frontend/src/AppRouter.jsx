@@ -7,6 +7,11 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import AboutPage from './pages/AboutPage';
+import PrivacyPage from './pages/PrivacyPage';
+import ContactPage from './pages/ContactPage';
+import DocsPage from './pages/DocsPage';
+import LicensePage from './pages/LicensePage';
 import { ToastProvider } from './components/Toast';
 
 const ProtectedRoute = ({ children }) => {
@@ -38,6 +43,11 @@ function AnimatedRoutes() {
           <Route path="login" element={<AnimatedRoute><LoginPage /></AnimatedRoute>} />
           <Route path="register" element={<AnimatedRoute><RegisterPage /></AnimatedRoute>} />
           <Route path="reset-password" element={<AnimatedRoute><ResetPasswordPage /></AnimatedRoute>} />
+          <Route path="about" element={<AnimatedRoute><AboutPage /></AnimatedRoute>} />
+          <Route path="privacy" element={<AnimatedRoute><PrivacyPage /></AnimatedRoute>} />
+          <Route path="contact" element={<AnimatedRoute><ContactPage /></AnimatedRoute>} />
+          <Route path="docs" element={<AnimatedRoute><DocsPage /></AnimatedRoute>} />
+          <Route path="license" element={<AnimatedRoute><LicensePage /></AnimatedRoute>} />
           <Route path="admin" element={
             <ProtectedRoute>
               <AnimatedRoute><AdminPanel /></AnimatedRoute>

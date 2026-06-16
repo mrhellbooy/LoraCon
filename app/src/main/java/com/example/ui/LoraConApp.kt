@@ -2153,7 +2153,7 @@ fun ResearchHubScreen(
                 .padding(vertical = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            listOf("MANUAL", "REPOS").forEach { tab ->
+            listOf("MANUAL", "REPOS", "OFFICIAL").forEach { tab ->
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -2165,8 +2165,11 @@ fun ResearchHubScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = if (tab == "MANUAL") localizer("SYSTEM MANUAL", "GUÍA DE USO", "BENUTZERHANDBUCH", "システム指南", "操作指引与用户手册")
-                               else localizer("TECH SPECS", "ESPECIFICACIONES", "TECH SPEZIFIKATION", "技術仕様", "协议开源技术库"),
+                        text = when(tab) {
+                            "MANUAL" -> localizer("SYSTEM MANUAL", "GUÍA DE USO", "BENUTZERHANDBUCH", "システム指南", "操作指引与用户手册")
+                            "REPOS" -> localizer("TECH SPECS", "ESPECIFICACIONES", "TECH SPEZIFIKATION", "技術仕様", "协议开源技术库")
+                            else -> localizer("OFFICIAL", "OFICIAL", "OFFIZIELL", "公式サイト", "官方发布")
+                        },
                         color = if (activeSubTab == tab) ObsidianBlack else TextSecondary,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
@@ -2212,7 +2215,7 @@ fun ResearchHubScreen(
                             "Transition to the main 'Shield' tab. Toggle the active encapsulation protocol (WireGuard or OpenVPN). Tap the large neural-like biometric Shield core trigger button. Within seconds, secure handshakes complete and routing tables evolve.",
                             "Transicione al panel principal Proteger. Seleccione el protocolo (WireGuard u OpenVPN) y presione el gran switch circular de conexión para armar la protección.",
                             "Aktivieren Sie die VPN-Verschlüsselung im Hauptmenü. Ein Fingertipp auf den holografischen Schild-Button löst den krypto-symmetrischen Schlüsselaustausch aus.",
-                            "「シールド」画面で、暗号化プロトコル（WireGuard もしくは OpenVPN）を指定します。中央の巨大な生体サークル電極をタップすると、鍵交換プロセスが開始されます。",
+                            "「シールド」画面で、暗号化プロトコル（WireGuard もしくは OpenVPN）を指定します。中央の巨大な生体サークル電极をタップすると、鍵交换プロセスが開始されます。",
                             "进入首屏“防护”，选择您青睐的底层网络协议（推荐超高速 WireGuard ）。点击正中悬浮的主控圆盘核能开关，微秒内建立隧道连接。"
                         ),
                         icon = "🛡️"
@@ -2226,7 +2229,7 @@ fun ResearchHubScreen(
                             "Access high-bandwidth elite servers via the 'Keys' channel tab. Initiate a decentralized crypto token transfer over Solana Devnet. Input your transaction hash and verify the blocks automatically to secure premium status instantly.",
                             "Para acceder a servidores ilimitados, navegue al canal Llaves. Inicie un pago criptográfico descentralizado en la red Solana Devnet. Ingrese el hash para activar privilegios.",
                             "Erwerben Sie ungedrosselte Verschlüsselungsschlüssel. Überweisen Sie SOL/USDT auf die hinterlegte Blockchain-Wallet und bestätigen Sie die Transaktions-ID.",
-                            "「キー」タブから超高速でトラフィックの最適化を継続するために特権プランを選択。認証コード用の決済トランザクションを入力后、自動的に制限が解除されます。",
+                            "「キー」タブから超高速でトラフィックの最適化を継続するために特权プランを選択。认证代码用的支付交易输入后，自动解除限制。",
                             "如果需要加载标记为 PREMIUM 专线，可以在“卡包”进行链上模拟存证。转入模拟的 SOL 后，填写回执凭证，全线极速高宽带瞬间敞开。"
                         ),
                         icon = "🗝️"
@@ -2240,15 +2243,14 @@ fun ResearchHubScreen(
                             "Need advanced network diagnostics or system troubleshooting? Activate the floating Lora AI chatbot in the bottom right corner. Ask complex technical, protocol, or Solana transaction details to get real-time recommendations.",
                             "¿Necesita ayuda? Active la burbuja flotante del asistente Lora AI. Haga preguntas técnicas complejas sobre criptografía, logs de red y resolución de fallos.",
                             "Tippen Sie auf die schwebende KI-Blase unten rechts, wenn Sie Netzwerkprobleme analysieren möchten. Unser Modell sucht nach krypto-strukturellen Bottlenecks.",
-                            "右下の「AI ナビゲーター」アイコン（🧠）をタップしてチャットを開きます。最適な暗号ノード提案や、Solana トランザクション承認状況などの技術的相談が可能です。",
+                            "右下の「AI ナビゲーター」アイコン（🧠）をタップしてチャットを開きます。最適な暗号ノード提案や、Solana トランザクション分配状況などの技術的相談が可能です。",
                             "如有任何断连、卡顿或区块链网络状况疑问，双击右下角浮动的“微处理器 🧠”小浮窗，人工智能助理将用前沿算法全天候帮您排错。"
                         ),
                         icon = "🧠"
-
                     )
                 }
             }
-        } else {
+        } else if (activeSubTab == "REPOS") {
             Text(
                 text = localizer(
                     "Below are high-quality secure public cross platform libraries on Github for production implementations.",
@@ -2296,6 +2298,58 @@ fun ResearchHubScreen(
                         tech = "Scientific connectivity Bible research methodologies",
                         url = "https://maijied.github.io/Lorapok-Labs-Bible/",
                         desc = "Lorapok conceptual bible and cellular designs emphasizing deep quantum security, stealth layers, bio-biological geometry, and high-contrast terminal design patterns for software nodes. Connected."
+                    )
+                }
+            }
+        } else {
+            // OFFICIAL TAB
+            Text(
+                 text = localizer(
+                     "Official Lorapok Labs communication channels and legal documentation.",
+                     "Canales oficiales de comunicación de Lorapok Labs y documentación legal.",
+                     "Offizielle Lorapok Labs Kanäle und rechtliche Dokumente.",
+                     "Lorapok Labs 公式コミュニケーションチャネルと法的文書。",
+                     "Lorapok Labs 官方发布渠道、法律合规说明与联系方式："
+                 ),
+                 color = TextSecondary,
+                 fontSize = 11.sp,
+                 modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            LazyColumn(
+                 verticalArrangement = Arrangement.spacedBy(10.dp),
+                 modifier = Modifier.weight(1f)
+            ) {
+                item {
+                    ResearchRepositoryCard(
+                        title = "Official Website",
+                        tech = "Landing & Dashboard",
+                        url = "https://lorapok.com",
+                        desc = "Main portal for LoraCon services, node status orchestration, and high-level administrative terminal dashboard access."
+                    )
+                }
+                item {
+                    ResearchRepositoryCard(
+                        title = "Documentation Wiki",
+                        tech = "Knowledge Base",
+                        url = "https://docs.lorapok.com",
+                        desc = "Comprehensive technical documentation, API specifications, and infrastructure deployment guidelines."
+                    )
+                }
+                item {
+                    ResearchRepositoryCard(
+                        title = "Privacy & License",
+                        tech = "Legal Lexicon",
+                        url = "https://lorapok.com/#/privacy",
+                        desc = "Review our strict No-Logs policy, data retention (none), and MIT License agreement for the tunneling suite."
+                    )
+                }
+                item {
+                    ResearchRepositoryCard(
+                        title = "Support & Contact",
+                        tech = "Communication",
+                        url = "lorapokdev@gmail.com",
+                        desc = "Direct line to the Lorapok Labs collective for technical inquiries, bug reports, or strategic infrastructure partnerships."
                     )
                 }
             }
@@ -2389,36 +2443,20 @@ fun FloatingSentientAiAssistant(
     if (!isExpanded) {
         Box(
             modifier = modifier
-                .size(60.dp)
+                .size(70.dp)
                 .clip(CircleShape)
-                .background(Brush.radialGradient(colors = listOf(CyberEmerald, ObsidianBlack)))
-                .border(2.dp, CyberEmerald, CircleShape)
-                .minimumInteractiveComponentSize()
+                .background(Brush.radialGradient(colors = listOf(CyberEmerald.copy(alpha = 0.2f), Color.Transparent)))
                 .clickable { onToggle() }
                 .testTag("ai_assistant_bubble"),
             contentAlignment = Alignment.Center
         ) {
-            val infiniteTransition = rememberInfiniteTransition(label = "pulseRing")
-            val pulseScale by infiniteTransition.animateFloat(
-                initialValue = 0.9f,
-                targetValue = 1.1f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(2000, easing = LinearEasing),
-                    repeatMode = RepeatMode.Reverse
-                ),
-                label = "scale"
-            )
-
-            Box(
+            LorapokLarvaLogo(
+                isConnecting = isAiLoading,
+                isConnected = true,
                 modifier = Modifier
-                    .size(44.dp)
-                    .scale(pulseScale)
-                    .clip(CircleShape)
-                    .background(ObsidianBlack),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("🧠", fontSize = 22.sp)
-            }
+                    .size(50.dp)
+                    .padding(4.dp)
+            )
         }
     } else {
         Card(

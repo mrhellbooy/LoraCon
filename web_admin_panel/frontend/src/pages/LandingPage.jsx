@@ -1,9 +1,14 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Shield, 
   Zap, 
   Download, 
+  X,
+  Smartphone,
+  Monitor,
+  Apple,
+  Terminal,
   ExternalLink,
   Github,
   Twitter,
@@ -19,6 +24,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import Logo from '../components/Logo';
 
 const FeatureCard = ({ icon: Icon, title, description, delay }) => (
@@ -41,10 +47,132 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => (
   </motion.div>
 );
 
+const TabManModal = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl"
+      onClick={onClose}
+    >
+      <motion.div 
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        className="w-full max-w-2xl bg-[#0D0D0D] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#22c55e]/10 flex items-center justify-center">
+              <Download className="w-5 h-5 text-[#22c55e]" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold">LORAPOK ECOSYSTEM</h3>
+              <p className="text-xs text-slate-500 font-mono">v4.0.2 ARM64/X86_64</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-xl transition-colors">
+            <X size={24} className="text-slate-500" />
+          </button>
+        </div>
+        <div className="p-8 gap-4 grid grid-cols-1 sm:grid-cols-2">
+          {[
+            { name: 'Android APK', size: '24.5 MB', icon: Smartphone, link: '#' },
+            { name: 'Windows Client', size: '48.2 MB', icon: Monitor, link: '#' },
+            { name: 'macOS DMG', size: '42.1 MB', icon: Apple, link: '#' },
+            { name: 'Linux Binary', size: '18.9 MB', icon: Terminal, link: '#' },
+          ].map((item, i) => (
+            <motion.a
+              key={item.name}
+              href={item.link}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="p-6 rounded-3xl bg-white/[0.03] border border-white/5 hover:border-[#22c55e]/50 hover:bg-[#22c55e]/5 transition-all group"
+            >
+              <item.icon className="w-8 h-8 text-slate-500 group-hover:text-[#22c55e] mb-4 transition-colors" />
+              <div className="font-bold text-white mb-1">{item.name}</div>
+              <div className="text-xs text-slate-500 font-mono">{item.size}</div>
+            </motion.a>
+          ))}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const LorapokVpnDemo = () => {
+  const [status, setStatus] = useState('IDLE'); // IDLE, CONNECTING, CONNECTED
+
+  return (
+    <div className="relative w-full h-full bg-[#050505] p-8 flex flex-col font-mono text-[10px]">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-2">
+          <Logo size={20} isConnecting={status === 'CONNECTING'} isConnected={status === 'CONNECTED'} />
+          <span className="text-[#22c55e] font-bold">LORA-CON PORTAL v2</span>
+        </div>
+        <div className={`px-2 py-0.5 rounded-full border ${status === 'CONNECTED' ? 'bg-[#22c55e]/10 border-[#22c55e] text-[#22c55e]' : 'bg-white/5 border-white/10 text-slate-500'}`}>
+          {status}
+        </div>
+      </div>
+
+      <div className="flex-1 space-y-2 overflow-hidden">
+        <p className="text-slate-600">$ lora --status</p>
+        <p className="text-slate-400">Node: [NONE]</p>
+        <p className="text-slate-400">Latency: 0ms</p>
+        {status !== 'IDLE' && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-1">
+            <p className="text-blue-400">$ lora --connect to us_east_sentinel</p>
+            <p className="text-slate-500">>> Initiating Handshake [ChaCha20-Poly1305]</p>
+            <p className="text-slate-500">>> Generating Ephemeral Keys [Curve25519]</p>
+            {status === 'CONNECTED' && (
+              <>
+                <p className="text-[#22c55e]">>> ENCRYPTED TUNNEL ESTABLISHED</p>
+                <p className="text-[#22c55e]">>> IP: 194.22.18.243 (MASKED)</p>
+                <div className="pt-4 grid grid-cols-2 gap-4">
+                   <div className="p-3 rounded-xl bg-[#22c55e]/5 border border-[#22c55e]/20">
+                      <div className="text-slate-500 mb-1">DOWNLINK</div>
+                      <div className="text-lg font-bold text-white">42.5 Mbps</div>
+                   </div>
+                   <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/20">
+                      <div className="text-slate-500 mb-1">UPLINK</div>
+                      <div className="text-lg font-bold text-white">12.8 Mbps</div>
+                   </div>
+                </div>
+              </>
+            )}
+          </motion.div>
+        )}
+      </div>
+
+      <button 
+        onClick={() => {
+          if (status === 'IDLE') {
+            setStatus('CONNECTING');
+            setTimeout(() => setStatus('CONNECTED'), 2000);
+          } else {
+            setStatus('IDLE');
+          }
+        }}
+        className={`mt-4 w-full py-4 rounded-2xl font-bold transition-all ${status === 'CONNECTED' ? 'bg-red-500/10 border border-red-500/50 text-red-500 hover:bg-red-500/20' : 'bg-[#22c55e]/10 border border-[#22c55e]/50 text-[#22c55e] hover:bg-[#22c55e]/20'}`}
+      >
+        {status === 'CONNECTED' ? 'DISCONNECT' : status === 'CONNECTING' ? 'ARMING...' : 'INITIATE TUNNEL'}
+      </button>
+    </div>
+  );
+};
+
 export default function LandingPage() {
+  const [isTabManOpen, setIsTabManOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#030711] text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
       <Navbar />
+      <AnimatePresence>
+        {isTabManOpen && <TabManModal isOpen={isTabManOpen} onClose={() => setIsTabManOpen(false)} />}
+      </AnimatePresence>
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-32 px-6 overflow-hidden">
@@ -56,61 +184,77 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#22c55e]/10 border border-[#22c55e]/20 text-[#22c55e] text-xs font-bold uppercase tracking-[0.2em] mb-8"
-            >
-              <Activity className="w-3.5 h-3.5" /> Lorapok Labs Protocol V2.0
-            </motion.div>
-
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-6xl md:text-8xl lg:text-9xl font-black leading-[0.85] tracking-tighter mb-10"
-            >
-              SECURE THE <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#22c55e] to-[#166534]">EDGE</span>.<br />
-              OWN THE <span className="text-white">FLOW.</span>
-            </motion.h1>
-
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-slate-400 text-lg md:text-xl max-w-3xl mx-auto mb-12 leading-relaxed font-light"
-            >
-              LoraCon provides a decentralized, high-speed encrypted tunneling ecosystem 
-              designed for the next generation of privacy. High-performance relays,
-              military-grade encryption, and zero-latency routing.
-            </motion.p>
-
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-5"
-            >
-              <Link to="/admin">
-                <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(34,197,94,0.3)' }}
-                  whileTap={{ scale: 0.97 }}
-                  className="px-10 py-5 rounded-2xl bg-[#22c55e] text-black font-black text-lg flex items-center gap-3 transition-shadow"
-                >
-                  <Cpu className="w-5 h-5" /> Launch Terminal
-                </motion.button>
-              </Link>
-              <motion.button
-                whileHover={{ scale: 1.05, background: 'rgba(255,255,255,0.08)' }}
-                whileTap={{ scale: 0.97 }}
-                className="px-10 py-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md font-bold text-lg flex items-center gap-3"
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div className="text-left">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#22c55e]/10 border border-[#22c55e]/20 text-[#22c55e] text-xs font-bold uppercase tracking-[0.2em] mb-8"
               >
-                <Link to="/register" className="flex items-center gap-3">
-                  <Shield className="w-5 h-5" /> Get Started
+                <Activity className="w-3.5 h-3.5" /> Lorapok Labs Protocol V2.0
+              </motion.div>
+
+              <motion.h1 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="text-6xl md:text-8xl font-black leading-[0.85] tracking-tighter mb-10"
+              >
+                SECURE THE <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#22c55e] to-[#166534]">EDGE</span>.<br />
+                OWN THE <span className="text-white">FLOW.</span>
+              </motion.h1>
+
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-slate-400 text-lg md:text-xl max-w-xl mb-12 leading-relaxed font-light"
+              >
+                LoraCon provides a decentralized, high-speed encrypted tunneling ecosystem 
+                designed for the next generation of privacy. High-performance relays,
+                military-grade encryption, and zero-latency routing.
+              </motion.p>
+
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="flex flex-col sm:flex-row items-center gap-5"
+              >
+                <Link to="/admin">
+                  <motion.button
+                    whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(34,197,94,0.3)' }}
+                    whileTap={{ scale: 0.97 }}
+                    className="px-10 py-5 rounded-2xl bg-[#22c55e] text-black font-black text-lg flex items-center gap-3 transition-shadow"
+                  >
+                    <Cpu className="w-5 h-5" /> Launch Terminal
+                  </motion.button>
                 </Link>
-              </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05, background: 'rgba(255,255,255,0.08)' }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => setIsTabManOpen(true)}
+                  className="px-10 py-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md font-bold text-lg flex items-center gap-3"
+                >
+                  <Download className="w-5 h-5" /> Get App
+                </motion.button>
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.4 }}
+              className="relative hidden lg:block"
+            >
+              <div className="absolute inset-0 bg-[#22c55e]/20 blur-[120px] rounded-full" />
+              <div className="relative z-10 bg-gradient-to-tr from-[#111] to-[#0D0D0D] p-1 rounded-[3rem] border border-white/10 shadow-2xl overflow-hidden aspect-square">
+                 <div className="absolute inset-0 opacity-20 pointer-events-none">
+                    <div className="w-full h-full bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:24px_24px]" />
+                 </div>
+                 <LorapokVpnDemo />
+              </div>
             </motion.div>
           </div>
         </div>
@@ -193,101 +337,46 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="flex-1 relative"
           >
-             <div className="relative z-10 bg-gradient-to-tr from-[#111] to-[#0D0D0D] p-1 rounded-[2.5rem] border border-white/10 shadow-2xl">
-                <div className="bg-[#050505] rounded-[2.3rem] overflow-hidden aspect-video relative group">
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#22c55e]/10 group-hover:to-[#22c55e]/20 transition-all pointer-events-none" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <Shield className="w-20 h-20 text-[#22c55e] mx-auto mb-6 opacity-40" />
-                      <p className="text-slate-500 font-mono text-xs uppercase tracking-[0.3em]">Visualizing Interface...</p>
-                    </div>
-                  </div>
-                  <div className="absolute bottom-6 left-6 right-6 p-6 rounded-2xl bg-black/80 backdrop-blur-md border border-white/10">
-                    <div className="flex items-center justify-between">
-                       <span className="text-xs font-bold text-[#22c55e]">LORA-CON MASTER NODE</span>
-                       <div className="flex gap-1">
-                         <div className="w-1.5 h-1.5 rounded-full bg-red-500/50" />
-                         <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/50" />
-                         <div className="w-1.5 h-1.5 rounded-full bg-green-500/50" />
-                       </div>
-                    </div>
-                  </div>
+             {/* CLI TERMINAL MOCKUP with Glowing Effect */}
+             <div className="relative z-10 bg-[#0A0A0A] p-1 rounded-[2rem] border border-white/10 shadow-[0_0_50px_rgba(34,197,94,0.1)] overflow-hidden">
+                <div className="absolute inset-0 bg-[#22c55e]/5 animate-pulse pointer-events-none" />
+                <div className="flex items-center gap-2 px-6 py-4 bg-white/5 border-b border-white/10">
+                   <div className="flex gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
+                   </div>
+                   <span className="text-[10px] font-mono text-slate-500 ml-4 font-bold tracking-widest uppercase">system_orch_v2 ⚡ bash</span>
+                </div>
+                <div className="p-8 font-mono text-xs space-y-3 min-h-[300px]">
+                   <p className="text-slate-500">loracon_node_admin login --user sentinel_01</p>
+                   <p className="text-[#22c55e]">[PROCESS]: Accessing encrypted core... SUCCESS</p>
+                   <p className="text-slate-400"># system.status()</p>
+                   <div className="grid grid-cols-2 gap-4 py-2">
+                      <div className="space-y-1">
+                         <p className="text-slate-600">>> CPU_LOAD</p>
+                         <p className="text-white">12.4%</p>
+                      </div>
+                      <div className="space-y-1">
+                         <p className="text-slate-600">>> ACTIVE_NODES</p>
+                         <p className="text-white">42 / 64</p>
+                      </div>
+                   </div>
+                   <p className="text-slate-400"># nodes.deploy(rk_swiss_alpine)</p>
+                   <p className="text-yellow-500 animate-pulse">>> DEPLOYING NODE TO SOLANA DEVNET...</p>
+                   <p className="text-[#22c55e]">>> DEPLOYMENT SUCCESS [7820ms]</p>
+                   <div className="mt-6 flex items-center gap-2">
+                      <span className="block w-2 h-4 bg-[#22c55e] animate-pulse" />
+                   </div>
                 </div>
              </div>
-             {/* Decorative glow */}
-             <div className="absolute -inset-4 bg-[#22c55e]/10 blur-[60px] rounded-full pointer-events-none opacity-50" />
+             {/* Glowing light behind */}
+             <div className="absolute -inset-10 bg-[#22c55e]/10 blur-[100px] rounded-full pointer-events-none" />
           </motion.div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-white/10 bg-black/40 py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-20">
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Logo size={40} className="text-[#22c55e]" />
-                <span className="text-2xl font-black tracking-tighter">LoraCon.</span>
-              </div>
-              <p className="text-slate-500 max-w-xs text-sm">
-                Architecting secure tunnels for a decentralized future. A project by Lorapok Labs.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-12 sm:gap-24">
-               <div>
-                 <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-widest">Mastery</h4>
-                 <div className="flex flex-col gap-4 text-slate-500 text-sm">
-                   <Link to="/admin" className="hover:text-[#22c55e] transition-colors">Admin Console</Link>
-                   <a href="#" className="hover:text-[#22c55e] transition-colors">Node Health</a>
-                   <a href="#" className="hover:text-[#22c55e] transition-colors">Documentation</a>
-                 </div>
-               </div>
-               <div>
-                 <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-widest">Company</h4>
-                 <div className="flex flex-col gap-4 text-slate-500 text-sm">
-                   <a href="#" className="hover:text-[#22c55e] transition-colors">About Labs</a>
-                   <a href="#" className="hover:text-[#22c55e] transition-colors">Privacy Lexicon</a>
-                   <a href="#" className="hover:text-[#22c55e] transition-colors">Contact</a>
-                 </div>
-               </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 pt-10 border-t border-white/5">
-            <div className="flex items-center gap-2">
-              <p className="text-slate-600 text-xs font-mono tracking-tighter">
-                &copy; {new Date().getFullYear()} LORAPOK LABS - BANGLADESH - ALL RIGHTS RESERVED
-              </p>
-            </div>
-            
-            <div className="flex items-center gap-2 flex-wrap justify-center md:justify-end">
-              {[
-                { href: 'https://github.com/lorapok', icon: <Github className="w-5 h-5" />, label: 'GitHub' },
-                { href: 'https://x.com/lorapoklabs', icon: <Twitter className="w-5 h-5" />, label: 'X / Twitter' },
-                { href: 'mailto:lorapokdev@gmail.com', icon: <Mail className="w-5 h-5" />, label: 'Email' },
-                { href: 'https://www.linkedin.com/showcase/lorapok/', icon: <Linkedin className="w-5 h-5" />, label: 'LinkedIn' },
-                { href: 'https://www.reddit.com/r/LorapokLabs/', icon: <MessageSquare className="w-5 h-5" />, label: 'Reddit' },
-                { href: 'https://gravatar.com/lorapok', icon: <UserCheck className="w-5 h-5" />, label: 'Gravatar' },
-                { href: 'https://www.instagram.com/lorapoklabs/', icon: <Instagram className="w-5 h-5" />, label: 'Instagram' },
-                { href: 'https://www.facebook.com/lorapoklabs', icon: <Facebook className="w-5 h-5" />, label: 'Facebook' },
-                { href: 'https://lorapok.com/contact', icon: <ExternalLink className="w-5 h-5" />, label: 'Contact' },
-              ].map(({ href, icon, label }) => (
-                <a 
-                  key={label} 
-                  href={href} 
-                  target={href.startsWith('mailto') ? undefined : '_blank'} 
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-[#22c55e] hover:bg-[#22c55e]/10 hover:border-[#22c55e]/30 transition-all"
-                  title={label}
-                >
-                  {icon}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

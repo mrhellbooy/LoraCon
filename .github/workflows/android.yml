@@ -44,7 +44,7 @@ jobs:
         touch docs/.nojekyll
 
         # 2. Set up the staging directory
-        mkdir -p staging/docs/downloads
+        mkdir -p staging/downloads staging/docs/downloads
         
         # 3. Copy files for Root '/' Pages settings
         cp docs/index.html staging/

@@ -20,7 +20,7 @@ const NodeMap = ({ nodes }) => {
     svg.append("rect")
       .attr("width", width)
       .attr("height", height)
-      .attr("fill", "#050505")
+      .attr("fill", "#030711")
       .attr("rx", 10);
       
     // Draw Nodes

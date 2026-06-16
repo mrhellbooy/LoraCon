@@ -42,7 +42,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => (
     viewport={{ once: true }}
     transition={{ duration: 0.6, delay, ease: "easeOut" }}
     whileHover={{ y: -5, transition: { duration: 0.2 } }}
-    className="relative p-8 rounded-[2rem] bg-gradient-to-br from-[#0D0D0D] to-[#050505] border border-white/5 hover:border-[#22c55e]/30 transition-all group overflow-hidden shadow-2xl shadow-black"
+    className="relative p-8 rounded-[2rem] bg-gradient-to-br from-[#0D0D0D] to-[#030711] border border-white/5 hover:border-[#22c55e]/30 transition-all group overflow-hidden shadow-2xl shadow-black"
   >
     <motion.div 
       initial={{ opacity: 0 }}
@@ -74,8 +74,6 @@ const DownloadModal = ({ isOpen, onClose }) => {
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
-
   const handleDownload = (e, item) => {
     e.preventDefault();
     if (item.name === 'Android APK') {
@@ -101,66 +99,72 @@ const DownloadModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }} 
-      animate={{ opacity: 1 }} 
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] overflow-y-auto bg-black/90 backdrop-blur-3xl p-4 flex items-start md:items-center justify-center py-12"
-      onClick={onClose}
-    >
-      <motion.div 
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-2xl bg-[#09090b] border border-white/5 rounded-3xl overflow-hidden flex flex-col shadow-2xl relative my-auto"
-        onClick={e => e.stopPropagation()}
-      >
-        <div className="p-6 border-b border-white/5 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center text-[#22c55e]">
-              <Download className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-sm font-bold text-white tracking-widest uppercase mb-0.5">LORAPOK ECOSYSTEM</h3>
-              <p className="text-[10px] text-slate-500 font-mono">v4.0.2 ARM64/X86_64</p>
-            </div>
-          </div>
-          <button 
-            onClick={onClose} 
-            className="p-2 text-slate-500 hover:text-white transition-colors"
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[200] overflow-y-auto bg-black/90 backdrop-blur-3xl p-4 flex items-center justify-center py-12"
+          onClick={onClose}
+        >
+          <motion.div 
+            initial={{ scale: 0.95, opacity: 0, y: 15 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 15 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-2xl bg-[#09090b] border border-white/5 rounded-3xl overflow-hidden flex flex-col shadow-2xl relative my-auto"
+            onClick={e => e.stopPropagation()}
           >
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {[
-            { name: 'Android APK', size: '24.5 MB', icon: Smartphone },
-            { name: 'Firefox Extension', size: '2.1 MB', icon: Globe },
-            { name: 'Windows Client', size: '48.2 MB', icon: Monitor },
-            { name: 'macOS DMG', size: '42.1 MB', icon: Apple },
-            { name: 'Linux Binary', size: '18.9 MB', icon: Terminal },
-          ].map((item, i) => (
-            <motion.a
-              key={item.name}
-              href="#"
-              onClick={(e) => handleDownload(e, item)}
-              whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.03)' }}
-              whileTap={{ scale: 0.98 }}
-              className={`p-6 rounded-2xl bg-white/[0.02] border border-white/5 transition-all group flex flex-col gap-4 ${
-                i === 4 ? 'sm:col-span-2 sm:text-center sm:items-center' : ''
-              }`}
-            >
-              <item.icon className="w-6 h-6 text-slate-400 group-hover:text-[#22c55e] transition-colors" />
-              <div className={i === 4 ? 'sm:flex sm:flex-col sm:items-center' : ''}>
-                <div className="font-bold text-white tracking-wide mb-1 text-sm">{item.name}</div>
-                <div className="text-[10px] text-slate-500 font-mono tracking-widest">{item.size}</div>
+            <div className="p-6 border-b border-white/5 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#22c55e]/10 border border-[#22c55e]/20 flex items-center justify-center text-[#22c55e]">
+                  <Download className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white tracking-widest uppercase mb-0.5">LORAPOK ECOSYSTEM</h3>
+                  <p className="text-[10px] text-slate-500 font-mono">v4.0.2 ARM64/X86_64</p>
+                </div>
               </div>
-            </motion.a>
-          ))}
-        </div>
-      </motion.div>
-    </motion.div>
+              <button 
+                onClick={onClose} 
+                className="p-2 text-slate-500 hover:text-white transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { name: 'Android APK', size: '24.5 MB', icon: Smartphone },
+                { name: 'Firefox Extension', size: '2.1 MB', icon: Globe },
+                { name: 'Windows Client', size: '48.2 MB', icon: Monitor },
+                { name: 'macOS DMG', size: '42.1 MB', icon: Apple },
+                { name: 'Linux Binary', size: '18.9 MB', icon: Terminal },
+              ].map((item, i) => (
+                <motion.a
+                  key={item.name}
+                  href="#"
+                  onClick={(e) => handleDownload(e, item)}
+                  whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.03)' }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`p-6 rounded-2xl bg-white/[0.02] border border-white/5 transition-all group flex flex-col gap-4 ${
+                    i === 4 ? 'sm:col-span-2 sm:text-center sm:items-center' : ''
+                  }`}
+                >
+                  <item.icon className="w-6 h-6 text-slate-400 group-hover:text-[#22c55e] transition-colors" />
+                  <div className={i === 4 ? 'sm:flex sm:flex-col sm:items-center' : ''}>
+                    <div className="font-bold text-white tracking-wide mb-1 text-sm">{item.name}</div>
+                    <div className="text-[10px] text-slate-500 font-mono tracking-widest">{item.size}</div>
+                  </div>
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -215,15 +219,17 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      setFormData(prev => ({
+        ...prev,
+        service: selectedPlan || 'Protocol Stealth'
+      }));
     } else {
       document.body.style.overflow = 'unset';
     }
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
+  }, [isOpen, selectedPlan]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -242,69 +248,79 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
   };
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[130] overflow-y-auto bg-black/90 backdrop-blur-xl p-4 flex items-start md:items-center justify-center py-12"
-      onClick={onClose}
-    >
-      <motion.div 
-        initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-[#0D0D0D] border border-white/10 rounded-[3rem] p-10 relative overflow-hidden my-auto"
-        onClick={e => e.stopPropagation()}
-      >
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-[#22c55e] to-transparent" />
-        <h2 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase italic">Protocol Wishlist</h2>
-        <p className="text-slate-500 text-xs mb-8 font-mono leading-relaxed uppercase tracking-wider">Join the alpha testing queue for our upcoming clusters.</p>
-        
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Operator Alias</label>
-            <input 
-              required
-              type="text" 
-              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#22c55e] transition-colors font-mono text-sm"
-              placeholder="e.g. SENTINEL-01"
-              value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
-            />
-          </div>
-          <div>
-            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Communication Link</label>
-            <input 
-              required
-              type="email" 
-              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#22c55e] transition-colors font-mono text-sm"
-              placeholder="operator@sentinel.net"
-              value={formData.email}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
-            />
-          </div>
-          <div>
-            <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Cluster Target</label>
-            <select 
-              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#22c55e] transition-colors font-mono text-sm appearance-none"
-              value={formData.service}
-              onChange={(e) => setFormData({...formData, service: e.target.value})}
-            >
-              <option>Protocol Stealth</option>
-              <option>Protocol Warp</option>
-              <option>Sentinel Prime</option>
-            </select>
-          </div>
-          <button 
-            type="submit" 
-            disabled={isSubmitting}
-            className="w-full py-5 bg-[#22c55e] text-black font-black uppercase tracking-widest text-[11px] rounded-[1.5rem] hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(34,197,94,0.4)] disabled:opacity-50"
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[130] overflow-y-auto bg-black/90 backdrop-blur-xl p-4 flex items-center justify-center py-12"
+          onClick={onClose}
+        >
+          <motion.div 
+            initial={{ scale: 0.95, opacity: 0, y: 15 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 15 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-md bg-[#0D0D0D] border border-white/10 rounded-[3rem] p-10 relative overflow-hidden my-auto"
+            onClick={e => e.stopPropagation()}
           >
-            {isSubmitting ? 'TRANSMITTING...' : 'TRANSMIT REQUEST'}
-          </button>
-        </form>
-        
-        <button onClick={onClose} className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors">
-          <X size={24} />
-        </button>
-      </motion.div>
-    </motion.div>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-[#22c55e] to-transparent" />
+            <h2 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase italic">Protocol Wishlist</h2>
+            <p className="text-slate-500 text-xs mb-8 font-mono leading-relaxed uppercase tracking-wider">Join the alpha testing queue for our upcoming clusters.</p>
+            
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Operator Alias</label>
+                <input 
+                  required
+                  type="text" 
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#22c55e] transition-colors font-mono text-sm"
+                  placeholder="e.g. SENTINEL-01"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Communication Link</label>
+                <input 
+                  required
+                  type="email" 
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#22c55e] transition-colors font-mono text-sm"
+                  placeholder="operator@sentinel.net"
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-[8px] uppercase tracking-[0.3em] text-[#22c55e] mb-2 font-black">Cluster Target</label>
+                <select 
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#22c55e] transition-colors font-mono text-sm appearance-none"
+                  value={formData.service}
+                  onChange={(e) => setFormData({...formData, service: e.target.value})}
+                >
+                  <option>Protocol Stealth</option>
+                  <option>Protocol Warp</option>
+                  <option>Sentinel Prime</option>
+                </select>
+              </div>
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="w-full py-5 bg-[#22c55e] text-black font-black uppercase tracking-widest text-[11px] rounded-[1.5rem] hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(34,197,94,0.4)] disabled:opacity-50"
+              >
+                {isSubmitting ? 'TRANSMITTING...' : 'TRANSMIT REQUEST'}
+              </button>
+            </form>
+            
+            <button onClick={onClose} className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors">
+              <X size={24} />
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -319,6 +335,11 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      setStep('CHECKOUT');
+      setWalletConnected(false);
+      setActiveTab('PAYMENT');
+      setSelectedChain('SOLANA');
+      setVerificationTx('');
     } else {
       document.body.style.overflow = 'unset';
     }
@@ -326,8 +347,6 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
-
-  if (!isOpen) return null;
 
   const handlePayment = () => {
     if (!walletConnected) {
@@ -342,19 +361,24 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
   };
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[120] overflow-y-auto bg-black/95 backdrop-blur-2xl p-4 flex items-start lg:items-center justify-center py-12"
-      onClick={onClose}
-    >
-      <motion.div 
-        initial={{ y: "100%", opacity: 0 }} 
-        animate={{ y: 0, opacity: 1 }} 
-        exit={{ y: "100%", opacity: 0 }}
-        transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="w-full max-w-4xl bg-[#080808] border border-white/10 rounded-[3rem] flex flex-col lg:flex-row h-auto overflow-hidden lg:h-[80vh] lg:max-h-[85vh] my-auto"
-        onClick={e => e.stopPropagation()}
-      >
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[120] overflow-y-auto bg-black/95 backdrop-blur-2xl p-4 flex items-center justify-center py-12"
+          onClick={onClose}
+        >
+          <motion.div 
+            initial={{ scale: 0.95, opacity: 0, y: 15 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 15 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-4xl bg-[#080808] border border-white/10 rounded-[3rem] flex flex-col lg:flex-row h-auto overflow-hidden lg:h-[80vh] lg:max-h-[85vh] my-auto"
+            onClick={e => e.stopPropagation()}
+          >
         {/* Left Side: Summary & Branding */}
         <div className="w-full lg:w-1/3 bg-white/[0.02] border-b lg:border-b-0 lg:border-r border-white/5 p-10 flex flex-col justify-between relative overflow-hidden shrink-0">
           <div className="absolute top-0 left-0 w-full h-full bg-[#22c55e]/5 blur-[80px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none" />
@@ -581,6 +605,8 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
         </div>
       </motion.div>
     </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -722,7 +748,7 @@ const LorapokVpnDemo = () => {
               animate={{ opacity: 1, y: 0 }} 
               className="space-y-2 pt-2"
             >
-              <div className="p-4 rounded-2xl bg-[#050505]/80 border border-white/10 backdrop-blur-md relative overflow-hidden">
+              <div className="p-4 rounded-2xl bg-[#030711]/80 border border-white/10 backdrop-blur-md relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-2 opacity-10">
                   <Shield className="w-12 h-12 text-[#22c55e]" />
                 </div>
@@ -745,7 +771,7 @@ const LorapokVpnDemo = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-3 relative z-10">
-                  <div className="p-3 rounded-xl bg-[#050505]/80 backdrop-blur-md border border-[#22c55e]/30 flex flex-col justify-between h-14 overflow-hidden relative">
+                  <div className="p-3 rounded-xl bg-[#030711]/80 backdrop-blur-md border border-[#22c55e]/30 flex flex-col justify-between h-14 overflow-hidden relative">
                     <div className="absolute inset-0 bg-[#22c55e]/5"></div>
                     <div className="relative z-10 flex items-center gap-1.5 opacity-80">
                       <Zap className="w-2.5 h-2.5 text-[#22c55e]" />
@@ -753,7 +779,7 @@ const LorapokVpnDemo = () => {
                     </div>
                     <div className="relative z-10 text-sm font-black text-white tracking-tight">{speeds.down} Mbps</div>
                   </div>
-                  <div className="p-3 rounded-xl bg-[#050505]/80 backdrop-blur-md border border-blue-500/30 flex flex-col justify-between h-14 overflow-hidden relative">
+                  <div className="p-3 rounded-xl bg-[#030711]/80 backdrop-blur-md border border-blue-500/30 flex flex-col justify-between h-14 overflow-hidden relative">
                     <div className="absolute inset-0 bg-blue-500/5"></div>
                     <div className="relative z-10 flex items-center gap-1.5 opacity-80 text-blue-400">
                       <Activity className="w-2.5 h-2.5" />
@@ -812,24 +838,21 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
-      <AnimatePresence>
-        {isDownloadOpen && <DownloadModal isOpen={isDownloadOpen} onClose={() => setIsDownloadOpen(false)} />}
-        {isWishlistOpen && (
-          <WishlistModal 
-            isOpen={isWishlistOpen} 
-            onClose={() => setIsWishlistOpen(false)} 
-            selectedPlan={selectedPlan} 
-          />
-        )}
-        {isCheckoutOpen && (
-          <CheckoutModal 
-            isOpen={isCheckoutOpen} 
-            onClose={() => setIsCheckoutOpen(false)} 
-            plan={selectedPlanData} 
-          />
-        )}
-      </AnimatePresence>
+    <div className="min-h-screen bg-[#030711] text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
+      <DownloadModal 
+        isOpen={isDownloadOpen} 
+        onClose={() => setIsDownloadOpen(false)} 
+      />
+      <WishlistModal 
+        isOpen={isWishlistOpen} 
+        onClose={() => setIsWishlistOpen(false)} 
+        selectedPlan={selectedPlan} 
+      />
+      <CheckoutModal 
+        isOpen={isCheckoutOpen} 
+        onClose={() => setIsCheckoutOpen(false)} 
+        plan={selectedPlanData} 
+      />
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-32 px-6 overflow-hidden">
@@ -915,7 +938,7 @@ export default function LandingPage() {
       </section>
 
       {/* Feature Cards Section */}
-      <section className="py-32 px-6 bg-[#050505]/50 relative">
+      <section className="py-32 px-6 bg-[#030711]/50 relative">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-20">
             <div className="max-w-2xl">

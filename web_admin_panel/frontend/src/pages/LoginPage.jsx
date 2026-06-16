@@ -9,8 +9,11 @@ export default function LoginPage() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === 'loracon-master-2026') { // Very basic "Superadmin" check
-      sessionStorage.setItem('isAdmin', 'true');
+    if (password === 'loracon-master-2026') {
+      sessionStorage.setItem('role', 'SUPERADMIN');
+      navigate('/admin');
+    } else if (password === 'loracon-admin-2026') {
+      sessionStorage.setItem('role', 'USERADMIN');
       navigate('/admin');
     } else {
       setError('Invalid Access Token.');

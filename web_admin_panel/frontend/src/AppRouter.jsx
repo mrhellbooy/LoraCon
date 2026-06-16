@@ -6,8 +6,8 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 
 const ProtectedRoute = ({ children }) => {
-  const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
-  return isAdmin ? children : <Navigate to="/login" />;
+  const role = sessionStorage.getItem('role');
+  return role ? children : <Navigate to="/login" />;
 };
 
 export default function AppRouter() {

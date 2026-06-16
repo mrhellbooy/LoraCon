@@ -45,16 +45,18 @@ export default function LandingPage() {
         </p>
         
         <div className="flex gap-4">
-          <motion.button 
+          <motion.a 
+            href="/downloads/loracon-latest.apk" 
+            download="loracon-latest.apk"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition"
           >
             <ArrowDown size={20} /> Download Client
-          </motion.button>
+          </motion.a>
           
           <motion.a 
-            href="/admin" 
+            href="/#/admin" 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-2 bg-[#111] border border-[#222] text-gray-300 px-8 py-3 rounded-full font-bold hover:bg-[#1A1A1A] transition"

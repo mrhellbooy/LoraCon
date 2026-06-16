@@ -415,6 +415,8 @@ fun DashboardScreen(
     val totalBytesSent by viewModel.totalBytesSent.collectAsState()
     val totalBytesReceived by viewModel.totalBytesReceived.collectAsState()
     val durationSeconds by viewModel.activeConnectionDuration.collectAsState()
+    val sub by viewModel.userSubscription.collectAsState()
+    val freeBandwidthLimit by viewModel.freeBandwidthLimit.collectAsState()
 
     var isLanguageMenuExpanded by remember { mutableStateOf(false) }
 
@@ -656,30 +658,42 @@ fun DashboardScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Text(
                                 text = server?.flagEmoji ?: "🌍",
                                 fontSize = 28.sp
                             )
                             Spacer(modifier = Modifier.width(14.dp))
-                            Column {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = server?.name ?: "No server selected",
                                     color = TextPrimary,
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.SansSerif
+                                    fontFamily = FontFamily.SansSerif,
+                                    maxLines = 1,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                 )
                                 Text(
                                     text = server?.country ?: "Select Endpoint",
                                     color = TextSecondary,
                                     fontSize = 11.sp,
-                                    fontFamily = FontFamily.SansSerif
+                                    fontFamily = FontFamily.SansSerif,
+                                    maxLines = 1,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                 )
                             }
                         }
 
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.widthIn(min = 70.dp)
+                        ) {
                             Text("⚡", fontSize = 14.sp)
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
@@ -687,10 +701,48 @@ fun DashboardScreen(
                                 color = CyberEmerald,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium,
-                                fontFamily = FontFamily.Monospace
+                                fontFamily = FontFamily.Monospace,
+                                maxLines = 1
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text("▶", color = TextMuted, fontSize = 11.sp)
+                        }
+                    }
+
+                    if (sub.tier == "FREE" && connState == ConnectionState.Connected) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(WarningRed.copy(alpha = 0.15f), RoundedCornerShape(8.dp))
+                                .border(1.dp, WarningRed.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                                .padding(horizontal = 12.dp, vertical = 10.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text("⚠️", fontSize = 12.sp)
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "FREE SPEED CAP ACTIVE: max $freeBandwidthLimit Mbps",
+                                        color = WarningRed,
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = FontFamily.Monospace
+                                    )
+                                }
+                                Text(
+                                    text = "UPGRADE ⚡",
+                                    color = CyberEmerald,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontFamily = FontFamily.Monospace,
+                                    modifier = Modifier.padding(horizontal = 4.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -983,16 +1035,21 @@ fun ServerListScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                modifier = Modifier.weight(1f),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Text(node.flagEmoji, fontSize = 28.sp)
                                 Spacer(modifier = Modifier.width(14.dp))
-                                Column {
+                                Column(modifier = Modifier.weight(1f)) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Text(
                                             text = node.name,
                                             color = TextPrimary,
                                             fontWeight = FontWeight.Bold,
-                                            fontSize = 13.sp
+                                            fontSize = 13.sp,
+                                            maxLines = 1,
+                                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                         )
                                         if (node.isPremium) {
                                             Spacer(modifier = Modifier.width(6.dp))
@@ -1010,12 +1067,19 @@ fun ServerListScreen(
                                     Text(
                                         text = "IP: ${node.ipAddress} • Protocol: ${node.protocolSupported}",
                                         color = TextSecondary,
-                                        fontSize = 11.sp
+                                        fontSize = 11.sp,
+                                        maxLines = 1,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                     )
                                 }
                             }
 
-                            Column(horizontalAlignment = Alignment.End) {
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            Column(
+                                horizontalAlignment = Alignment.End,
+                                modifier = Modifier.widthIn(min = 65.dp)
+                            ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Text("⚡", fontSize = 12.sp)
                                     Spacer(modifier = Modifier.width(4.dp))
@@ -1024,7 +1088,8 @@ fun ServerListScreen(
                                         color = if (node.pingsMs < 60) CyberEmerald else SignalOrange,
                                         fontSize = 12.sp,
                                         fontFamily = FontFamily.Monospace,
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        maxLines = 1
                                     )
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
@@ -1032,7 +1097,8 @@ fun ServerListScreen(
                                     text = "Load: ${node.loadPercentage}%",
                                     color = TextMuted,
                                     fontSize = 10.sp,
-                                    fontFamily = FontFamily.Monospace
+                                    fontFamily = FontFamily.Monospace,
+                                    maxLines = 1
                                 )
                             }
                         }
@@ -1050,6 +1116,10 @@ fun AccountSubscriptionScreen(
     localizer: (String, String, String, String, String) -> String
 ) {
     val sub by viewModel.userSubscription.collectAsState()
+    val cryptoSolAddress by viewModel.cryptoSolAddress.collectAsState()
+    val cryptoUsdtAddress by viewModel.cryptoUsdtAddress.collectAsState()
+    val priceStandardSol by viewModel.priceStandardSol.collectAsState()
+    val pricePremiumSol by viewModel.pricePremiumSol.collectAsState()
 
     var isPaying by remember { mutableStateOf<String?>(null) }
     var selectedCryptoWallet by remember { mutableStateOf("USDT (ERC20)") }
@@ -1130,7 +1200,7 @@ fun AccountSubscriptionScreen(
             PlanCard(
                 title = localizer("STANDARD VAULT", "BÓVEDA ESTÁNDAR", "STANDARDSCHUTZ", "スタンダード", "标准隐形中继"),
                 price = "$3.20 / mo",
-                cryptoPrice = "≈ 0.05 SOL",
+                cryptoPrice = "≈ $priceStandardSol SOL",
                 features = listOf(
                     localizer("Access to standard Japanese Neon server", "Servidor de Shinjuku Neon integrado", "Zugriff auf Shinjuku Neon Server", "Shinjuku Neonサーバーを完全解放", "畅连日本霓虹、新加坡核心中继"),
                     localizer("WireGuard protocol acceleration up to 300 Mbps", "Velocidades WireGuard hasta 300 Mbps", "Geschwindigkeiten bis zu 300 Mbps", "最速 300 Mbps の回線バースト", "信道提速，享受最高 300 Mbps 带宽"),
@@ -1145,7 +1215,7 @@ fun AccountSubscriptionScreen(
             PlanCard(
                 title = localizer("LORAPOK STEALTH EXTREME", "LORAPOK EXTREMO DISCRETO", "LORAPOK STEALTH EXTREME", "Lorapok 極限ステルス仕様", "Lorapok 曜石极端隐秘"),
                 price = "$7.50 / mo",
-                cryptoPrice = "≈ 0.12 SOL",
+                cryptoPrice = "≈ $pricePremiumSol SOL",
                 features = listOf(
                     localizer("Access to military Swiss Vaults & Iceland Ice nodes", "Bóvedas suizas y nodos árticos en Islandia", "Zugriff auf Schweizer Tresor & Island Knoten", "軍事スイスVaults & アイスランド・ステルス", "解锁瑞士雪山保密堡垒与冰岛极地暗曜节点"),
                     localizer("Unlimited speed & rate limits (1 Gbps+)", "Velocidad ilimitada sin límites (1 Gbps+)", "Unbegrenzte Geschwindigkeiten (1 Gbps+)", "転送速度無制限 (最高 1 Gbps)", "尊享最优先级 1 Gbps+ 无锁爆发带宽"),
@@ -1218,7 +1288,7 @@ fun AccountSubscriptionScreen(
                             .padding(10.dp)
                     ) {
                         Text(
-                            text = "LCon78RzqpWXtBz89MNpQA2z7Y9C8BxvEwtDevNet789",
+                            text = if (selectedCryptoWallet.contains("USDT") || selectedCryptoWallet.contains("USDC")) cryptoUsdtAddress else cryptoSolAddress,
                             color = AccentMint,
                             fontSize = 11.sp,
                             fontFamily = FontFamily.Monospace
@@ -1481,9 +1551,40 @@ fun AdminDashboardScreen(
     val clock by viewModel.utcClock.collectAsState()
     val servers by viewModel.servers.collectAsState()
 
-    var simulatedTiersCount by remember { mutableStateOf(14) }
-    var automatedBillingCycleActive by remember { mutableStateOf(true) }
-    var customizableApiRateLimitSetting by remember { mutableStateOf(100f) }
+    // ViewModel Admin configuration states
+    val cryptoSolAddress by viewModel.cryptoSolAddress.collectAsState()
+    val cryptoUsdtAddress by viewModel.cryptoUsdtAddress.collectAsState()
+    val priceStandardSol by viewModel.priceStandardSol.collectAsState()
+    val pricePremiumSol by viewModel.pricePremiumSol.collectAsState()
+    val selectedApiProvider by viewModel.selectedApiProvider.collectAsState()
+    val grokApiKeyString by viewModel.grokApiKeyString.collectAsState()
+    val freeBandwidthLimit by viewModel.freeBandwidthLimit.collectAsState()
+    val freeDailyQuotaLimit by viewModel.freeDailyQuotaLimit.collectAsState()
+
+    var activeAdminTab by remember { mutableStateOf("FLOW") } // "FLOW", "CRYPT", "SERVERS", "MONITOR"
+
+    // Crypt Wallet Fields
+    var solAddressField by remember(cryptoSolAddress) { mutableStateOf(cryptoSolAddress) }
+    var usdtAddressField by remember(cryptoUsdtAddress) { mutableStateOf(cryptoUsdtAddress) }
+    var priceStandardSolField by remember(priceStandardSol) { mutableStateOf(priceStandardSol.toString()) }
+    var pricePremiumSolField by remember(pricePremiumSol) { mutableStateOf(pricePremiumSol.toString()) }
+
+    // API Key Editor Field
+    var grokKeyField by remember(grokApiKeyString) { mutableStateOf(grokApiKeyString) }
+
+    // Server Adder Form State
+    var newServerId by remember { mutableStateOf("") }
+    var newServerName by remember { mutableStateOf("") }
+    var newServerCountry by remember { mutableStateOf("") }
+    var newServerFlag by remember { mutableStateOf("🌐") }
+    var newServerIp by remember { mutableStateOf("") }
+    var newServerPing by remember { mutableStateOf(45f) }
+    var newServerLoad by remember { mutableStateOf(20f) }
+    var newServerIsPremium by remember { mutableStateOf(false) }
+    var newServerRequiredTier by remember { mutableStateOf("FREE") } // FREE, STANDARD, PREMIUM
+    var newServerProtocol by remember { mutableStateOf("WireGuard & OpenVPN") }
+
+    var formStatusMessage by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -1491,165 +1592,530 @@ fun AdminDashboardScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = localizer("ADMIN MASTER PANEL", "CONSOLA DE ADMINISTRACIÓN", "ADMINISTRATIVES KONTROLLZENTRUM", "マスター管理パネル", "系统控制枢纽"),
+            text = localizer("ADMIN MASTER COGNITIVE PORTAL", "CONSOLA DE CONTROL MASTER", "ADMINISTRATIVES MASTER-WERKBANK", "マスター管理パネル", "系统控制与边缘调度控制台"),
             color = CyberEmerald,
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
+            fontSize = 17.sp,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 6.dp)
         )
 
+        // Clock & Quick telemetry stats card
         Card(
-            colors = CardDefaults.cardColors(containerColor = DarkSteel),
-            modifier = Modifier.fillMaxWidth().border(1.dp, BorderColor, RoundedCornerShape(10.dp))
+            colors = CardDefaults.cardColors(containerColor = ObsidianBlack),
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, BorderColor, RoundedCornerShape(10.dp))
         ) {
-            Column(modifier = Modifier.padding(14.dp)) {
-                Text("REAL-TIME NODES SYNCHRONY (UTC)", color = TextMuted, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
-                Text(clock, color = TechPurple, fontSize = 18.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column {
-                        Text("ACTIVE USER SUBSCRIBERS", color = TextMuted, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
-                        Text("$simulatedTiersCount active nodes", color = TextPrimary, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
-                    }
-
-                    Column(horizontalAlignment = Alignment.End) {
-                        Text("CLIENT CODES DEBUGGER STATUS", color = TextMuted, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
-                        Text("0x00 OK_HANDSHAKE", color = CyberEmerald, fontSize = 12.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Card(
-            colors = CardDefaults.cardColors(containerColor = DarkSteel),
-            modifier = Modifier.fillMaxWidth().border(0.5.dp, BorderColor, RoundedCornerShape(10.dp))
-        ) {
-            Column(modifier = Modifier.padding(14.dp)) {
+            Column(modifier = Modifier.padding(12.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = localizer("AUTOMATED BILLING CYCLE", "CICLOS DE COBRO AUTOMÁTICOS", "AUTOMATISIERTE ABRECHNUNG", "自動請求サイクル", "智能订阅结算自动扣除"),
-                            color = TextPrimary,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
-                        )
-                        Text(
-                            text = "Auto settlement checking on Solana epochs and card gateways.",
-                            color = TextSecondary,
-                            fontSize = 11.sp
-                        )
-                    }
-
-                    Switch(
-                        checked = automatedBillingCycleActive,
-                        onCheckedChange = { automatedBillingCycleActive = it },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = CyberEmerald,
-                            checkedTrackColor = CyberEmerald.copy(alpha = 0.4f)
-                        )
+                    Text("REALTIMING COORDINATION (UTC)", color = TextMuted, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
+                    Text(
+                        text = if (selectedApiProvider == "Grok AI API") "PROVIDER: xAI GROK" else "PROVIDER: GEMINI-FLASH",
+                        color = if (selectedApiProvider == "Grok AI API") TechPurple else CyberEmerald,
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace
                     )
                 }
+                Text(clock, color = TechPurple, fontSize = 16.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Active Db Endpoints: ${servers.filter { it.isActive }.size}", color = TextSecondary, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                    Text("System Security Status: 0x01 SECURE", color = CyberEmerald, fontSize = 11.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                }
+            }
+        }
 
-                Spacer(modifier = Modifier.height(14.dp))
-                HorizontalDivider(color = BorderColor)
-                Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-                Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = localizer("API RATE PROFILE LIMIT", "PERFIL DE LÍMITE DE VELOCIDAD API", "KNOTEN THROTTLING-LORELIMIT", "ノード伝送スロットル制限", "API 信道带宽流控限制"),
-                            color = TextPrimary,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
-                        )
-                        Text(
-                            text = "${customizableApiRateLimitSetting.toInt()} Mbps",
-                            color = CyberEmerald,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
-                        )
-                    }
+        // Admin Sub Tab select bar
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(DarkSteel, RoundedCornerShape(4.dp))
+                .padding(2.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            val tabs = listOf(
+                "FLOW" to "FLOW & API",
+                "CRYPT" to "CRYPT VAULT",
+                "SERVERS" to "NODES BUILD",
+                "MONITOR" to "GRAPH MONITOR"
+            )
+            tabs.forEach { (key, title) ->
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .minimumInteractiveComponentSize()
+                        .clip(RoundedCornerShape(3.dp))
+                        .background(if (activeAdminTab == key) CyberEmerald else Color.Transparent)
+                        .clickable { activeAdminTab = key }
+                        .padding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(
-                        text = "Customize rate limits on non-standard nodes below standard caps.",
-                        color = TextSecondary,
-                        fontSize = 11.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Slider(
-                        value = customizableApiRateLimitSetting,
-                        onValueChange = { customizableApiRateLimitSetting = it },
-                        valueRange = 10f..400f,
-                        colors = SliderDefaults.colors(
-                            thumbColor = CyberEmerald,
-                            activeTrackColor = CyberEmerald,
-                            inactiveTrackColor = BorderColorMedium
-                        )
+                        text = title,
+                        color = if (activeAdminTab == key) ObsidianBlack else TextSecondary,
+                        fontSize = 8.6.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Text(
-            text = "NODES SYSTEM METRIC MONITOR",
-            color = TextPrimary,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(6.dp),
-            modifier = Modifier.weight(1f)
+        // Content Area with scrollable components or nested cards
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(servers) { vmServer ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(DarkSteel, RoundedCornerShape(6.dp))
-                        .padding(10.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+            when (activeAdminTab) {
+                "FLOW" -> {
+                    // API System and limit sliders
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = DarkSteel),
+                        modifier = Modifier.fillMaxWidth().border(0.5.dp, BorderColor, RoundedCornerShape(10.dp))
                     ) {
-                        Text(vmServer.name, color = TextPrimary, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
+                        Column(modifier = Modifier.padding(14.dp)) {
+                            Text("API PROVIDER ORACLE ENGINE", color = CyberEmerald, fontSize = 12.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                listOf("Gemini API", "Grok AI API").forEach { prov ->
+                                    val isSelected = selectedApiProvider == prov
+                                    Box(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .minimumInteractiveComponentSize()
+                                            .clip(RoundedCornerShape(6.dp))
+                                            .background(if (isSelected) CyberEmerald else ObsidianBlack)
+                                            .border(1.dp, if (isSelected) CyberEmerald else BorderColorMedium, RoundedCornerShape(6.dp))
+                                            .clickable { viewModel.updateApiSettings(prov, grokKeyField) }
+                                            .padding(10.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(prov, color = if (isSelected) ObsidianBlack else TextPrimary, fontSize = 11.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                                    }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            if (selectedApiProvider == "Grok AI API") {
+                                OutlinedTextField(
+                                    value = grokKeyField,
+                                    onValueChange = {
+                                        grokKeyField = it
+                                        viewModel.updateApiSettings("Grok AI API", it)
+                                    },
+                                    label = { Text("Grok AI (xAI) API Key Payload", color = TechPurple) },
+                                    placeholder = { Text("e.g. xai-9aJK81...", color = TextMuted) },
+                                    textStyle = androidx.compose.ui.text.TextStyle(color = TextPrimary, fontFamily = FontFamily.Monospace, fontSize = 11.sp),
+                                    modifier = Modifier.fillMaxWidth().testTag("grok_api_key_input"),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedBorderColor = TechPurple,
+                                        unfocusedBorderColor = BorderColorMedium
+                                    )
+                                )
+                                Text("Grok AI cognitive model operates with deep-encryption rules and cheeky tech insight answers.", color = TextMuted, fontSize = 9.sp, modifier = Modifier.padding(top = 4.dp))
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(ObsidianBlack, RoundedCornerShape(6.dp))
+                                        .padding(10.dp)
+                                ) {
+                                    Text("Gemini API keys managed via AI Studio Secrets. Flash v1.5-Flash cognitive engine enabled.", color = TextMuted, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                                }
+                            }
+                        }
+                    }
+
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = DarkSteel),
+                        modifier = Modifier.fillMaxWidth().border(0.5.dp, BorderColor, RoundedCornerShape(10.dp))
+                    ) {
+                        Column(modifier = Modifier.padding(14.dp)) {
+                            Text("BANDWIDTH FLOW THROTTLING (FREE TIER)", color = CyberEmerald, fontSize = 12.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text("Free Bandwidth Cap", color = TextPrimary, fontSize = 11.sp)
+                                Text("$freeBandwidthLimit Mbps", color = CyberEmerald, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                            }
+                            Slider(
+                                value = freeBandwidthLimit.toFloat(),
+                                onValueChange = { viewModel.updateFreeLimits(it.toInt(), freeDailyQuotaLimit) },
+                                valueRange = 10f..150f,
+                                colors = SliderDefaults.colors(
+                                    thumbColor = CyberEmerald,
+                                    activeTrackColor = CyberEmerald,
+                                    inactiveTrackColor = BorderColorMedium
+                                )
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text("Free Daily Quota Limit", color = TextPrimary, fontSize = 11.sp)
+                                Text("$freeDailyQuotaLimit MB", color = CyberEmerald, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                            }
+                            Slider(
+                                value = freeDailyQuotaLimit.toFloat(),
+                                onValueChange = { viewModel.updateFreeLimits(freeBandwidthLimit, it.toInt()) },
+                                valueRange = 100f..2000f,
+                                colors = SliderDefaults.colors(
+                                    thumbColor = CyberEmerald,
+                                    activeTrackColor = CyberEmerald,
+                                    inactiveTrackColor = BorderColorMedium
+                                )
+                            )
+                            Text("Connected Free plans will get capped and speed-limited based on these rates instantly.", color = TextMuted, fontSize = 9.sp, modifier = Modifier.padding(top = 4.dp))
+                        }
+                    }
+                }
+
+                "CRYPT" -> {
+                    // Wallet configurations and plan rates
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = DarkSteel),
+                        modifier = Modifier.fillMaxWidth().border(0.5.dp, BorderColor, RoundedCornerShape(10.dp))
+                    ) {
+                        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Text("BLOCKCHAIN DEPLOYMENT PAYROLL SETTINGS", color = CyberEmerald, fontSize = 12.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+
+                            OutlinedTextField(
+                                value = solAddressField,
+                                onValueChange = { solAddressField = it },
+                                label = { Text("Solana (SOL) Recipient Address", color = TextSecondary) },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = TextPrimary, fontFamily = FontFamily.Monospace, fontSize = 11.sp),
+                                modifier = Modifier.fillMaxWidth().testTag("sol_wallet_input"),
+                                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = CyberEmerald, unfocusedBorderColor = BorderColorMedium)
+                            )
+
+                            OutlinedTextField(
+                                value = usdtAddressField,
+                                onValueChange = { usdtAddressField = it },
+                                label = { Text("USDT (Solana/ERC20) Recipient Address", color = TextSecondary) },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = TextPrimary, fontFamily = FontFamily.Monospace, fontSize = 11.sp),
+                                modifier = Modifier.fillMaxWidth().testTag("usdt_wallet_input"),
+                                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = CyberEmerald, unfocusedBorderColor = BorderColorMedium)
+                            )
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                OutlinedTextField(
+                                    value = priceStandardSolField,
+                                    onValueChange = { priceStandardSolField = it },
+                                    label = { Text("Standard rate SOL", color = TextSecondary) },
+                                    textStyle = androidx.compose.ui.text.TextStyle(color = TextPrimary, fontFamily = FontFamily.Monospace, fontSize = 11.sp),
+                                    modifier = Modifier.weight(1f).testTag("std_price_input"),
+                                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = CyberEmerald, unfocusedBorderColor = BorderColorMedium)
+                                )
+
+                                OutlinedTextField(
+                                    value = pricePremiumSolField,
+                                    onValueChange = { pricePremiumSolField = it },
+                                    label = { Text("Premium rate SOL", color = TextSecondary) },
+                                    textStyle = androidx.compose.ui.text.TextStyle(color = TextPrimary, fontFamily = FontFamily.Monospace, fontSize = 11.sp),
+                                    modifier = Modifier.weight(1f).testTag("prem_price_input"),
+                                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = CyberEmerald, unfocusedBorderColor = BorderColorMedium)
+                                )
+                            }
+
+                            Button(
+                                onClick = {
+                                    val solPrice = priceStandardSolField.toDoubleOrNull() ?: priceStandardSol
+                                    val premPrice = pricePremiumSolField.toDoubleOrNull() ?: pricePremiumSol
+                                    viewModel.updateCryptoSettings(solAddressField, usdtAddressField, solPrice, premPrice)
+                                    formStatusMessage = "Settlement keys synchronized to dynamic registry."
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = CyberEmerald),
+                                modifier = Modifier.fillMaxWidth().testTag("save_crypt_button"),
+                                shape = RoundedCornerShape(6.dp)
+                            ) {
+                                Text("SYNCHRONIZE PAYROLL CONFIGS", color = ObsidianBlack, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
+                            }
+
+                            if (formStatusMessage.isNotEmpty()) {
+                                Text(formStatusMessage, color = AccentMint, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                            }
+                        }
+                    }
+                }
+
+                "SERVERS" -> {
+                    // Server additions and deletions
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = DarkSteel),
+                        modifier = Modifier.fillMaxWidth().border(0.5.dp, BorderColor, RoundedCornerShape(10.dp))
+                    ) {
+                        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("BUILD NEW VPN NODE PROFILE", color = CyberEmerald, fontSize = 12.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+
+                            OutlinedTextField(
+                                value = newServerId,
+                                onValueChange = { newServerId = it },
+                                label = { Text("Server ID Key (e.g. us_sf)", color = TextSecondary) },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = TextPrimary, fontSize = 11.sp),
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = CyberEmerald, unfocusedBorderColor = BorderColorMedium)
+                            )
+
+                            OutlinedTextField(
+                                value = newServerName,
+                                onValueChange = { newServerName = it },
+                                label = { Text("Server Name", color = TextSecondary) },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = TextPrimary, fontSize = 11.sp),
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = CyberEmerald, unfocusedBorderColor = BorderColorMedium)
+                            )
+
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                OutlinedTextField(
+                                    value = newServerCountry,
+                                    onValueChange = { newServerCountry = it },
+                                    label = { Text("Country", color = TextSecondary) },
+                                    textStyle = androidx.compose.ui.text.TextStyle(color = TextPrimary, fontSize = 11.sp),
+                                    modifier = Modifier.weight(1.3f),
+                                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = CyberEmerald, unfocusedBorderColor = BorderColorMedium)
+                                )
+
+                                OutlinedTextField(
+                                    value = newServerFlag,
+                                    onValueChange = { newServerFlag = it },
+                                    label = { Text("Flag Emoji", color = TextSecondary) },
+                                    textStyle = androidx.compose.ui.text.TextStyle(color = TextPrimary, fontSize = 11.sp),
+                                    modifier = Modifier.weight(0.7f),
+                                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = CyberEmerald, unfocusedBorderColor = BorderColorMedium)
+                                )
+                            }
+
+                            OutlinedTextField(
+                                value = newServerIp,
+                                onValueChange = { newServerIp = it },
+                                label = { Text("IP Address Target", color = TextSecondary) },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = TextPrimary, fontSize = 11.sp),
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = CyberEmerald, unfocusedBorderColor = BorderColorMedium)
+                            )
+
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Text("Required Tier:", color = TextSecondary, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                                listOf("FREE", "STANDARD", "PREMIUM").forEach { tier ->
+                                    val isSelected = newServerRequiredTier == tier
+                                    Box(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .minimumInteractiveComponentSize()
+                                            .clip(RoundedCornerShape(4.dp))
+                                            .background(if (isSelected) CyberEmerald else ObsidianBlack)
+                                            .clickable {
+                                                newServerRequiredTier = tier
+                                                newServerIsPremium = tier != "FREE"
+                                            }
+                                            .padding(6.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(tier, color = if (isSelected) ObsidianBlack else TextSecondary, fontSize = 9.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                                    }
+                                }
+                            }
+
+                            Button(
+                                onClick = {
+                                    if (newServerId.trim().isEmpty() || newServerName.trim().isEmpty() || newServerIp.trim().isEmpty()) {
+                                        formStatusMessage = "Please fulfill ID, Name and IP Address fields."
+                                    } else {
+                                        viewModel.addServer(
+                                            id = newServerId.trim(),
+                                            name = newServerName.trim(),
+                                            country = newServerCountry.trim().ifEmpty { "Global" },
+                                            flagEmoji = newServerFlag.trim().ifEmpty { "🌐" },
+                                            ipAddress = newServerIp.trim(),
+                                            pingsMs = newServerPing.toInt(),
+                                            loadPercentage = newServerLoad.toInt(),
+                                            isPremium = newServerIsPremium,
+                                            requiredTier = newServerRequiredTier,
+                                            protocolSupported = newServerProtocol
+                                        )
+                                        formStatusMessage = "Server '${newServerName}' injected into local Room database successfully."
+                                        // Reset fields
+                                        newServerId = ""
+                                        newServerName = ""
+                                        newServerCountry = ""
+                                        newServerFlag = "🌐"
+                                        newServerIp = ""
+                                    }
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = CyberEmerald),
+                                modifier = Modifier.fillMaxWidth().testTag("add_node_button"),
+                                shape = RoundedCornerShape(6.dp)
+                            ) {
+                                Text("COMPOSE & INJECT NODE", color = ObsidianBlack, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
+                            }
+                        }
+                    }
+
+                    Text("ACTIVE COGNITIVE SYSTEM ENDPOINTS", color = TextPrimary, fontSize = 11.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, modifier = Modifier.padding(top = 6.dp))
+
+                    servers.filter { it.isActive }.forEach { node ->
+                        Card(
+                            colors = CardDefaults.cardColors(containerColor = DarkSteel),
+                            modifier = Modifier.fillMaxWidth().border(0.5.dp, BorderColor, RoundedCornerShape(8.dp))
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(10.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+                                    Text(node.flagEmoji, fontSize = 22.sp)
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Column {
+                                        Text(node.name, color = TextPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+                                        Text("IP: ${node.ipAddress} • ${node.requiredTier}", color = TextSecondary, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                                    }
+                                }
+                                IconButton(
+                                    onClick = { viewModel.deleteServer(node) },
+                                    modifier = Modifier.minimumInteractiveComponentSize()
+                                ) {
+                                    Text("🗑️", fontSize = 14.sp)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                "MONITOR" -> {
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = DarkSteel),
+                        modifier = Modifier.fillMaxWidth().border(0.5.dp, BorderColor, RoundedCornerShape(10.dp))
+                    ) {
+                        Column(modifier = Modifier.padding(14.dp)) {
+                            Text("SENTIENT TELEMETRY CONSOLE", color = CyberEmerald, fontSize = 12.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text("Realtime simulation of package stream throughput & neural encryption delays.", color = TextMuted, fontSize = 9.sp)
+
+                            Spacer(modifier = Modifier.height(14.dp))
+
+                            // Advanced Moving Graph canvas diagram
+                            val infiniteTransition = rememberInfiniteTransition(label = "graph_shift")
+                            val graphPhase by infiniteTransition.animateFloat(
+                                initialValue = 0f,
+                                targetValue = 2f * Math.PI.toFloat(),
+                                animationSpec = infiniteRepeatable(
+                                    animation = tween(2000, easing = LinearEasing)
+                                ),
+                                label = "phase"
+                            )
+
+                            val emeraldLocColor = CyberEmerald
+                            val purpleLocColor = TechPurple
+
+                            androidx.compose.foundation.Canvas(
                                 modifier = Modifier
-                                    .size(6.dp)
-                                    .clip(CircleShape)
-                                    .background(if (vmServer.isActive) CyberEmerald else WarningRed)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                "CAP: ${customizableApiRateLimitSetting.toInt()} Mbps • LOAD: ${vmServer.loadPercentage}%",
-                                color = TextSecondary,
-                                fontSize = 10.sp,
-                                fontFamily = FontFamily.Monospace
-                            )
+                                    .fillMaxWidth()
+                                    .height(140.dp)
+                                    .background(ObsidianBlack, RoundedCornerShape(8.dp))
+                                    .border(1.dp, BorderColorMedium, RoundedCornerShape(8.dp))
+                            ) {
+                                val w = size.width
+                                val h = size.height
+
+                                // Draw grids
+                                for (i in 1..4) {
+                                    val gy = h * i / 5
+                                    drawLine(Color.Gray.copy(alpha = 0.15f), Offset(0f, gy), Offset(w, gy), strokeWidth = 2f)
+                                }
+                                for (i in 1..9) {
+                                    val gx = w * i / 10
+                                    drawLine(Color.Gray.copy(alpha = 0.15f), Offset(gx, 0f), Offset(gx, h), strokeWidth = 2f)
+                                }
+
+                                // Draw moving waves represent load throughput
+                                val points = 100
+                                val path = androidx.compose.ui.graphics.Path()
+                                for (p in 0..points) {
+                                    val px = w * p / points
+                                    val term1 = Math.sin((p * 0.15 + graphPhase).toDouble()).toFloat()
+                                    val term2 = Math.cos((p * 0.05 - graphPhase * 0.5).toDouble()).toFloat()
+                                    val py = h * 0.5f + (term1 * 25f) + (term2 * 12f)
+                                    if (p == 0) path.moveTo(px, py) else path.lineTo(px, py)
+                                }
+                                drawPath(path, color = emeraldLocColor, style = Stroke(width = 4f, cap = StrokeCap.Round))
+
+                                // Draw second wave representing latency delays
+                                val path2 = androidx.compose.ui.graphics.Path()
+                                for (p in 0..points) {
+                                    val px = w * p / points
+                                    val term1 = Math.cos((p * 0.10 + graphPhase * 1.2).toDouble()).toFloat()
+                                    val term2 = Math.sin((p * 0.08 - graphPhase).toDouble()).toFloat()
+                                    val py = h * 0.6f + (term1 * 18f) + (term2 * 8f)
+                                    if (p == 0) path2.moveTo(px, py) else path2.lineTo(px, py)
+                                }
+                                drawPath(path2, color = purpleLocColor, style = Stroke(width = 3f, cap = StrokeCap.Round))
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Box(modifier = Modifier.size(8.dp).background(CyberEmerald, CircleShape))
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text("Client Throughput: 42.4 MB/s (AVG)", color = TextSecondary, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
+                                }
+
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Box(modifier = Modifier.size(8.dp).background(TechPurple, CircleShape))
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text("Crypt handshake delay: 35ms", color = TextSecondary, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
+                                }
+                            }
+                        }
+                    }
+
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = DarkSteel),
+                        modifier = Modifier.fillMaxWidth().border(0.5.dp, BorderColor, RoundedCornerShape(10.dp))
+                    ) {
+                        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text("RAPID PROTOCOL CLEARING AUDITOR", color = CyberEmerald, fontSize = 12.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                            Text("Database storage caches are backed up locally by Room SQL. Purge historic connections log securely and safely below.", color = TextSecondary, fontSize = 11.sp)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Button(
+                                onClick = {
+                                    viewModel.clearLogDatabase()
+                                    formStatusMessage = "Audit log records erased on SQLite server."
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = WarningRed),
+                                modifier = Modifier.fillMaxWidth().testTag("purge_logs_button"),
+                                shape = RoundedCornerShape(6.dp)
+                            ) {
+                                Text("PURGE CONNECTIVITY ARCHIVES", color = Color.White, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
+                            }
                         }
                     }
                 }
@@ -1658,70 +2124,212 @@ fun AdminDashboardScreen(
     }
 }
 
-// 6. OPEN-SOURCE EXHAUSTIVE WIREDUARD & OPENVPN RESEARCH REFERENCE
 @Composable
 fun ResearchHubScreen(
     localizer: (String, String, String, String, String) -> String
 ) {
+    var activeSubTab by remember { mutableStateOf("MANUAL") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         Text(
-            text = localizer("OPEN SOURCE SECURE VPN STANDARD HUB", "REFERENCIA DE REDES INTEGRACIÓN", "OFFENE TUNNEL REPOSITORIEN", "最先端 VPN 技術リサーチ", "开源 VPN 工程技术库"),
+            text = localizer("LORA SYSTEM INTEL HUB", "BIBLIOTECA SISTEMA LORACON", "LORA_CON SPEZIFIKATIONEN", "最先端技術リサーチ・指南", "安全工程指南与协议研究中心"),
             color = CyberEmerald,
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        Text(
-            text = localizer("Below are high-quality secure public cross platform libraries on Github for production implementations.", "A continuación se presentan los repositorios libres estándar del espectro técnico para producción.", "Nachfolgend finden Sie vertrauenswürdige quelloffene VPN-Module für die Produktion.", "商用統合に適したアクティブな WireGuard と OpenVPN 公開ライブラリ。", "以下展示了高活跃度、拥有强力社群维护的 WireGuard 与 OpenVPN 核心开源代码库生态："),
-            color = TextSecondary,
-            fontSize = 11.sp,
-            modifier = Modifier.padding(bottom = 12.dp)
-        )
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier.weight(1f)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            item {
-                ResearchRepositoryCard(
-                    title = "WireGuard-Android-SDK",
-                    tech = "WireGuard Core Protocol",
-                    url = "https://github.com/WireGuard/wireguard-android",
-                    desc = "Official WireGuard protocol client implementation. Supports user-space configs, tunnel configurations, fast handshakes, extreme throughput performance, and native kernel interactions on supported devices."
-                )
+            listOf("MANUAL", "REPOS").forEach { tab ->
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .minimumInteractiveComponentSize()
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(if (activeSubTab == tab) CyberEmerald else DarkSteel)
+                        .clickable { activeSubTab = tab }
+                        .padding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = if (tab == "MANUAL") localizer("SYSTEM MANUAL", "GUÍA DE USO", "BENUTZERHANDBUCH", "システム指南", "操作指引与用户手册")
+                               else localizer("TECH SPECS", "ESPECIFICACIONES", "TECH SPEZIFIKATION", "技術仕様", "协议开源技术库"),
+                        color = if (activeSubTab == tab) ObsidianBlack else TextSecondary,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace
+                    )
+                }
             }
-            item {
-                ResearchRepositoryCard(
-                    title = "ics-openvpn",
-                    tech = "OpenVPN Protocol",
-                    url = "https://github.com/schwabe/ics-openvpn",
-                    desc = "Standard-setting open-source OpenVPN client implementation for Android. Implements routing protocols, custom certificates, OpenSSL dependencies, multi-port support, and extensive connection logging triggers."
-                )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (activeSubTab == "MANUAL") {
+            Text(
+                text = localizer("Operational instructions of Lorapok crypt tunnels.", "Instrucciones paso a paso del espectro técnico para el usuario.", "Schritt-für-Schritt-Anleitung zur Nutzung von LoraCon.", "暗号化トンネルの設定と基本操作のマニュアル。", "了解如何利用 LoraCon 零碎阻碍优化工具，一键直达防御核心："),
+                color = TextSecondary,
+                fontSize = 11.sp,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                item {
+                    ManualStepCard(
+                        step = "STEP 1: NODE DISCOVERY",
+                        title = localizer("Inception & Node Setup", "Incepción y Nodos", "Knoten-Inbetriebnahme", "ノードの検出と確立", "极客入口与选节点"),
+                        desc = localizer(
+                            "Navigate to the 'Nodes' channel tab. Review the real-time latency indicators (⚡ in ms) and server load levels. Standard free nodes do not require security clearance. Click any server to prime your routing target.",
+                            "Navegue al canal Nodos. Revise el ping en milisegundos y carga. Haga clic en un nodo de Rhein-Main o Fráncfort para apuntar su tráfico.",
+                            "Wählen Sie im Reiter 'Knoten' einen Server aus. Standard-Knoten sind frei verfügbar, während Premium-Knoten gesicherte Token erfordern.",
+                            "「ノード」タブを起動し、伝送遅延（⚡ ms）と負荷を確認します。無料ノードは常时開放されており、クリックするだけで瞬時に接続標的が確定します。",
+                            "点击屏幕下方的“节点”菜单，查看全球各大边缘服务器。留意绿色闪电标出的延迟能耗（如 35ms ）。普通免费节点双击直接装载即可。"
+                        ),
+                        icon = "🌍"
+                    )
+                }
+                item {
+                    ManualStepCard(
+                        step = "STEP 2: ENVELOPE SHIELDING",
+                        title = localizer("Armor Tunnel handshakes", "Handshakes Seguros", "Handshake-Aktivierung", "トンネル鍵交換", "激活物理防卫外壳"),
+                        desc = localizer(
+                            "Transition to the main 'Shield' tab. Toggle the active encapsulation protocol (WireGuard or OpenVPN). Tap the large neural-like biometric Shield core trigger button. Within seconds, secure handshakes complete and routing tables evolve.",
+                            "Transicione al panel principal Proteger. Seleccione el protocolo (WireGuard u OpenVPN) y presione el gran switch circular de conexión para armar la protección.",
+                            "Aktivieren Sie die VPN-Verschlüsselung im Hauptmenü. Ein Fingertipp auf den holografischen Schild-Button löst den krypto-symmetrischen Schlüsselaustausch aus.",
+                            "「シールド」画面で、暗号化プロトコル（WireGuard もしくは OpenVPN）を指定します。中央の巨大な生体サークル電極をタップすると、鍵交換プロセスが開始されます。",
+                            "进入首屏“防护”，选择您青睐的底层网络协议（推荐超高速 WireGuard ）。点击正中悬浮的主控圆盘核能开关，微秒内建立隧道连接。"
+                        ),
+                        icon = "🛡️"
+                    )
+                }
+                item {
+                    ManualStepCard(
+                        step = "STEP 3: DECENTRALIZED SETTLEMENT",
+                        title = localizer("Acquiring Premium Keys", "Adquisición de Llaves", "Schlüssel kaufen", "プレミアムキーの申請", "链上支付解锁高级线路"),
+                        desc = localizer(
+                            "Access high-bandwidth elite servers via the 'Keys' channel tab. Initiate a decentralized crypto token transfer over Solana Devnet. Input your transaction hash and verify the blocks automatically to secure premium status instantly.",
+                            "Para acceder a servidores ilimitados, navegue al canal Llaves. Inicie un pago criptográfico descentralizado en la red Solana Devnet. Ingrese el hash para activar privilegios.",
+                            "Erwerben Sie ungedrosselte Verschlüsselungsschlüssel. Überweisen Sie SOL/USDT auf die hinterlegte Blockchain-Wallet und bestätigen Sie die Transaktions-ID.",
+                            "「キー」タブから超高速でトラフィックの最適化を継続するために特権プランを選択。認証コード用の決済トランザクションを入力后、自動的に制限が解除されます。",
+                            "如果需要加载标记为 PREMIUM 专线，可以在“卡包”进行链上模拟存证。转入模拟的 SOL 后，填写回执凭证，全线极速高宽带瞬间敞开。"
+                        ),
+                        icon = "🗝️"
+                    )
+                }
+                item {
+                    ManualStepCard(
+                        step = "STEP 4: SENTIENT AI NAVIGATION",
+                        title = localizer("Interactive Diagnostic Chat", "Copiloto Asistente IA", "Systemdiagnose mit KI", "対話型AIナビゲーション", "AI 协同诊断与路由调度"),
+                        desc = localizer(
+                            "Need advanced network diagnostics or system troubleshooting? Activate the floating Lora AI chatbot in the bottom right corner. Ask complex technical, protocol, or Solana transaction details to get real-time recommendations.",
+                            "¿Necesita ayuda? Active la burbuja flotante del asistente Lora AI. Haga preguntas técnicas complejas sobre criptografía, logs de red y resolución de fallos.",
+                            "Tippen Sie auf die schwebende KI-Blase unten rechts, wenn Sie Netzwerkprobleme analysieren möchten. Unser Modell sucht nach krypto-strukturellen Bottlenecks.",
+                            "右下の「AI ナビゲーター」アイコン（🧠）をタップしてチャットを開きます。最適な暗号ノード提案や、Solana トランザクション承認状況などの技術的相談が可能です。",
+                            "如有任何断连、卡顿或区块链网络状况疑问，双击右下角浮动的“微处理器 🧠”小浮窗，人工智能助理将用前沿算法全天候帮您排错。"
+                        ),
+                        icon = "🧠"
+
+                    )
+                }
             }
-            item {
-                ResearchRepositoryCard(
-                    title = "Outline-Vpn-Client",
-                    tech = "Shadowsocks Protocol",
-                    url = "https://github.com/Jigsaw-Code/outline-sdk",
-                    desc = "High performance connection framework providing highly resilient obfuscated proxy wrappers for cross-platform clients, utilizing stable Go-modules and secure network tunnels."
-                )
-            }
-            item {
-                ResearchRepositoryCard(
-                    title = "Lorapok Singularity Bible core",
-                    tech = "Scientific connectivity Bible research methodologies",
-                    url = "https://maijied.github.io/Lorapok-Labs-Bible/",
-                    desc = "Lorapok conceptual bible and cellular designs emphasizing deep quantum security, stealth layers, bio-logical geometry, and high-contrast terminal design patterns for software nodes. Connected."
-                )
+        } else {
+            Text(
+                text = localizer(
+                    "Below are high-quality secure public cross platform libraries on Github for production implementations.",
+                    "A continuación se presentan los repositorios libres estándar del espectro técnico para producción.",
+                    "Nachfolgend finden Sie vertrauenswürdige Bibliotheken.",
+                    "以下は本番実装向けの高品質なセキュア公开クロスプラットフォームライブラリです。",
+                    "强力社群维护的 WireGuard 与 OpenVPN 核心开源代码库生态："
+                ),
+                color = TextSecondary,
+                fontSize = 11.sp,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                item {
+                    ResearchRepositoryCard(
+                        title = "WireGuard-Android-SDK",
+                        tech = "WireGuard Core Protocol",
+                        url = "https://github.com/WireGuard/wireguard-android",
+                        desc = "Official WireGuard protocol client implementation. Supports user-space configs, tunnel configurations, fast handshakes, extreme throughput performance, and native kernel interactions on supported devices."
+                    )
+                }
+                item {
+                    ResearchRepositoryCard(
+                        title = "ics-openvpn",
+                        tech = "OpenVPN Protocol",
+                        url = "https://github.com/schwabe/ics-openvpn",
+                        desc = "Standard-setting open-source OpenVPN client implementation for Android. Implements routing protocols, custom certificates, OpenSSL dependencies, multi-port support, and extensive connection logging triggers."
+                    )
+                }
+                item {
+                    ResearchRepositoryCard(
+                        title = "Outline-Vpn-Client",
+                        tech = "Shadowsocks Protocol",
+                        url = "https://github.com/Jigsaw-Code/outline-sdk",
+                        desc = "High performance connection framework providing highly resilient obfuscated proxy wrappers for cross-platform clients, utilizing stable Go-modules and secure network tunnels."
+                    )
+                }
+                item {
+                    ResearchRepositoryCard(
+                        title = "Lorapok Singularity Bible core",
+                        tech = "Scientific connectivity Bible research methodologies",
+                        url = "https://maijied.github.io/Lorapok-Labs-Bible/",
+                        desc = "Lorapok conceptual bible and cellular designs emphasizing deep quantum security, stealth layers, bio-biological geometry, and high-contrast terminal design patterns for software nodes. Connected."
+                    )
+                }
             }
         }
     }
 }
+
+@Composable
+fun ManualStepCard(
+    step: String,
+    title: String,
+    desc: String,
+    icon: String
+) {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = DarkSteel),
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, BorderColor, RoundedCornerShape(10.dp))
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(step, color = TechPurple, fontSize = 9.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                Text(icon, fontSize = 16.sp)
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(title, color = CyberEmerald, fontWeight = FontWeight.Bold, fontSize = 13.sp, fontFamily = FontFamily.Monospace)
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(desc, color = TextSecondary, fontSize = 11.sp, lineHeight = 16.sp)
+        }
+    }
+}
+
 
 @Composable
 fun ResearchRepositoryCard(

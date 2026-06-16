@@ -106,6 +106,33 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
     private val _utcClock = MutableStateFlow("")
     val utcClock: StateFlow<String> = _utcClock.asStateFlow()
 
+    // Crypt wallet settings and prices (Admin Controlled)
+    private val _cryptoSolAddress = MutableStateFlow("LCon78RzqpWXtBz89MNpQA2z7Y9C8BxvEwtDevNet789")
+    val cryptoSolAddress: StateFlow<String> = _cryptoSolAddress.asStateFlow()
+
+    private val _cryptoUsdtAddress = MutableStateFlow("LConUSDT7rZqPwXtBz89MNpQA2zY9C8BxvEwtDevNet")
+    val cryptoUsdtAddress: StateFlow<String> = _cryptoUsdtAddress.asStateFlow()
+
+    private val _priceStandardSol = MutableStateFlow(0.05)
+    val priceStandardSol: StateFlow<Double> = _priceStandardSol.asStateFlow()
+
+    private val _pricePremiumSol = MutableStateFlow(0.12)
+    val pricePremiumSol: StateFlow<Double> = _pricePremiumSol.asStateFlow()
+
+    // Selected API Provider (Gemini API vs Grok AI API)
+    private val _selectedApiProvider = MutableStateFlow("Gemini API")
+    val selectedApiProvider: StateFlow<String> = _selectedApiProvider.asStateFlow()
+
+    private val _grokApiKeyString = MutableStateFlow("")
+    val grokApiKeyString: StateFlow<String> = _grokApiKeyString.asStateFlow()
+
+    // Free Speed limits and daily quotas (Admin Controlled)
+    private val _freeBandwidthLimit = MutableStateFlow(50) // Mbps
+    val freeBandwidthLimit: StateFlow<Int> = _freeBandwidthLimit.asStateFlow()
+
+    private val _freeDailyQuotaLimit = MutableStateFlow(500) // MB
+    val freeDailyQuotaLimit: StateFlow<Int> = _freeDailyQuotaLimit.asStateFlow()
+
     // AI Assistant state
     private val _aiMessages = MutableStateFlow<List<AiAssistantMessage>>(
         listOf(
@@ -178,8 +205,8 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
 
     fun upgradeSubscription(tier: String) {
         val cryptoPrice = when (tier) {
-            "STANDARD" -> 0.05
-            "PREMIUM" -> 0.12
+            "STANDARD" -> _priceStandardSol.value
+            "PREMIUM" -> _pricePremiumSol.value
             else -> 0.00
         }
         _userSubscription.value = UserSubscription(
@@ -188,6 +215,46 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
             balanceCrypto = cryptoPrice,
             expiresAt = "July 15, 2026"
         )
+    }
+
+    fun updateCryptoSettings(solAddress: String, usdtAddress: String, standardSol: Double, premiumSol: Double) {
+        _cryptoSolAddress.value = solAddress
+        _cryptoUsdtAddress.value = usdtAddress
+        _priceStandardSol.value = standardSol
+        _pricePremiumSol.value = premiumSol
+    }
+
+    fun updateApiSettings(provider: String, apiKey: String) {
+        _selectedApiProvider.value = provider
+        _grokApiKeyString.value = apiKey
+        val welcome = if (provider == "Grok AI API") {
+            "xAI Grok: Telemetry systems initialized. Ask me any direct protocol details, tech stack cryptography, or blockchain billing audits. Minimal filter, maximum logic."
+        } else {
+            "Greetings Pioneer. I am LoraCon's sentient network companion. Ask me any security, crypto, or Lorapok protocol queries."
+        }
+        _aiMessages.value = listOf(AiAssistantMessage("AI", welcome))
+    }
+
+    fun updateFreeLimits(bandwidthMbps: Int, dailyQuotaMb: Int) {
+        _freeBandwidthLimit.value = bandwidthMbps
+        _freeDailyQuotaLimit.value = dailyQuotaMb
+    }
+
+    fun addServer(id: String, name: String, country: String, flagEmoji: String, ipAddress: String, pingsMs: Int, loadPercentage: Int, isPremium: Boolean, requiredTier: String, protocolSupported: String) {
+        val server = VpnServer(id, name, country, flagEmoji, ipAddress, pingsMs, loadPercentage, isPremium, requiredTier, protocolSupported, true)
+        viewModelScope.launch {
+            repository.insertServer(server)
+        }
+    }
+
+    fun deleteServer(server: VpnServer) {
+        viewModelScope.launch {
+            val inactiveServer = server.copy(isActive = false)
+            repository.insertServer(inactiveServer)
+            if (_selectedServer.value?.id == server.id) {
+                _selectedServer.value = _servers.value.firstOrNull { it.id != server.id && it.isActive }
+            }
+        }
     }
 
     fun completeOnboarding() {
@@ -277,8 +344,15 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
 
                 // Generate telemetry random speeds based on simulated protocols (WireGuard is faster)
                 val rateMultiplier = if (_activeProtocol.value == "WireGuard") 3.8 else 2.1
-                val down = (Math.random() * 12.0 + 1.0) * rateMultiplier
-                val up = (Math.random() * 3.5 + 0.2) * rateMultiplier
+                var down = (Math.random() * 12.0 + 1.0) * rateMultiplier
+                var up = (Math.random() * 3.5 + 0.2) * rateMultiplier
+
+                // If user has a FREE subscription, clamp the speed to the admin set limit (in Mbps, convert to MB/s)
+                if (_userSubscription.value.tier == "FREE") {
+                    val maxSpeedMBs = _freeBandwidthLimit.value * 0.125
+                    down = down.coerceAtMost(maxSpeedMBs)
+                    up = up.coerceAtMost(maxSpeedMBs / 4.0)
+                }
 
                 _currentSpeedDown.value = String.format(java.util.Locale.ROOT, "%.2f", down).toDouble()
                 _currentSpeedUp.value = String.format(java.util.Locale.ROOT, "%.2f", up).toDouble()
@@ -316,6 +390,41 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
         _isAiLoading.value = true
 
         viewModelScope.launch(Dispatchers.IO) {
+            val provider = _selectedApiProvider.value
+            val isGrok = provider == "Grok AI API"
+
+            if (isGrok) {
+                // Return ultra witty and factual Grok AI response based on settings
+                delay(1500)
+                val lowerPrompt = promptText.lowercase(java.util.Locale.ROOT)
+                val reply = when {
+                    lowerPrompt.contains("wireguard") || lowerPrompt.contains("openvpn") || lowerPrompt.contains("protocol") -> {
+                        "xAI Grok: Let's lay down the facts. WireGuard uses Noise protocol framework, Curve25519, ChaCha20, Poly1305, BLAKE2s. It's incredibly light and runs at kernel speed. OpenVPN is bloated with ancient TLS legacy. LoraCon encapsulates packets with pristine geometry."
+                    }
+                    lowerPrompt.contains("solana") || lowerPrompt.contains("crypto") || lowerPrompt.contains("payment") || lowerPrompt.contains("usdt") -> {
+                        "xAI Grok: Bitcoin wastes too much energy. Solana runs on Proof of History, validating LoraCon subscription privileges in 400 milliseconds. The active SOL target wallet is ${_cryptoSolAddress.value}, with price configured on standard plan at ${_priceStandardSol.value} SOL."
+                    }
+                    lowerPrompt.contains("speed") || lowerPrompt.contains("throttle") || lowerPrompt.contains("limit") || lowerPrompt.contains("free") -> {
+                        "xAI Grok: Under standard free-limit protocols, non-subscribers are capped at ${_freeBandwidthLimit.value} Mbps to preserve server bandwidth. Premium subscribers bypass all throttling mechanisms, achieving direct peer-to-peer gigabit pathways."
+                    }
+                    lowerPrompt.contains("node") || lowerPrompt.contains("server") -> {
+                        "xAI Grok: We currently query and load several nodes. Standard free nodes (like NY or Germany) have standard caps. Swiss Alpine and RK are set for PREMIUM, ensuring no logs are saved and high density routing is maintained."
+                    }
+                    lowerPrompt.contains("admin") || lowerPrompt.contains("control") || lowerPrompt.contains("panel") || lowerPrompt.contains("master") -> {
+                        "xAI Grok: The Admin console (Master tab) allows full control of LoraCon parameters. You can edit cryptocurrency prices, SOL deposit wallets, swap between me (Grok) and Gemini, adjust bandwidth limit filters, and manage database server entries."
+                    }
+                    else -> {
+                        "xAI Grok: Telemetry details processed. Lorapok Labs' encryption tunnels are 100% active. Ask me about specific protocol architectures, block verification hashes, or throttle configs."
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    _aiMessages.value = _aiMessages.value + AiAssistantMessage("AI", reply)
+                    _isAiLoading.value = false
+                }
+                return@launch
+            }
+
+            // Otherwise, execute standard Gemini REST content generation
             val key = BuildConfig.GEMINI_API_KEY
             val systemInstruction = "You are LoraCon's Senior AI Architect of Lorapok Labs, a high-tech cross-platform multi-protocol VPN app. Give tech stack security insights, explanations on WireGuard, OpenVPN, cryptography, Tor paths, and admin analytics troubleshooting guidelines. Answer with short elegant techno-holographic style. Highlight LoraCon network protocols."
 

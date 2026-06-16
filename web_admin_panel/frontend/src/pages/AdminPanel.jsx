@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Shield, Activity, Server, Sliders, Monitor, Cpu, ChevronRight, CreditCard, Users, Terminal, RefreshCw
+  Shield, Activity, Server, Sliders, Monitor, Cpu, ChevronRight, CreditCard, Users, Terminal, RefreshCw, Cog
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import NodeMap from '../components/NodeMap';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
@@ -21,29 +23,98 @@ const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState('FLOW');
   const [protocol, setProtocol] = useState('WireGuard');
+  const [autoConnect, setAutoConnect] = useState(() => {
+    return localStorage.getItem('autoConnect') === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('autoConnect', autoConnect);
+  }, [autoConnect]);
+
   const role = sessionStorage.getItem('role');
   const isSuperAdmin = role === 'SUPERADMIN';
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [config, setConfig] = useState({ 
     freeBandwidthLimit: 50, 
     freeDailyQuotaLimit: 500, 
-    activeApiProvider: "Grok AI API", 
-    cryptoSolAddress: "9s...A1", 
-    cryptoUsdtAddress: "3k...B2", 
-    priceStandardSol: 0.15, 
-    pricePremiumSol: 0.35 
+    activeApiProvider: "Gemini API", 
+    cryptoSolAddress: "...", 
+    cryptoUsdtAddress: "...", 
+    priceStandardSol: 0, 
+    pricePremiumSol: 0 
   });
   
-  const handleRefresh = () => {
+  const [nodes, setNodes] = useState([]);
+  const [sessions, setSessions] = useState([]);
+
+  const fetchData = async () => {
     setIsRefreshing(true);
-    setTimeout(() => setIsRefreshing(false), 1500);
+    try {
+      const [configRes, sessionRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/api/admin/config`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/api/admin/sessions`).then(r => r.json())
+      ]);
+      
+      if (configRes.success) {
+        setConfig(configRes.config);
+        setNodes(configRes.nodes);
+      }
+      if (sessionRes.success) {
+        setSessions(sessionRes.sessions);
+      }
+    } catch (error) {
+      console.error("Failed to fetch admin data:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
-  const [nodes, setNodes] = useState([{ id: 1, location: 'Singapore-01', load: 45, status: 'Active' },
-    { id: 2, location: 'Tokyo-04', load: 78, status: 'Warning' },
-    { id: 3, location: 'US-West-09', load: 12, status: 'Active' }]);
-  const [sessions, setSessions] = useState([{ id: 'usr_889', user: 'agent_x', connectionTime: '2h 15m' },
-    { id: 'usr_991', user: 'node_7', connectionTime: '45m' }]);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleRefresh = () => {
+    fetchData();
+  };
+
+  const handleConfigChange = (key, value) => {
+    setConfig(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleDeployConfig = async () => {
+    setIsRefreshing(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/config/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config)
+      });
+      const data = await response.json();
+      if (data.success) {
+        alert("Configuration deployed successfully!");
+      } else {
+        alert("Failed to deploy: " + data.message);
+      }
+    } catch (error) {
+      console.error("Deploy failed:", error);
+      alert("Deployment failed.");
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+  const [bandwidthData, setBandwidthData] = useState(
+      Array.from({ length: 20 }, (_, i) => ({ time: i, value: Math.random() * 50 }))
+  );
+
+  useEffect(() => {
+      const interval = setInterval(() => {
+          setBandwidthData(prev => {
+              const newData = [...prev.slice(1), { time: prev[prev.length - 1].time + 1, value: Math.random() * 50 }];
+              return newData;
+          });
+      }, 1000);
+      return () => clearInterval(interval);
+  }, []);
 
   const tabs = [
     { id: 'FLOW', label: 'Flow Control', icon: Sliders },
@@ -51,7 +122,8 @@ export default function AdminPanel() {
     { id: 'MONITOR', label: 'Telemetry', icon: Monitor },
     { id: 'BILLING', label: 'Billing/Finance', icon: CreditCard },
     { id: 'USERS', label: 'User Directory', icon: Users },
-    { id: 'SYSTEM', label: 'System Logs', icon: Terminal }
+    { id: 'SYSTEM', label: 'System Logs', icon: Terminal },
+    { id: 'SETTINGS', label: 'Settings', icon: Cog }
   ];
 
   return (
@@ -97,7 +169,7 @@ export default function AdminPanel() {
                 {isSuperAdmin && (
                   <>
                     <button className="px-5 py-2.5 rounded-lg bg-[#111] border border-[#222] hover:bg-[#1a1a1a] transition">System Logs</button>
-                    <button className="px-5 py-2.5 rounded-lg bg-green-500 text-black font-bold hover:bg-green-400 transition">Deploy Changes</button>
+                    <button onClick={handleDeployConfig} className="px-5 py-2.5 rounded-lg bg-green-500 text-black font-bold hover:bg-green-400 transition">Deploy Changes</button>
                   </>
                 )}
             </div>
@@ -131,7 +203,12 @@ export default function AdminPanel() {
                 {Object.entries(config).map(([key, val]) => (
                   <div key={key} className="bg-[#111] p-5 rounded-xl border border-[#222]">
                     <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-2 block">{key}</label>
-                    <input className="w-full bg-transparent text-lg font-mono outline-none" defaultValue={val} readOnly={!isSuperAdmin} />
+                    <input 
+                        className="w-full bg-transparent text-lg font-mono outline-none" 
+                        value={config[key]} 
+                        onChange={(e) => handleConfigChange(key, e.target.value)}
+                        readOnly={!isSuperAdmin} 
+                    />
                   </div>
                 ))}
               </div>
@@ -147,12 +224,12 @@ export default function AdminPanel() {
                         <div className="flex items-center gap-4">
                             <div className="p-3 bg-[#050505] rounded-lg border border-[#222]"><Cpu size={20} className="text-gray-500" /></div>
                             <div>
-                                <h4 className="font-bold">{node.location}</h4>
-                                <p className={`text-xs ${node.status === 'Active' ? 'text-green-500' : 'text-orange-500'}`}>{node.status}</p>
+                                <h4 className="font-bold">{node.name}</h4>
+                                <p className={`text-xs ${node.isActive ? 'text-green-500' : 'text-gray-500'}`}>{node.isActive ? 'Active' : 'Inactive'}</p>
                             </div>
                         </div>
                         <div className="w-48 h-2 bg-gray-900 rounded-full overflow-hidden">
-                            <div className="h-full bg-green-500 rounded-full" style={{ width: `${node.load}%` }}></div>
+                            <div className="h-full bg-green-500 rounded-full" style={{ width: `${node.loadPercentage}%` }}></div>
                         </div>
                     </div>
                     ))}
@@ -163,6 +240,20 @@ export default function AdminPanel() {
           {activeTab === 'MONITOR' && (
             <div>
               <h2 className="text-lg font-semibold mb-8 flex items-center gap-2"><Activity size={18} className="text-green-500" /> Live Telemetry</h2>
+              <div className="bg-[#111] p-6 rounded-xl border border-[#222] mb-8 h-64">
+                <NodeMap nodes={nodes} />
+              </div>
+              <div className="bg-[#111] p-6 rounded-xl border border-[#222] mb-8 h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={bandwidthData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#222" />
+                        <XAxis dataKey="time" hide />
+                        <YAxis stroke="#444" fontSize={12} />
+                        <Tooltip contentStyle={{ backgroundColor: '#000', border: '1px solid #222' }} />
+                        <Line type="monotone" dataKey="value" stroke="#22c55e" strokeWidth={2} dot={false} />
+                    </LineChart>
+                </ResponsiveContainer>
+              </div>
               <div className="grid gap-3">
                 {sessions.map(s => (
                   <div key={s.id} className="p-5 bg-[#111] rounded-xl border border-[#222] flex justify-between font-mono text-sm items-center">
@@ -212,7 +303,7 @@ export default function AdminPanel() {
             </div>
           )}
 
-          {activeTab === 'SYSTEM' && (
+            {activeTab === 'SYSTEM' && (
             <div>
               <h2 className="text-lg font-semibold mb-8 flex items-center gap-2"><Terminal size={18} className="text-green-500" /> System Logs</h2>
               <div className="bg-[#050505] p-6 rounded-xl border border-[#222] font-mono text-xs text-gray-400 h-64 overflow-y-auto">
@@ -220,6 +311,24 @@ export default function AdminPanel() {
                 <p>11:05:17 SYSTEM: FINALIZING STARTUP...</p>
                 <p>11:05:18 SYSTEM: FIRST DEPLOYMENT DETECTED...</p>
                 <p className="text-green-500">11:05:19 SYSTEM: HELLO, WORLD!</p>
+              </div>
+            </div>
+          )}
+          
+          {activeTab === 'SETTINGS' && (
+            <div>
+              <h2 className="text-lg font-semibold mb-8 flex items-center gap-2"><Cog size={18} className="text-green-500" /> System Settings</h2>
+              <div className="bg-[#111] p-6 rounded-xl border border-[#222] flex justify-between items-center">
+                <div>
+                  <h4 className="font-bold">Auto-Connect on Startup</h4>
+                  <p className="text-sm text-gray-500">Automatically establish VPN connection on app launch.</p>
+                </div>
+                <button 
+                  onClick={() => setAutoConnect(!autoConnect)}
+                  className={`w-14 h-8 rounded-full transition-colors ${autoConnect ? 'bg-green-500' : 'bg-[#222]'}`}
+                >
+                  <div className={`w-6 h-6 bg-white rounded-full transition-transform ${autoConnect ? 'translate-x-7' : 'translate-x-1'}`}></div>
+                </button>
               </div>
             </div>
           )}

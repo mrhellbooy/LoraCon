@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Shield, Activity, Server, Sliders, Monitor, Cpu, ChevronRight
+  Shield, Activity, Server, Sliders, Monitor, Cpu, ChevronRight, CreditCard, Users, Terminal
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -40,7 +40,10 @@ export default function AdminPanel() {
   const tabs = [
     { id: 'FLOW', label: 'Flow Control', icon: Sliders },
     { id: 'SERVERS', label: 'Node Cluster', icon: Server },
-    { id: 'MONITOR', label: 'Telemetry', icon: Monitor }
+    { id: 'MONITOR', label: 'Telemetry', icon: Monitor },
+    { id: 'BILLING', label: 'Billing/Finance', icon: CreditCard },
+    { id: 'USERS', label: 'User Directory', icon: Users },
+    { id: 'SYSTEM', label: 'System Logs', icon: Terminal }
   ];
 
   return (
@@ -130,6 +133,56 @@ export default function AdminPanel() {
                     <span className="text-green-500 bg-green-900/20 px-3 py-1 rounded-full text-xs">{s.connectionTime}</span>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'BILLING' && (
+            <div>
+              <h2 className="text-lg font-semibold mb-8 flex items-center gap-2"><CreditCard size={18} className="text-green-500" /> Financial Overview</h2>
+              <div className="grid grid-cols-3 gap-6">
+                <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Monthly Revenue</p>
+                  <p className="text-2xl font-bold">$12,450.00</p>
+                </div>
+                <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Provider Costs</p>
+                  <p className="text-2xl font-bold text-orange-500">$4,200.00</p>
+                </div>
+                <div className="bg-[#111] p-6 rounded-xl border border-[#222]">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Profit Margin</p>
+                  <p className="text-2xl font-bold text-green-500">66.2%</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'USERS' && (
+            <div>
+              <h2 className="text-lg font-semibold mb-8 flex items-center gap-2"><Users size={18} className="text-green-500" /> User Directory</h2>
+              {isSuperAdmin ? (
+                <div className="bg-[#111] rounded-xl border border-[#222] overflow-hidden">
+                    <table className="w-full text-sm text-left">
+                        <thead className="text-[10px] text-gray-500 uppercase"><tr><th className="px-6 py-4">ID</th><th className="px-6 py-4">Status</th><th className="px-6 py-4">Role</th></tr></thead>
+                        <tbody><tr className="border-t border-[#222]"><td className="px-6 py-4">user_001</td><td className="px-6 py-4 text-green-500">Active</td><td className="px-6 py-4">Admin</td></tr></tbody>
+                    </table>
+                </div>
+              ) : (
+                <div className="bg-[#111] rounded-xl border border-[#222] p-6">
+                    <p className="text-gray-500">User management access restricted to SuperAdmin.</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'SYSTEM' && (
+            <div>
+              <h2 className="text-lg font-semibold mb-8 flex items-center gap-2"><Terminal size={18} className="text-green-500" /> System Logs</h2>
+              <div className="bg-[#050505] p-6 rounded-xl border border-[#222] font-mono text-xs text-gray-400 h-64 overflow-y-auto">
+                <p>11:05:16 SYSTEM: VARIABLES INJECTED...</p>
+                <p>11:05:17 SYSTEM: FINALIZING STARTUP...</p>
+                <p>11:05:18 SYSTEM: FIRST DEPLOYMENT DETECTED...</p>
+                <p className="text-green-500">11:05:19 SYSTEM: HELLO, WORLD!</p>
               </div>
             </div>
           )}

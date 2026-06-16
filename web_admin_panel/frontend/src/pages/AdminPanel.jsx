@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Shield, Activity, Server, Sliders, Monitor, Cpu, ChevronRight, CreditCard, Users, Terminal
+  Shield, Activity, Server, Sliders, Monitor, Cpu, ChevronRight, CreditCard, Users, Terminal, RefreshCw
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -20,8 +20,10 @@ const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState('FLOW');
+  const [protocol, setProtocol] = useState('WireGuard');
   const role = sessionStorage.getItem('role');
   const isSuperAdmin = role === 'SUPERADMIN';
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [config, setConfig] = useState({ 
     freeBandwidthLimit: 50, 
     freeDailyQuotaLimit: 500, 
@@ -31,6 +33,12 @@ export default function AdminPanel() {
     priceStandardSol: 0.15, 
     pricePremiumSol: 0.35 
   });
+  
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => setIsRefreshing(false), 1500);
+  };
+
   const [nodes, setNodes] = useState([{ id: 1, location: 'Singapore-01', load: 45, status: 'Active' },
     { id: 2, location: 'Tokyo-04', load: 78, status: 'Warning' },
     { id: 3, location: 'US-West-09', load: 12, status: 'Active' }]);
@@ -73,12 +81,26 @@ export default function AdminPanel() {
                 <h1 className="text-3xl font-bold mb-2">Control Plane</h1>
                 <p className="text-gray-500 font-light">Infrastructure oversight for Lorapok network.</p>
             </div>
-            {isSuperAdmin && (
-              <div className="flex gap-2">
-                  <button className="px-5 py-2.5 rounded-lg bg-[#111] border border-[#222] hover:bg-[#1a1a1a] transition">System Logs</button>
-                  <button className="px-5 py-2.5 rounded-lg bg-green-500 text-black font-bold hover:bg-green-400 transition">Deploy Changes</button>
-              </div>
-            )}
+            <div className="flex gap-2">
+                <button 
+                  onClick={handleRefresh}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#111] border border-[#222] hover:bg-[#1a1a1a] transition ${isRefreshing ? 'opacity-80' : ''}`}
+                >
+                  <motion.div
+                    animate={{ rotate: isRefreshing ? 360 : 0 }}
+                    transition={{ duration: 1, repeat: isRefreshing ? Infinity : 0, ease: "linear" }}
+                  >
+                    <RefreshCw size={16} />
+                  </motion.div>
+                  {isRefreshing ? 'Syncing...' : 'Refresh'}
+                </button>
+                {isSuperAdmin && (
+                  <>
+                    <button className="px-5 py-2.5 rounded-lg bg-[#111] border border-[#222] hover:bg-[#1a1a1a] transition">System Logs</button>
+                    <button className="px-5 py-2.5 rounded-lg bg-green-500 text-black font-bold hover:bg-green-400 transition">Deploy Changes</button>
+                  </>
+                )}
+            </div>
         </header>
 
         <motion.div 
@@ -90,6 +112,21 @@ export default function AdminPanel() {
           {activeTab === 'FLOW' && (
             <div>
               <h2 className="text-lg font-semibold mb-8 flex items-center gap-2"><Sliders size={18} className="text-green-500" /> Infrastructure Config</h2>
+              
+              <div className="bg-[#111] p-6 rounded-xl border border-[#222] mb-6">
+                <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-4 block">Active VPN Protocol</label>
+                <div className="flex gap-2">
+                    <button 
+                        onClick={() => setProtocol('WireGuard')}
+                        className={`px-6 py-2.5 rounded-lg font-bold transition ${protocol === 'WireGuard' ? 'bg-green-500 text-black' : 'bg-[#222] text-white hover:bg-[#333]'}`}
+                    >WireGuard</button>
+                    <button 
+                        onClick={() => setProtocol('OpenVPN')}
+                        className={`px-6 py-2.5 rounded-lg font-bold transition ${protocol === 'OpenVPN' ? 'bg-green-500 text-black' : 'bg-[#222] text-white hover:bg-[#333]'}`}
+                    >OpenVPN</button>
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-6">
                 {Object.entries(config).map(([key, val]) => (
                   <div key={key} className="bg-[#111] p-5 rounded-xl border border-[#222]">

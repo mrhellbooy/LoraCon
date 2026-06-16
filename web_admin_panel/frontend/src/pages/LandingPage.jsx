@@ -2,6 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDown, Shield, Cpu, Zap, Activity, ChevronRight, Lock, Server, Cloud, Globe } from 'lucide-react';
 
+const TunnelAnimation = () => (
+  <div className="flex-1 relative h-16 flex items-center justify-center overflow-hidden bg-black rounded-lg border border-[#222]">
+    {[...Array(5)].map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute border border-green-500/50"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: [0, 1.5, 3], opacity: [0, 1, 0] }}
+        transition={{ duration: 2, repeat: Infinity, delay: i * 0.4, ease: "linear" }}
+        style={{ width: `${20 + i * 20}%`, height: `${20 + i * 20}%`, borderRadius: "8px" }}
+      />
+    ))}
+  </div>
+);
+
+const TrafficVisualizer = ({ connected }) => (
+  <div className="flex justify-between items-center w-full my-8 h-16 px-4 bg-[#111] rounded-lg border border-[#222]">
+    <Server size={24} className={connected ? "text-green-500" : "text-gray-600"} />
+    {connected ? <TunnelAnimation /> : (
+        <div className="flex-1 flex justify-center items-center text-gray-600 font-mono text-sm">Standby</div>
+    )}
+    <Globe size={24} className={connected ? "text-cyan-500" : "text-gray-600"} />
+  </div>
+);
+
 const Terminal = () => {
   const [lines, setLines] = useState([]);
   
@@ -60,6 +85,7 @@ const VPNService = () => {
   return (
     <div className="bg-[#0a0a0a] border border-green-900 rounded-2xl p-8 w-full max-w-md mb-12 shadow-[0_0_50px_-10px_rgba(34,197,94,0.3)]">
         <h3 className="text-xl font-bold mb-6">Active VPN Service</h3>
+        <TrafficVisualizer connected={connected} />
         <motion.button
             onClick={() => setConnected(!connected)}
             animate={{ backgroundColor: connected ? "#ef4444" : "#22c55e" }}

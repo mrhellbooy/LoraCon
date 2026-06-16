@@ -11,7 +11,7 @@ on:
 
 # Allow one concurrent deployment
 concurrency:
-  group: 'pages'
+  group: 'web-admin-pages'
   cancel-in-progress: true
 
 # Explicitly set the publish_branch

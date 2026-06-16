@@ -1,0 +1,6 @@
+{
+  "name": "LoraCon",
+  "description": "Secure multi-protocol Cross-Platform VPN app based on Lorapok Labs design guidelines featuring WireGuard/OpenVPN simulation, dashboard analytics, and 3D-type animations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

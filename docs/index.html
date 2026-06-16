@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoraCon | Lorapok Labs</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap');
+        
+        :root {
+            --obsidian-black: #090D14;
+            --dark-steel: #1A222B;
+            --cyber-emerald: #10B981;
+            --electric-cyan: #03B6D4;
+            --accent-mint: #34D399;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+        }
+
+        body {
+            background-color: var(--obsidian-black);
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(9, 13, 20, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .logo span {
+            background: linear-gradient(90deg, var(--cyber-emerald), var(--electric-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .emoji-larva {
+            font-size: 3rem;
+            filter: drop-shadow(0 0 10px var(--cyber-emerald));
+            animation: breathe 2s infinite alternate;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 900px;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            background: -webkit-linear-gradient(var(--cyber-emerald), var(--electric-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        .terminal-box {
+            background-color: var(--dark-steel);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--cyber-emerald);
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .terminal-box::before {
+            content: 'sys.log';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background-color: var(--obsidian-black);
+            padding: 0 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .terminal-box div {
+            margin-bottom: 0.5rem;
+            display: flex;
+        }
+
+        .terminal-box span.prompt {
+            color: var(--electric-cyan);
+            margin-right: 1rem;
+        }
+
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid var(--cyber-emerald);
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        .nodes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .node-card {
+            background-color: var(--dark-steel);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .node-card:hover {
+            border-color: var(--cyber-emerald);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .node-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyber-emerald), var(--electric-cyan));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .node-card:hover::before {
+            opacity: 1;
+        }
+
+        .node-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .node-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .node-desc {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1.5;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--cyber-emerald);
+            color: var(--obsidian-black);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 1.2rem 3rem;
+            border-radius: 8px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .cta-button:hover {
+            background-color: var(--accent-mint);
+            box-shadow: 0 0 30px rgba(52, 211, 153, 0.5);
+            transform: scale(1.05);
+        }
+
+        footer {
+            width: 100%;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            background-color: #05080C;
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            100% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 20px var(--cyber-emerald)); }
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--cyber-emerald); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="emoji-larva">🐛</div>
+            <span>Lorapok Labs</span>
+        </div>
+    </header>
+
+    <main>
+        <h1>Products That<br>Feel Alive.</h1>
+        <p>Meet your Cybernetic Black Soldier Fly Larva. A friendly, plump system optimizer that silently consumes bottlenecks and protects your data in the background.</p>
+        
+        <div class="terminal-box">
+            <div><span class="prompt">root@loracon:~#</span> <span class="typewriter">./initialize_larva_core.sh</span></div>
+            <div style="animation: fadein 4s forwards; opacity: 0;">[OK] Plating armor initialized...</div>
+            <div style="animation: fadein 5s forwards; opacity: 0;">[OK] Neon-green sensors active...</div>
+            <div style="animation: fadein 6s forwards; opacity: 0; color: var(--electric-cyan);">Larva is now consuming latency.</div>
+        </div>
+
+        <a href="downloads/loracon-latest.apk" class="cta-button" download="loracon-latest.apk">Download APK</a>
+
+        <div class="nodes">
+            <div class="node-card">
+                <div class="node-icon">🛡️</div>
+                <div class="node-title">Secure Armor</div>
+                <div class="node-desc">Charcoal metallic plating fused with AES-256 encryption. Silently guards against anomalies.</div>
+            </div>
+            <div class="node-card">
+                <div class="node-title">⚡</div>
+                <div class="node-title">Deep Optimization</div>
+                <div class="node-desc">Consumes network latency bottlenecks, reducing overhead and streamlining packet flows.</div>
+            </div>
+            <div class="node-card">
+                <div class="node-icon">🧬</div>
+                <div class="node-title">Active Metamorphosis</div>
+                <div class="node-desc">Dynamic route evolution. Shifts protocols seamlessly in response to environmental resistance.</div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Lorapok Labs // Operational Telemetry // LoraCon Protocol</p>
+    </footer>
+
+    <style>
+        @keyframes fadein {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+    </style>
+</body>
+</html>

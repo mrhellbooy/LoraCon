@@ -36,14 +36,29 @@ jobs:
     - name: Build with Gradle
       run: gradle assembleDebug --no-configuration-cache
       
-    - name: Copy APK to docs
+    - name: Prepare Dual-Support Docs Staging
       run: |
+        # 1. Create standard docs directory locally
         mkdir -p docs/downloads
         cp app/build/outputs/apk/debug/app-debug.apk docs/downloads/loracon-latest.apk
+        touch docs/.nojekyll
+
+        # 2. Set up the staging directory
+        mkdir -p staging/docs/downloads
+        
+        # 3. Copy files for Root '/' Pages settings
+        cp docs/index.html staging/
+        cp docs/downloads/loracon-latest.apk staging/downloads/
+        touch staging/.nojekyll
+
+        # 4. Copy files for Nested '/docs' Pages settings
+        cp docs/index.html staging/docs/
+        cp docs/downloads/loracon-latest.apk staging/docs/downloads/
+        touch staging/docs/.nojekyll
 
     - name: Deploy to GitHub Pages
       if: success()
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
+        publish_dir: ./staging

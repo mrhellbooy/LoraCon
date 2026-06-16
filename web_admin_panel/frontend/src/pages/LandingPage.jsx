@@ -51,7 +51,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => (
     />
     <div className="absolute top-0 right-0 w-32 h-32 bg-[#22c55e]/5 blur-[40px] rounded-full -mr-16 -mt-16 group-hover:bg-[#22c55e]/10 transition-colors" />
     <div className="relative z-10 text-center md:text-left flex flex-col items-center md:items-start">
-      <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center mb-8 group-hover:bg-[#22c55e]/10 group-hover:border-[#22c55e]/30 transition-all duration-300">
+      <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center mb-8 group-hover:bg-[#22c55e]/10 group-hover:border-[#22c55e]/30 transition-all">
         <Icon className="w-8 h-8 text-slate-500 group-hover:text-[#22c55e] transition-colors" />
       </div>
       <h3 className="text-xl font-bold text-white mb-4">{title}</h3>
@@ -97,6 +97,8 @@ const DownloadModal = ({ isOpen, onClose }) => {
       addToast(`${item.name} is currently in restricted beta.`, 'warning');
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <motion.div 
@@ -243,6 +245,8 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
     setIsSubmitting(false);
   };
 
+  if (!isOpen) return null;
+
   return (
     <motion.div 
       initial={{ opacity: 0 }} 
@@ -302,7 +306,7 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
           <button 
             type="submit" 
             disabled={isSubmitting}
-            className="w-full py-5 bg-[#22c55e] text-black font-black uppercase tracking-widest text-[11px] rounded-[1.5rem] hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(34,197,94,0.4)] disabled:opacity-50"
+            className="w-full py-5 bg-[#22c55e] text-black font-black uppercase tracking-widest text-[11px] rounded-[1.5rem] hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(34,197,94,0.2)] disabled:opacity-50"
           >
             {isSubmitting ? 'TRANSMITTING...' : 'TRANSMIT REQUEST'}
           </button>
@@ -324,7 +328,7 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
   const [selectedChain, setSelectedChain] = useState('SOLANA'); // SOLANA, BINANCE
   const [verificationTx, setVerificationTx] = useState('');
 
-  if (!plan) return null;
+  if (!plan || !isOpen) return null;
 
   useEffect(() => {
     if (isOpen) {
@@ -449,13 +453,13 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
                     <div className="flex gap-2 p-1 bg-white/[0.03] border border-white/10 rounded-2xl">
                       <button 
                         onClick={() => { setSelectedChain('SOLANA'); setWalletConnected(false); }}
-                        className={`flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${selectedChain === 'SOLANA' ? 'bg-[#22c55e] text-black shadow-lg' : 'text-slate-500 hover:text-white'}`}
+                        className={`flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${selectedChain === 'SOLANA' ? 'bg-[#22c55e] text-black shadow-lg' : 'text-slate-600 hover:text-white'}`}
                       >
                         Solana Network
                       </button>
                       <button 
                         onClick={() => { setSelectedChain('BINANCE'); setWalletConnected(false); }}
-                        className={`flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${selectedChain === 'BINANCE' ? 'bg-[#f3ba2f] text-black shadow-lg' : 'text-slate-500 hover:text-white'}`}
+                        className={`flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${selectedChain === 'BINANCE' ? 'bg-[#f3ba2f] text-black shadow-lg' : 'text-slate-600 hover:text-white'}`}
                       >
                         Binance Smart Chain
                       </button>
@@ -470,14 +474,14 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
                           {!walletConnected ? (
                             <button 
                               onClick={() => setWalletConnected(true)}
-                              className={`px-4 py-2 ${selectedChain === 'SOLANA' ? 'bg-[#22c55e]' : 'bg-[#f3ba2f]'} text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all`}
+                              className={`px-4 py-2 ${selectedChain === 'SOLANA' ? 'bg-[#22c55e]' : 'bg-[#f3ba2f]'} text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 transition-transform`}
                             >
                               Connect
                             </button>
                           ) : (
-                            <div className={`flex items-center gap-2 px-3 py-1.5 ${selectedChain === 'SOLANA' ? 'bg-[#22c55e]/10 border-[#22c55e]/30' : 'bg-[#f3ba2f]/10 border-[#f3ba2f]/30'} rounded-xl`}>
+                            <div className={`flex items-center gap-2 px-3 py-1.5 ${selectedChain === 'SOLANA' ? 'bg-[#22c55e]/10 border-[#22c55e]/30' : 'bg-[#f3ba2f]/10 border-[#f3ba2f]/30'} rounded-lg border`}>
                                <div className={`w-1.5 h-1.5 rounded-full ${selectedChain === 'SOLANA' ? 'bg-[#22c55e]' : 'bg-[#f3ba2f]'} animate-pulse`} />
-                               <span className={`text-[10px] ${selectedChain === 'SOLANA' ? 'text-[#22c55e]' : 'text-[#f3ba2f]'} font-mono`}>{selectedChain === 'SOLANA' ? '6xP...j7vV' : '0x7...E4d1'}</span>
+                               <span className={`text-[10px] ${selectedChain === 'SOLANA' ? 'text-[#22c55e]' : 'text-[#f3ba2f]'} font-mono`}>{selectedChain === 'SOLANA' ? '6xP...j7vV' : '0x7...E4D'}</span>
                             </div>
                           )}
                        </div>
@@ -705,7 +709,7 @@ const LorapokVpnDemo = () => {
           <Logo size={18} isConnecting={status === 'CONNECTING'} isConnected={status === 'CONNECTED'} />
           <span className="text-[#22c55e] font-mono tracking-tighter uppercase font-bold text-sm">LORA-CON PORTAL v2</span>
         </div>
-        <div className={`px-3 py-1 rounded-full border text-[10px] uppercase font-black tracking-widest ${status === 'CONNECTED' ? 'bg-[#22c55e]/10 border-[#22c55e]/50 text-[#22c55e]' : 'bg-white/5 border-white/10 text-slate-500'}`}>
+        <div className={`px-3 py-1 rounded-full border text-[10px] uppercase font-black tracking-widest ${status === 'CONNECTED' ? 'bg-[#22c55e]/10 border-[#22c55e]/50 text-[#22c55e]' : 'bg-white/5 border-white/10 text-slate-400'}`}>
           {status}
         </div>
       </div>
@@ -891,7 +895,7 @@ export default function LandingPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-slate-400 text-lg md:text-xl max-w-xl mb-12 leading-relaxed font-light"
               >
-                LoraCon provides a decentralized, high-speed encrypted tunneling ecosystem designed for the next generation of privacy. High-performance relays, military-grade encryption, and zero-latency routing.
+                LoraCon provides a decentralized, high-speed encrypted tunneling ecosystem designed for the next generation of privacy. High-performance relays, military-grade encryption, and zero-trust network topology.
               </motion.p>
 
               <motion.div 
@@ -976,7 +980,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center bg-white/[0.02] border border-white/5 rounded-[4rem] p-12 lg:p-20 overflow-hidden relative">
              <div className="absolute top-0 right-0 w-96 h-96 bg-[#38bdf8]/5 blur-[100px] rounded-full -mr-48 -mt-48" />
              <div className="relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#38bdf8]/10 border border-[#38bdf8]/20 text-[#38bdf8] text-[9px] font-black uppercase tracking-widest rounded-full mb-8">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#38bdf8]/10 border border-[#38bdf8]/20 text-[#38bdf8] text-[9px] font-black uppercase tracking-widest rounded-full mb-6">
                    Firefox Dedicated Extension
                 </div>
                 <h2 className="text-4xl md:text-6xl font-black text-white mb-8 leading-[1.1]">
@@ -1121,7 +1125,7 @@ export default function LandingPage() {
                   Enter Console <Cpu className="w-4 h-4" />
                 </motion.button>
               </Link>
-              <a href="https://github.com/mrhellbooy/LoraCon" target="_blank" rel="noopener noreferrer" className="px-8 py-4 rounded-2xl border border-white/10 hover:bg-white/5 transition-all font-bold flex items-center gap-2">
+              <a href="https://github.com/mrhellbooy/LoraCon" target="_blank" rel="noopener noreferrer" className="px-8 py-4 rounded-2xl border border-white/10 hover:bg-white/5 transition-all font-black flex items-center gap-2">
                 Github Source <Github className="w-4 h-4" />
               </a>
             </div>

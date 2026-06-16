@@ -81,28 +81,29 @@ export default function LandingPage() {
       <motion.section 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }}
-        className="flex flex-col items-center justify-center pt-32 pb-24 px-6 text-center"
+        className="relative flex flex-col items-center justify-center pt-32 pb-24 px-6 text-center overflow-hidden"
       >
-        <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="mb-6 flex gap-2 items-center bg-[#111] px-4 py-1.5 rounded-full border border-[#222]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-950/20 via-transparent to-transparent"></div>
+        <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="relative mb-6 flex gap-2 items-center bg-[#111] px-4 py-1.5 rounded-full border border-[#222]">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
           <span className="text-green-500 font-mono text-xs uppercase tracking-widest">Powered by Lorapok Labs</span>
         </motion.div>
         
-        <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter">
+        <h1 className="relative text-5xl md:text-7xl font-bold mb-8 tracking-tighter">
           Tunneling that <br/>
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">Feels Alive.</span>
         </h1>
         
-        <p className="text-gray-400 mb-12 max-w-2xl text-lg md:text-xl font-light leading-relaxed">
+        <p className="relative text-gray-400 mb-12 max-w-2xl text-lg md:text-xl font-light leading-relaxed">
           The Cybernetic Black Soldier Fly Larva is your silent system optimizer. It consumes network bottlenecks and protects your data flow with adaptive, military-grade protocol shielding.
         </p>
 
         <Terminal />
         
-        <div className="flex flex-col items-center gap-4">
+        <div className="relative flex flex-col items-center gap-4">
           <motion.button 
             onClick={startDownload}
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(74, 222, 128, 0.3)" }}
             whileTap={{ scale: 0.95 }}
             disabled={isDownloading}
             className="flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition disabled:opacity-50"
@@ -118,7 +119,7 @@ export default function LandingPage() {
           
           <motion.a 
             href="#/admin" 
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.05, backgroundColor: "#151515" }}
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-2 bg-[#111] border border-[#222] text-gray-300 px-8 py-3 rounded-full font-bold hover:bg-[#1A1A1A] transition"
           >
@@ -144,7 +145,8 @@ export default function LandingPage() {
             <motion.div 
               key={i}
               variants={itemVariants}
-              className="p-8 bg-[#0a0a0a] border border-[#1a1a1a] rounded-2xl hover:border-green-900 transition flex flex-col items-start"
+              whileHover={{ borderColor: "rgba(34, 197, 94, 0.4)" }}
+              className="p-8 bg-[#0a0a0a] border border-[#1a1a1a] rounded-2xl transition-all duration-300 flex flex-col items-start hover:shadow-[0_0_30px_-5px_rgba(34,197,94,0.1)]"
             >
               <div className="bg-[#111] p-3 rounded-xl mb-6 border border-[#222]">
                 <f.icon className="text-green-500" size={24} />

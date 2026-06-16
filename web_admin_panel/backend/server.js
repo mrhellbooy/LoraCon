@@ -28,9 +28,43 @@ let registeredNodes = [
   { id: "srv_jp", name: "Tokyo Sentient Node", country: "Japan", flagEmoji: "🇯🇵", ipAddress: "106.155.3.1", pingsMs: 55, loadPercentage: 68, requiredTier: "STANDARD", isActive: true },
 ];
 
+// 🛡️ User Database (In-Memory)
+const usersDB = {
+  "admin": { password: "loracon-master-2026", role: "SUPERADMIN" },
+  "user": { password: "loracon-admin-2026", role: "USERADMIN" }
+};
+
+// 🛡️ Authentication Endpoints
+app.post('/api/auth/login', (req, res) => {
+  const { username, password } = req.body;
+  const user = usersDB[username];
+  if (user && user.password === password) {
+    res.json({ success: true, role: user.role });
+  } else {
+    res.status(401).json({ success: false, message: "Invalid credentials." });
+  }
+});
+
+app.post('/api/auth/register', (req, res) => {
+  const { username, password } = req.body;
+  if (usersDB[username]) {
+    return res.status(400).json({ success: false, message: "Username already exists." });
+  }
+  usersDB[username] = { password, role: "USERADMIN" };
+  res.json({ success: true, message: "Account created successfully." });
+});
+
+app.post('/api/auth/reset-password', (req, res) => {
+  const { username, newPassword } = req.body;
+  if (!usersDB[username]) {
+    return res.status(404).json({ success: false, message: "User not found." });
+  }
+  usersDB[username].password = newPassword;
+  res.json({ success: true, message: "Password reset successful." });
+});
+
 // 📊 Dynamically Simulated Connected Client Sessions
 const generateSimulatedSessions = () => {
-  const users = ["Pioneer_Helix", "Cipher_Runner", "Solar_Swiper", "Net_Stalker", "Core_Gazer"];
   const platforms = ["Android 14", "Windows 11 Client", "macOS Sonoma", "Linux Core", "iOS Standard v17"];
   const countries = [
     { name: "Netherlands", flag: "🇳🇱" },

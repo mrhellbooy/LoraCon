@@ -4,6 +4,8 @@ import Layout from './components/Layout';
 import AdminPanel from './pages/AdminPanel';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 const ProtectedRoute = ({ children }) => {
   const role = sessionStorage.getItem('role');
@@ -17,6 +19,8 @@ export default function AppRouter() {
         <Route path="/" element={<Layout />}>
           <Route index element={<LandingPage />} />
           <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="reset-password" element={<ResetPasswordPage />} />
           <Route path="admin" element={
             <ProtectedRoute>
               <AdminPanel />

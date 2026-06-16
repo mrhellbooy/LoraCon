@@ -46,7 +46,7 @@ export default function LandingPage() {
         
         <div className="flex gap-4">
           <motion.a 
-            href="/downloads/loracon-latest.apk" 
+            href="downloads/loracon-latest.apk" 
             download="loracon-latest.apk"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

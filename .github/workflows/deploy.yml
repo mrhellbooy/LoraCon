@@ -1,0 +1,106 @@
+name: Deploy LoraCon Ecosystem (Android & Web Panel)
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+concurrency:
+  group: 'deploy-loracon-ecosystem'
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # --- 1. Set up Java for Android ---
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      # --- 2. Restore Keystore & Env for Android ---
+      - name: Restore Keystore & Environment Files
+        run: |
+          if [ -f debug.keystore.base64 ]; then
+            base64 -d debug.keystore.base64 > debug.keystore
+          else
+            echo "debug.keystore.base64 not found, generating a new debug keystore..."
+            keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          fi
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          else
+            touch .env
+          fi
+
+      # --- 3. Build Android Client APK ---
+      - name: Build Android App with Gradle Wrapper
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-configuration-cache
+
+      # --- 4. Set up Node.js for Web ---
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'web_admin_panel/frontend/package.json'
+
+      # --- 5. Build Web Portal ---
+      - name: Install Frontend Dependencies
+        run: |
+          cd web_admin_panel/frontend
+          npm install
+
+      - name: Build Web Application
+        run: |
+          cd web_admin_panel/frontend
+          npm run build
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+
+      # --- 6. Consolidate Assets for GitHub Pages ---
+      - name: Consolidate Staging Directory
+        run: |
+          # Create fresh combined staging directory
+          mkdir -p staging/downloads
+          mkdir -p staging/docs/downloads
+
+          # 1. Copy full React portal build (SaaS landing page & admin control panel) to root
+          cp -r web_admin_panel/frontend/dist/* staging/
+
+          # 2. Copy the freshly compiled APK to both /downloads and /docs/downloads
+          cp app/build/outputs/apk/debug/app-debug.apk staging/downloads/loracon-latest.apk
+          cp app/build/outputs/apk/debug/app-debug.apk staging/docs/downloads/loracon-latest.apk
+
+          # 3. Copy standalone simple HTML landing page to /docs/index.html
+          cp docs/index.html staging/docs/index.html
+
+          # 4. Create .nojekyll to prevent Jekyll from discarding folders
+          touch staging/.nojekyll
+          touch staging/docs/.nojekyll
+
+      # --- 7. Deploy Everything to GitHub Pages ---
+      - name: Publish Consolidated Assets to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./staging
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'deploy: build and deploy LoraCon ecosystem (Android client & Web Portal) [skip ci]'

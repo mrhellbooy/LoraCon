@@ -1,6 +1,42 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDown, Shield, Cpu, Zap, Activity, ChevronRight, Lock, Server, Cloud, Globe } from 'lucide-react';
+
+const Terminal = () => {
+  const [lines, setLines] = useState([]);
+  
+  useEffect(() => {
+    const sequence = [
+      { text: "root@loracon:~# ./initialize_larva_core.sh", delay: 0 },
+      { text: "[OK] Plating armor initialized...", delay: 1500 },
+      { text: "[OK] Neon-green sensors active...", delay: 3000 },
+      { text: "Larva is now consuming latency.", delay: 4500, color: "text-cyan-400" },
+    ];
+    
+    sequence.forEach((line) => {
+      setTimeout(() => {
+        setLines((prev) => [...prev, line]);
+      }, line.delay);
+    });
+  }, []);
+
+  return (
+    <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl p-6 font-mono text-sm text-green-500 text-left w-full max-w-lg mb-12 shadow-2xl relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-cyan-500"></div>
+      <div className="text-xs text-gray-500 mb-4 uppercase tracking-wider">sys.log</div>
+      {lines.map((line, i) => (
+        <motion.div 
+          key={i} 
+          initial={{ opacity: 0, x: -10 }} 
+          animate={{ opacity: 1, x: 0 }}
+          className={`mb-2 ${line.color || ""}`}
+        >
+          {line.text}
+        </motion.div>
+      ))}
+    </div>
+  );
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -13,6 +49,23 @@ const itemVariants = {
 };
 
 export default function LandingPage() {
+  const [downloadProgress, setDownloadProgress] = useState(0);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const startDownload = () => {
+    setIsDownloading(true);
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 1;
+      setDownloadProgress(progress);
+      if (progress >= 100) {
+        clearInterval(interval);
+        window.location.href = 'downloads/loracon-latest.apk';
+        setIsDownloading(false);
+        setDownloadProgress(0);
+      }
+    }, 30);
+  };
   const features = [
     { icon: Shield, title: "Military-Grade Security", desc: "Charcoal metallic plating fused with AES-256 multi-layer encryption." },
     { icon: Cpu, title: "Neural Optimization", desc: "Consumes network latency bottlenecks, streamlining complex packet flows." },
@@ -43,17 +96,25 @@ export default function LandingPage() {
         <p className="text-gray-400 mb-12 max-w-2xl text-lg md:text-xl font-light leading-relaxed">
           The Cybernetic Black Soldier Fly Larva is your silent system optimizer. It consumes network bottlenecks and protects your data flow with adaptive, military-grade protocol shielding.
         </p>
+
+        <Terminal />
         
-        <div className="flex gap-4">
-          <motion.a 
-            href="downloads/loracon-latest.apk" 
-            download="loracon-latest.apk"
+        <div className="flex flex-col items-center gap-4">
+          <motion.button 
+            onClick={startDownload}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition"
+            disabled={isDownloading}
+            className="flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition disabled:opacity-50"
           >
-            <ArrowDown size={20} /> Download Client
-          </motion.a>
+            <ArrowDown size={20} /> {isDownloading ? "Downloading..." : "Download Client"}
+          </motion.button>
+          
+          {isDownloading && (
+            <div className="w-64 h-2 bg-[#111] rounded-full overflow-hidden">
+                <motion.div className="h-full bg-green-500" style={{ width: `${downloadProgress}%` }} />
+            </div>
+          )}
           
           <motion.a 
             href="#/admin" 

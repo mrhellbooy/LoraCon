@@ -81,16 +81,11 @@ jobs:
           # 1. Copy full React portal build (SaaS landing page & admin control panel) to root
           cp -r web_admin_panel/frontend/dist/* staging/
 
-          # 2. Copy the freshly compiled APK to both /downloads and /docs/downloads
+          # 2. Copy the freshly compiled APK to /downloads
           cp app/build/outputs/apk/debug/app-debug.apk staging/downloads/loracon-latest.apk
-          cp app/build/outputs/apk/debug/app-debug.apk staging/docs/downloads/loracon-latest.apk
 
-          # 3. Copy standalone simple HTML landing page to /docs/index.html
-          cp docs/index.html staging/docs/index.html
-
-          # 4. Create .nojekyll to prevent Jekyll from discarding folders
+          # 3. Create .nojekyll to prevent Jekyll from discarding folders
           touch staging/.nojekyll
-          touch staging/docs/.nojekyll
 
       # --- 7. Deploy Everything to GitHub Pages ---
       - name: Publish Consolidated Assets to GitHub Pages

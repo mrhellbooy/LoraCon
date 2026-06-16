@@ -10,8 +10,8 @@
 <rect x="20" y="45" width="60" height="20" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="1.5"/>
 <rect x="25" y="58" width="50" height="18" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="1.5"/>
 <rect x="35" y="70" width="30" height="15" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="1.5"/>
-<circle cx="40" cy="30" r="10" fill="#030711"/>
-<circle cx="60" cy="30" r="10" fill="#030711"/>
+<circle cx="40" cy="30" r="10" fill="#050505"/>
+<circle cx="60" cy="30" r="10" fill="#050505"/>
 <circle cx="42" cy="30" r="4" fill="#22c55e"/>
 <circle cx="62" cy="30" r="4" fill="#22c55e"/>
 <line x1="40" y1="20" x2="30" y2="10" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>

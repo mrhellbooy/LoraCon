@@ -29,7 +29,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#030711]">
+    <div className="min-h-screen flex items-center justify-center bg-[#050505]">
       <div className="bg-[#0D0D0D] p-8 rounded-2xl border border-[#222] w-96 text-center">
         <Shield size={48} className="text-green-500 mx-auto mb-4" />
         <h2 className="text-2xl font-bold mb-6">LoraCon Login</h2>

@@ -42,7 +42,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => (
     viewport={{ once: true }}
     transition={{ duration: 0.6, delay, ease: "easeOut" }}
     whileHover={{ y: -5, transition: { duration: 0.2 } }}
-    className="relative p-8 rounded-[2rem] bg-gradient-to-br from-[#0D0D0D] to-[#030711] border border-white/5 hover:border-[#22c55e]/30 transition-all group overflow-hidden shadow-2xl shadow-black"
+    className="relative p-8 rounded-[2rem] bg-gradient-to-br from-[#0D0D0D] to-[#050505] border border-white/5 hover:border-[#22c55e]/30 transition-all group overflow-hidden shadow-2xl shadow-black"
   >
     <motion.div 
       initial={{ opacity: 0 }}
@@ -62,6 +62,18 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => (
 
 const DownloadModal = ({ isOpen, onClose }) => {
   const addToast = useToast();
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleDownload = (e, item) => {
@@ -93,14 +105,14 @@ const DownloadModal = ({ isOpen, onClose }) => {
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-3xl"
+      className="fixed inset-0 z-[200] overflow-y-auto bg-black/90 backdrop-blur-3xl p-4 flex items-start md:items-center justify-center py-12"
       onClick={onClose}
     >
       <motion.div 
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-2xl bg-[#09090b] border border-white/5 rounded-3xl overflow-hidden flex flex-col shadow-2xl relative"
+        className="w-full max-w-2xl bg-[#09090b] border border-white/5 rounded-3xl overflow-hidden flex flex-col shadow-2xl relative my-auto"
         onClick={e => e.stopPropagation()}
       >
         <div className="p-6 border-b border-white/5 flex items-center justify-between">
@@ -200,6 +212,17 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
   const [formData, setFormData] = useState({ name: '', email: '', service: selectedPlan || 'Protocol Stealth' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
@@ -221,12 +244,12 @@ const WishlistModal = ({ isOpen, onClose, selectedPlan }) => {
   return (
     <motion.div 
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[130] flex items-center justify-center bg-black/90 backdrop-blur-xl p-4"
+      className="fixed inset-0 z-[130] overflow-y-auto bg-black/90 backdrop-blur-xl p-4 flex items-start md:items-center justify-center py-12"
       onClick={onClose}
     >
       <motion.div 
         initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-[#0D0D0D] border border-white/10 rounded-[3rem] p-10 relative overflow-hidden"
+        className="w-full max-w-md bg-[#0D0D0D] border border-white/10 rounded-[3rem] p-10 relative overflow-hidden my-auto"
         onClick={e => e.stopPropagation()}
       >
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-[#22c55e] to-transparent" />
@@ -293,6 +316,17 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
   const [selectedChain, setSelectedChain] = useState('SOLANA'); // SOLANA, BINANCE
   const [verificationTx, setVerificationTx] = useState('');
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handlePayment = () => {
@@ -310,7 +344,7 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
   return (
     <motion.div 
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[120] flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4 lg:p-0"
+      className="fixed inset-0 z-[120] overflow-y-auto bg-black/95 backdrop-blur-2xl p-4 flex items-start lg:items-center justify-center py-12"
       onClick={onClose}
     >
       <motion.div 
@@ -318,11 +352,11 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
         animate={{ y: 0, opacity: 1 }} 
         exit={{ y: "100%", opacity: 0 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="w-full max-w-4xl bg-[#080808] border border-white/10 rounded-[3rem] overflow-hidden flex flex-col lg:flex-row h-[90vh] lg:h-auto lg:max-h-[85vh]"
+        className="w-full max-w-4xl bg-[#080808] border border-white/10 rounded-[3rem] flex flex-col lg:flex-row h-auto overflow-hidden lg:h-[80vh] lg:max-h-[85vh] my-auto"
         onClick={e => e.stopPropagation()}
       >
         {/* Left Side: Summary & Branding */}
-        <div className="w-full lg:w-1/3 bg-white/[0.02] border-r border-white/5 p-10 flex flex-col justify-between relative overflow-hidden">
+        <div className="w-full lg:w-1/3 bg-white/[0.02] border-b lg:border-b-0 lg:border-r border-white/5 p-10 flex flex-col justify-between relative overflow-hidden shrink-0">
           <div className="absolute top-0 left-0 w-full h-full bg-[#22c55e]/5 blur-[80px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none" />
           <div className="relative z-10">
             <Logo size={40} className="mb-10" />
@@ -357,7 +391,7 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
         </div>
 
         {/* Right Side: Interactive Module */}
-        <div className="flex-1 p-10 flex flex-col relative">
+        <div className="flex-1 p-10 flex flex-col relative min-h-0">
           <button onClick={onClose} className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors z-20">
             <X size={24} />
           </button>
@@ -383,9 +417,9 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
               <div className="flex items-center gap-6 border-b border-white/5 mb-8">
                 {['PAYMENT', 'HISTORY', 'USAGE'].map(tab => (
                   <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`pb-4 text-[9px] font-black uppercase tracking-[0.3em] transition-all relative ${activeTab === tab ? 'text-[#22c55e]' : 'text-slate-600 hover:text-slate-400'}`}
+                     key={tab}
+                     onClick={() => setActiveTab(tab)}
+                     className={`pb-4 text-[9px] font-black uppercase tracking-[0.3em] transition-all relative ${activeTab === tab ? 'text-[#22c55e]' : 'text-slate-600 hover:text-slate-400'}`}
                   >
                     {tab}
                     {activeTab === tab && <motion.div layoutId="tabUnderline" className="absolute bottom-0 left-0 w-full h-[2px] bg-[#22c55e]" />}
@@ -393,7 +427,7 @@ const CheckoutModal = ({ isOpen, onClose, plan }) => {
                 ))}
               </div>
 
-              <div className="flex-1 pr-2 custom-scrollbar">
+              <div className="flex-1 pr-2 custom-scrollbar overflow-y-auto min-h-0">
                 {activeTab === 'PAYMENT' && (
                   <div className="space-y-8 py-4">
                     <div className="flex gap-2 p-1 bg-white/[0.03] border border-white/10 rounded-2xl">
@@ -778,7 +812,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030711] text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-[#22c55e]/30 selection:text-[#22c55e]">
       <AnimatePresence>
         {isDownloadOpen && <DownloadModal isOpen={isDownloadOpen} onClose={() => setIsDownloadOpen(false)} />}
         {isWishlistOpen && (
@@ -881,7 +915,7 @@ export default function LandingPage() {
       </section>
 
       {/* Feature Cards Section */}
-      <section className="py-32 px-6 bg-[#030711]/50 relative">
+      <section className="py-32 px-6 bg-[#050505]/50 relative">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-20">
             <div className="max-w-2xl">

@@ -12,6 +12,7 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   build-and-deploy:
@@ -98,3 +99,4 @@ jobs:
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: 'deploy: build and deploy LoraCon ecosystem (Android client & Web Portal) [skip ci]'
+          force_orphan: true

@@ -259,6 +259,11 @@ app.post('/api/ai/chat', async (req, res) => {
   }
 });
 
+// Basic Status Check
+app.get('/', (req, res) => {
+  res.send('<html><body style="font-family:sans-serif; background:#050505; color:white; padding:50px; text-align:center;"><h1>LoraCon Portal Operational</h1><p>Infrastructure suite for secure, high-availability tunneling.</p></body></html>');
+});
+
 // App Startup Listening
 app.listen(PORT, () => {
   console.log(`====================================================`);

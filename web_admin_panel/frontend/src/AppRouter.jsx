@@ -2,7 +2,7 @@ import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import AdminPanel from './pages/AdminPanel';
-import DownloadPage from './pages/DownloadPage';
+import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 
 const ProtectedRoute = ({ children }) => {
@@ -15,7 +15,7 @@ export default function AppRouter() {
     <HashRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<DownloadPage />} />
+          <Route index element={<LandingPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="admin" element={
             <ProtectedRoute>

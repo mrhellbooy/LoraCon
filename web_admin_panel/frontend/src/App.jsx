@@ -18,6 +18,8 @@ import {
   Power
 } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+
 function App() {
   // Config & Node states
   const [activeTab, setActiveTab] = useState('FLOW'); // 'FLOW', 'CRYPT', 'SERVERS', 'MONITOR'
@@ -51,7 +53,7 @@ function App() {
   const loadWorkspaceState = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/api/admin/config');
+      const res = await fetch(`${API_BASE_URL}/api/admin/config`);
       const data = await res.json();
       if (data.success) {
         setConfig(data.config);
@@ -61,7 +63,7 @@ function App() {
         setErrorMsg('Node sync error: server feedback invalid.');
       }
     } catch (err) {
-      setErrorMsg('LoraCon Backend Server unreached. Ensure http://localhost:5000 is launched.');
+      setErrorMsg(`LoraCon Backend Server unreached. Ensure your API is running at: ${API_BASE_URL}`);
     } finally {
       setLoading(false);
     }
@@ -70,7 +72,7 @@ function App() {
   // Fetch virtual connected users
   const loadSessions = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/sessions');
+      const res = await fetch(`${API_BASE_URL}/api/admin/sessions`);
       const data = await res.json();
       if (data.success) {
         setSessions(data.sessions);
@@ -90,7 +92,7 @@ function App() {
   // Update variables (throttles, crypt addresses, pricing)
   const handleUpdateConfig = async (newConfig) => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/config/update', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/config/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newConfig)
@@ -114,7 +116,7 @@ function App() {
       return;
     }
     try {
-      const res = await fetch('http://localhost:5000/api/admin/server/add', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/server/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(addNode)
@@ -134,7 +136,7 @@ function App() {
   // Remove specific VPN server node
   const handleDeleteNode = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/server/delete/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/server/delete/${id}`, {
         method: 'DELETE'
       });
       const data = await res.json();

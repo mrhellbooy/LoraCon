@@ -1,0 +1,51 @@
+name: Deploy LoraCon Web Admin (GitHub Pages)
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'web_admin_panel/frontend/**'
+      - '.github/workflows/deploy-web-admin.yml'
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'web_admin_panel/frontend/package-lock.json'
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd web_admin_panel/frontend
+          npm install
+
+      - name: Build Web Application
+        run: |
+          cd web_admin_panel/frontend
+          npm run build
+        env:
+          # Optional: Specify your production Express server endpoint
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+
+      - name: Publish Static Assets to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./web_admin_panel/frontend/dist
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'deploy: compile & deploy latest LoraCon admin layout [skip ci]'

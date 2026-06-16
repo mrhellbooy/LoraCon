@@ -5,9 +5,8 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import NodeMap from '../components/NodeMap';
+import { adminConfig, adminSessions, apiHealth } from '../services/api';
 import { useToast } from '../components/Toast';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   <button 
@@ -48,31 +47,47 @@ export default function AdminPanel() {
   
   const [nodes, setNodes] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const [apiStatus, setApiStatus] = useState('online');
+
+  useEffect(() => {
+    let timeoutId;
+
+    const checkHealth = async () => {
+      const { error } = await apiHealth.check();
+      if (error) {
+        setApiStatus('offline');
+        showToast("Connection to backend lost!", "error");
+      } else {
+        setApiStatus('online');
+      }
+      // Schedule next poll safely after this one completes
+      timeoutId = setTimeout(checkHealth, 30000);
+    };
+
+    // Start polling
+    checkHealth();
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   const fetchData = async () => {
     setIsRefreshing(true);
-    try {
-      const [configRes, sessionRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/api/admin/config`).then(r => r.json()),
-        fetch(`${API_BASE_URL}/api/admin/sessions`).then(r => r.json())
-      ]);
+    const [configRes, sessionRes] = await Promise.all([
+        adminConfig.get(),
+        adminSessions.get()
+    ]);
       
-      if (configRes.success) {
-        setConfig(configRes.config);
-        setNodes(configRes.nodes);
-        showToast("System dashboard data synchronized.");
-      } else {
-        showToast("Failed to fetch dashboard data.", "error");
-      }
-      if (sessionRes.success) {
-        setSessions(sessionRes.sessions);
-      }
-    } catch (error) {
-      console.error("Failed to fetch admin data:", error);
-      showToast("Unable to reach backend services.", "error");
-    } finally {
-      setIsRefreshing(false);
+    if (configRes.data && configRes.data.success) {
+      setConfig(configRes.data.config);
+      setNodes(configRes.data.nodes);
+      showToast("System dashboard data synchronized.");
+    } else {
+      showToast(configRes.error || "Failed to fetch dashboard data.", "error");
     }
+    if (sessionRes.data && sessionRes.data.success) {
+      setSessions(sessionRes.data.sessions);
+    }
+    setIsRefreshing(false);
   };
 
   useEffect(() => {
@@ -89,24 +104,13 @@ export default function AdminPanel() {
 
   const handleDeployConfig = async () => {
     setIsRefreshing(true);
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/admin/config/update`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(config)
-      });
-      const data = await response.json();
-      if (data.success) {
+    const { data, error } = await adminConfig.update(config);
+    if (data && data.success) {
         showToast("Configuration deployed successfully!");
-      } else {
-        showToast("Failed to deploy: " + data.message, "error");
-      }
-    } catch (error) {
-      console.error("Deploy failed:", error);
-      showToast("Deployment handshake failed.", "error");
-    } finally {
-      setIsRefreshing(false);
+    } else {
+        showToast(error || "Failed to deploy: " + (data?.message || "Unknown error"), "error");
     }
+    setIsRefreshing(false);
   };
   const [bandwidthData, setBandwidthData] = useState(
       Array.from({ length: 20 }, (_, i) => ({ time: i, value: Math.random() * 50 }))
@@ -160,6 +164,10 @@ export default function AdminPanel() {
                 <p className="text-gray-500 font-light">Infrastructure oversight for Lorapok network.</p>
             </div>
             <div className="flex gap-2">
+                <div className="flex items-center gap-2 px-4 py-2.5 bg-[#111] border border-[#222] rounded-lg">
+                    <div className={`w-2 h-2 rounded-full ${apiStatus === 'online' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                    <span className="text-xs font-mono uppercase tracking-widest text-gray-400">API: {apiStatus}</span>
+                </div>
                 <button 
                   onClick={handleRefresh}
                   className={`flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#111] border border-[#222] hover:bg-[#1a1a1a] transition ${isRefreshing ? 'opacity-80' : ''}`}

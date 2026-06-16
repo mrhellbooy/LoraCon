@@ -1,261 +1,192 @@
-import React, { useState, useEffect } from 'react';
+import { ReactNode, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowDown, Shield, Cpu, Zap, Activity, ChevronRight, Lock, Server, Cloud, Globe } from 'lucide-react';
+import { Download, Zap, Shield, Globe, Layout, Layers, RefreshCw, Twitter, Mail, ExternalLink, Linkedin, MessageSquare, UserCheck, X, CheckCircle2, Github, Instagram, Facebook, Send, Phone } from 'lucide-react';
+import Navbar from '../components/Navbar';
+import Logo from '../components/Logo';
+import { Link } from 'react-router-dom';
 
-const TunnelAnimation = () => (
-  <div className="flex-1 relative h-16 flex items-center justify-center overflow-hidden bg-black rounded-lg border border-[#222]">
-    {[...Array(5)].map((_, i) => (
+const ADDON_RELEASES_URL = 'https://github.com/Maijied/Lorapok-TabMan/releases/latest';
+const ADDON_DOWNLOAD_URL = 'https://github.com/Maijied/Lorapok-TabMan/releases/latest/download/lorapok-tabman-latest.zip';
+
+function InstallModal({ onClose }) {
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
       <motion.div
-        key={i}
-        className="absolute border border-green-500/50"
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: [0, 1.5, 3], opacity: [0, 1, 0] }}
-        transition={{ duration: 2, repeat: Infinity, delay: i * 0.4, ease: "linear" }}
-        style={{ width: `${20 + i * 20}%`, height: `${20 + i * 20}%`, borderRadius: "8px" }}
-      />
-    ))}
-  </div>
-);
-
-const TrafficVisualizer = ({ connected }) => (
-  <div className="flex justify-between items-center w-full my-8 h-16 px-4 bg-[#111] rounded-lg border border-[#222]">
-    <Server size={24} className={connected ? "text-green-500" : "text-gray-600"} />
-    {connected ? <TunnelAnimation /> : (
-        <div className="flex-1 flex justify-center items-center text-gray-600 font-mono text-sm">Standby</div>
-    )}
-    <Globe size={24} className={connected ? "text-cyan-500" : "text-gray-600"} />
-  </div>
-);
-
-const Terminal = () => {
-  const [lines, setLines] = useState([]);
-  
-  useEffect(() => {
-    const sequence = [
-      { text: "root@loracon:~# ./initialize_larva_core.sh", delay: 0 },
-      { text: "[OK] Plating armor initialized...", delay: 1500 },
-      { text: "[OK] Neon-green sensors active...", delay: 3000 },
-      { text: "Larva is now consuming latency.", delay: 4500, color: "text-cyan-400" },
-    ];
-    
-    sequence.forEach((line) => {
-      setTimeout(() => {
-        setLines((prev) => [...prev, line]);
-      }, line.delay);
-    });
-  }, []);
-
-  return (
-    <div className="bg-[#0a0a0a] border border-green-900 rounded-xl p-6 font-mono text-sm text-green-500 text-left w-full max-w-lg mb-12 shadow-[0_0_50px_-10px_rgba(34,197,94,0.3)] relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-cyan-500"></div>
-      <div className="text-xs text-gray-500 mb-4 uppercase tracking-wider">sys.log</div>
-      {lines.map((line, i) => (
-        <motion.div 
-          key={i} 
-          initial={{ opacity: 0, x: -10 }} 
-          animate={{ opacity: 1, x: 0 }}
-          className={`mb-2 ${line.color || ""}`}
-        >
-          {line.text}
-        </motion.div>
-      ))}
-    </div>
-  );
-};
-
-const VPNService = () => {
-  const [connected, setConnected] = useState(false);
-  const [stats, setStats] = useState({ ping: "0ms", upload: "0Mbps", download: "0Mbps" });
-
-  useEffect(() => {
-    if (!connected) {
-      setStats({ ping: "0ms", upload: "0Mbps", download: "0Mbps" });
-      return;
-    }
-    const interval = setInterval(() => {
-      setStats({
-        ping: `${Math.floor(Math.random() * 20) + 10}ms`,
-        upload: `${Math.floor(Math.random() * 20) + 50}Mbps`,
-        download: `${Math.floor(Math.random() * 50) + 200}Mbps`
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [connected]);
-
-  return (
-    <div className="bg-[#0a0a0a] border border-green-900 rounded-2xl p-8 w-full max-w-md mb-12 shadow-[0_0_50px_-10px_rgba(34,197,94,0.3)]">
-        <h3 className="text-xl font-bold mb-6">Active VPN Service</h3>
-        <TrafficVisualizer connected={connected} />
-        <motion.button
-            onClick={() => setConnected(!connected)}
-            animate={{ backgroundColor: connected ? "#ef4444" : "#22c55e" }}
-            className="w-full py-4 rounded-xl font-bold text-black mb-6"
-        >
-            {connected ? "DISCONNECT" : "CONNECT NOW"}
-        </motion.button>
-        <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
-                <p className="text-gray-500 text-xs uppercase">Ping</p>
-                <p className="font-mono text-green-400">{stats.ping}</p>
-            </div>
-            <div>
-                <p className="text-gray-500 text-xs uppercase">Upload</p>
-                <p className="font-mono text-green-400">{stats.upload}</p>
-            </div>
-            <div>
-                <p className="text-gray-500 text-xs uppercase">Download</p>
-                <p className="font-mono text-green-400">{stats.download}</p>
-            </div>
-        </div>
-    </div>
-  );
-};
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
-};
-
-export default function LandingPage() {
-  const [downloadProgress, setDownloadProgress] = useState(0);
-  const [isDownloading, setIsDownloading] = useState(false);
-
-  const startDownload = () => {
-    setIsDownloading(true);
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 1;
-      setDownloadProgress(progress);
-      if (progress >= 100) {
-        clearInterval(interval);
-        window.location.href = 'downloads/loracon-latest.apk';
-        setIsDownloading(false);
-        setDownloadProgress(0);
-      }
-    }, 30);
-  };
-  const features = [
-    { icon: Shield, title: "Military-Grade Security", desc: "Charcoal metallic plating fused with AES-256 multi-layer encryption." },
-    { icon: Cpu, title: "Neural Optimization", desc: "Consumes network latency bottlenecks, streamlining complex packet flows." },
-    { icon: Lock, title: "Zero-Knowledge Core", desc: "Private tunneling environment, ensuring absolute user confidentiality." },
-    { icon: Server, title: "Distributed Interconnect", desc: "High-speed multi-routing fabric for global content delivery." },
-    { icon: Globe, title: "Global Relay Points", desc: "Latency-minimized edge relay nodes for rapid content access." },
-    { icon: Zap, title: "Dynamic Routing", desc: "Self-healing tunnel paths optimized in millisecond cycles." }
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-green-500 selection:text-black">
-      {/* Hero Section */}
-      <motion.section 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }}
-        className="relative flex flex-col items-center justify-center pt-32 pb-24 px-6 text-center overflow-hidden"
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        className="relative w-full max-w-lg bg-[#0a0f1a] border border-white/10 rounded-[2.5rem] p-8 shadow-2xl overflow-hidden"
       >
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-950/20 via-transparent to-transparent"></div>
-        <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="relative mb-6 flex gap-2 items-center bg-[#111] px-4 py-1.5 rounded-full border border-[#222]">
-          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-          <span className="text-green-500 font-mono text-xs uppercase tracking-widest">Powered by Lorapok Labs</span>
-        </motion.div>
-        
-        <h1 className="relative text-5xl md:text-7xl font-bold mb-8 tracking-tighter">
-          Tunneling that <br/>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">Feels Alive.</span>
-        </h1>
-        
-        <p className="relative text-gray-400 mb-12 max-w-2xl text-lg md:text-xl font-light leading-relaxed">
-          The Cybernetic Black Soldier Fly Larva is your silent system optimizer. It consumes network bottlenecks and protects your data flow with adaptive, military-grade protocol shielding.
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-sky-500/10 blur-[80px] rounded-full pointer-events-none" />
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <Logo size={40} />
+            <div>
+              <h2 className="text-xl font-black text-white">Install Lorapok TabMan</h2>
+              <p className="text-slate-500 text-xs mt-0.5">Firefox Add-on · Free · Open Source</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        <a
+          href={ADDON_DOWNLOAD_URL}
+          download="lorapok-tabman-latest.zip"
+          className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-black text-white text-sm mb-6 group relative overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 50%, #0284c7 100%)' }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+          <Download className="w-5 h-5 relative" />
+          <span className="relative">Download Latest ZIP</span>
+        </a>
+        <p className="text-center text-[10px] text-slate-600 mb-4">
+          Or browse all releases:{' '}
+          <a href={ADDON_RELEASES_URL} target="_blank" rel="noopener noreferrer" className="text-sky-500 hover:underline">
+            GitHub Releases <ExternalLink className="w-3 h-3 inline" />
+          </a>
         </p>
-
-        <Terminal />
-        <VPNService />
-        
-        <div className="relative flex flex-col items-center gap-4">
-          <motion.button 
-            onClick={startDownload}
-            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(74, 222, 128, 0.3)" }}
-            whileTap={{ scale: 0.95 }}
-            disabled={isDownloading}
-            className="flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition disabled:opacity-50"
-          >
-            <ArrowDown size={20} /> {isDownloading ? "Downloading..." : "Download Client"}
-          </motion.button>
-          
-          {isDownloading && (
-            <div className="w-64 h-2 bg-[#111] rounded-full overflow-hidden">
-                <motion.div className="h-full bg-green-500" style={{ width: `${downloadProgress}%` }} />
+        <div className="space-y-3">
+          <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">How to install locally</p>
+          {[
+            { step: '01', text: 'Click "Download Latest ZIP" above and download the file' },
+            { step: '02', text: 'Extract the ZIP to a folder on your computer' },
+            { step: '03', text: 'Open Firefox and go to about:debugging' },
+            { step: '04', text: 'Click "This Firefox" → "Load Temporary Add-on..."' },
+            { step: '05', text: 'Select the manifest.json file inside the extracted folder' },
+            { step: '06', text: 'The TabMan icon appears in your Firefox toolbar — done!' },
+          ].map(({ step, text }) => (
+            <div key={step} className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5">
+              <span className="text-[10px] font-black text-sky-500 font-mono mt-0.5 shrink-0">{step}</span>
+              <p className="text-slate-300 text-sm leading-relaxed">{text}</p>
             </div>
-          )}
-          
-          <motion.a 
-            href="#/admin" 
-            whileHover={{ scale: 1.05, backgroundColor: "#151515" }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 bg-[#111] border border-[#222] text-gray-300 px-8 py-3 rounded-full font-bold hover:bg-[#1A1A1A] transition"
-          >
-            Dashboard <ChevronRight size={16} />
-          </motion.a>
-        </div>
-      </motion.section>
-
-      {/* Features Grid */}
-      <motion.section 
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        className="max-w-7xl mx-auto px-6 py-24 border-t border-[#111]"
-      >
-        <div className="mb-16">
-            <h3 className="text-3xl md:text-4xl font-bold tracking-tight">Core Infrastructure.</h3>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((f, i) => (
-            <motion.div 
-              key={i}
-              variants={itemVariants}
-              whileHover={{ borderColor: "rgba(34, 197, 94, 0.4)" }}
-              className="p-8 bg-[#0a0a0a] border border-green-900/30 rounded-2xl transition-all duration-300 flex flex-col items-start shadow-[0_0_20px_-10px_rgba(34,197,94,0.1)] hover:shadow-[0_0_30px_-5px_rgba(34,197,94,0.3)]"
-            >
-              <div className="bg-[#111] p-3 rounded-xl mb-6 border border-[#222]">
-                <f.icon className="text-green-500" size={24} />
-              </div>
-              <h4 className="text-xl font-semibold mb-2">{f.title}</h4>
-              <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
-            </motion.div>
           ))}
         </div>
-      </motion.section>
+        <div className="mt-6 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20">
+          <div className="flex items-start gap-3">
+            <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <p className="text-amber-300/80 text-xs leading-relaxed">
+              <strong>Note:</strong> Temporary add-ons are removed when Firefox restarts. For permanent installation, wait for Mozilla review approval — we've submitted to AMO and it's pending review.
+            </p>
+          </div>
+        </div>
+        <button onClick={onClose} className="w-full mt-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 font-bold text-sm transition-all border border-white/5">
+          Got it
+        </button>
+      </motion.div>
+    </div>
+  );
+}
+
+export default function LandingPage() {
+  const [showInstallModal, setShowInstallModal] = useState(false);
+
+  return (
+    <div className="relative overflow-hidden bg-[#030711]">
+      <Navbar />
+
+      <AnimatePresence>
+        {showInstallModal && <InstallModal onClose={() => setShowInstallModal(false)} />}
+      </AnimatePresence>
+
+      <section className="relative pt-32 pb-20 px-6">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-gradient-to-b from-sky-500/10 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-3/4 h-[400px] bg-sky-500/5 blur-[120px] rounded-full pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-bold uppercase tracking-widest mb-6">
+              <Logo size={12} className="hover:scale-100" /> A Product of Lorapok Labs
+            </span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-8 leading-[0.9]"
+          >
+            Collapse the <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">Chaos.</span><br />
+            Save your <span className="text-white">Memory.</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
+          >
+            Lorapok TabMan instantly converts all your open tabs into a single, beautiful list.
+            Reduce memory usage by up to 95% and reclaim your focus.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <Link to="/admin">
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(56,189,248,0.4)' }}
+                whileTap={{ scale: 0.97 }}
+                className="group relative w-full sm:w-auto px-10 py-4 rounded-2xl font-black text-lg text-white overflow-hidden focus:outline-none focus:ring-4 focus:ring-sky-500/40"
+                style={{ background: 'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 50%, #0284c7 100%)' }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <div className="absolute inset-0 rounded-2xl shadow-[0_0_30px_rgba(56,189,248,0.35)] group-hover:shadow-[0_0_50px_rgba(56,189,248,0.55)] transition-shadow duration-300" />
+                <span className="relative flex items-center gap-2.5">
+                  <Layout className="w-5 h-5" />
+                  Launch Dashboard
+                </span>
+              </motion.button>
+            </Link>
+            <motion.button
+                onClick={() => setShowInstallModal(true)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl font-bold text-lg backdrop-blur-md transition-all flex items-center gap-2"
+              >
+                <Download className="w-5 h-5" /> Download Addon
+              </motion.button>
+            </motion.div>
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="py-20 px-6 border-t border-[#111]">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="col-span-2 md:col-span-1">
-                <span className="font-bold text-white text-lg">Lorapok Labs</span>
+      <div className="border-t border-white/10 bg-black/30 py-10 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-4 shrink-0">
+            <Logo size={32} />
+            <div>
+              <span className="text-base font-bold text-slate-200 block">Lorapok Labs &middot; Bangladesh</span>
+              <span className="text-sm text-slate-500">&copy; {new Date().getFullYear()} Lorapok Labs. All rights reserved.</span>
             </div>
-            <div className="flex flex-col gap-3">
-                <span className="font-semibold text-gray-200">Protocol</span>
-                <span className="hover:text-green-500 cursor-pointer text-gray-500 text-sm">Documentation</span>
-                <span className="hover:text-green-500 cursor-pointer text-gray-500 text-sm">API Reference</span>
-            </div>
-            <div className="flex flex-col gap-3">
-                <span className="font-semibold text-gray-200">Company</span>
-                <span className="hover:text-green-500 cursor-pointer text-gray-500 text-sm">About Us</span>
-                <span className="hover:text-green-500 cursor-pointer text-gray-500 text-sm">Careers</span>
-            </div>
-            <div className="flex flex-col gap-3">
-                <span className="font-semibold text-gray-200">Legal</span>
-                <span className="hover:text-green-500 cursor-pointer text-gray-500 text-sm">Privacy</span>
-                <span className="hover:text-green-500 cursor-pointer text-gray-500 text-sm">Terms</span>
-            </div>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            {[
+              { href: 'https://github.com/lorapok', icon: <Github className="w-5 h-5" />, label: 'GitHub' },
+              { href: 'https://x.com/lorapoklabs', icon: <Twitter className="w-5 h-5" />, label: 'X / Twitter' },
+              { href: 'mailto:lorapokdev@gmail.com', icon: <Mail className="w-5 h-5" />, label: 'Email' },
+              { href: 'https://www.linkedin.com/showcase/lorapok/', icon: <Linkedin className="w-5 h-5" />, label: 'LinkedIn' },
+              { href: 'https://www.reddit.com/r/LorapokLabs/', icon: <MessageSquare className="w-5 h-5" />, label: 'Reddit' },
+              { href: 'https://gravatar.com/lorapok', icon: <UserCheck className="w-5 h-5" />, label: 'Gravatar' },
+              { href: 'https://www.instagram.com/lorapoklabs/', icon: <Instagram className="w-5 h-5" />, label: 'Instagram' },
+              { href: 'https://www.facebook.com/lorapoklabs', icon: <Facebook className="w-5 h-5" />, label: 'Facebook' },
+              { href: 'https://lorapok.com/contact', icon: <ExternalLink className="w-5 h-5" />, label: 'Contact' },
+            ].map(({ href, icon, label }) => (
+              <a key={label} href={href} target={href.startsWith('mailto') ? undefined : '_blank'} rel="noopener noreferrer"
+                className="p-3 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-sky-400 hover:bg-sky-500/10 hover:border-sky-500/30 transition-all"
+                title={label}>{icon}</a>
+            ))}
+          </div>
         </div>
-        <p className="text-center text-gray-700 text-xs mt-16 pt-8 border-t border-[#111]">© 2026 Lorapok Labs. Infrastructure suite for secure, high-availability tunneling.</p>
-      </footer>
+      </div>
     </div>
   );
 }

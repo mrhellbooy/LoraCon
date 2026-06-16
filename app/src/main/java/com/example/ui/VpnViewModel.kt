@@ -37,9 +37,11 @@ enum class AppTheme {
 
 data class UserSubscription(
     val email: String = "pioneer@lorapok.labs",
-    val tier: String = "FREE", // FREE, STANDARD, PREMIUM
-    val balanceCrypto: Double = 0.00,
-    val expiresAt: String = "N/A"
+    val tier: String = "PREMIUM", // FREE, STANDARD, PREMIUM
+    val balanceCrypto: Double = 1.25,
+    val expiresAt: String = "August 15, 2026",
+    val status: String = "ACTIVE", // ACTIVE, INACTIVE, SUSPENDED
+    val promoCode: String = "LUNA2026"
 )
 
 data class AiAssistantMessage(
@@ -151,6 +153,7 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
     init {
         // Fetch or create default servers list
         viewModelScope.launch {
+            repository.refreshServers()
             repository.activeServers.collectLatest { list ->
                 if (list.isEmpty()) {
                     repository.initializeDefaultServers()

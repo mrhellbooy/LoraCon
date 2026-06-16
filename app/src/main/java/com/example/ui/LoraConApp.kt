@@ -626,17 +626,20 @@ fun DashboardScreen(
                                 .padding(2.dp)
                         ) {
                             listOf("WireGuard", "OpenVPN").forEach { proto ->
-                                Box(
+                                TextButton(
+                                    onClick = { viewModel.selectProtocol(proto) },
                                     modifier = Modifier
                                         .minimumInteractiveComponentSize()
-                                        .clip(RoundedCornerShape(4.dp))
-                                        .background(if (activeProtocol == proto) CyberEmerald else Color.Transparent)
-                                        .clickable { viewModel.selectProtocol(proto) }
-                                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                                        .height(32.dp),
+                                    shape = RoundedCornerShape(4.dp),
+                                    colors = ButtonDefaults.textButtonColors(
+                                        containerColor = if (activeProtocol == proto) CyberEmerald else Color.Transparent,
+                                        contentColor = if (activeProtocol == proto) Color(0xFF090D14) else TextSecondary
+                                    ),
+                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
                                 ) {
                                     Text(
                                         text = proto,
-                                        color = if (activeProtocol == proto) Color(0xFF090D14) else TextSecondary,
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = FontFamily.Monospace

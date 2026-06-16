@@ -2,9 +2,12 @@ package com.example.data
 
 import android.content.Context
 import androidx.room.Room
+import com.example.api.LoraConApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 class VpnRepository(context: Context) {
     private val database: AppDatabase = Room.databaseBuilder(
@@ -14,9 +17,27 @@ class VpnRepository(context: Context) {
     ).build()
 
     private val dao = database.vpnDao()
+    
+    // Retrofit service for fetching real node data
+    private val apiService = Retrofit.Builder()
+        .baseUrl("https://loracon-backend.onrender.com/") // User should update this via .env/Secrets
+        .addConverterFactory(MoshiConverterFactory.create())
+        .build()
+        .create(LoraConApiService::class.java)
 
     val allLogs: Flow<List<VpnLog>> = dao.getAllLogs()
     val activeServers: Flow<List<VpnServer>> = dao.getActiveServers()
+
+    suspend fun refreshServers() = withContext(Dispatchers.IO) {
+        try {
+            val servers = apiService.getServers()
+            for (server in servers) {
+                dao.insertServer(server)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     suspend fun insertLog(log: VpnLog) = withContext(Dispatchers.IO) {
         dao.insertLog(log)
